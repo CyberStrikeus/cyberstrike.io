@@ -7,16 +7,16 @@ import { THEME_OPENAUTH } from "@openauthjs/openauth/ui/theme"
 import { GithubProvider } from "@openauthjs/openauth/provider/github"
 import { GoogleOidcProvider } from "@openauthjs/openauth/provider/google"
 import { CloudflareStorage } from "@openauthjs/openauth/storage/cloudflare"
-import { Account } from "@whykido/console-core/account.js"
-import { Workspace } from "@whykido/console-core/workspace.js"
-import { Actor } from "@whykido/console-core/actor.js"
-import { Resource } from "@whykido/console-resource"
-import { User } from "@whykido/console-core/user.js"
-import { and, Database, eq, isNull, or } from "@whykido/console-core/drizzle/index.js"
-import { WorkspaceTable } from "@whykido/console-core/schema/workspace.sql.js"
-import { UserTable } from "@whykido/console-core/schema/user.sql.js"
-import { AuthTable } from "@whykido/console-core/schema/auth.sql.js"
-import { Identifier } from "@whykido/console-core/identifier.js"
+import { Account } from "@cyberstrike/console-core/account.js"
+import { Workspace } from "@cyberstrike/console-core/workspace.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { Resource } from "@cyberstrike/console-resource"
+import { User } from "@cyberstrike/console-core/user.js"
+import { and, Database, eq, isNull, or } from "@cyberstrike/console-core/drizzle/index.js"
+import { WorkspaceTable } from "@cyberstrike/console-core/schema/workspace.sql.js"
+import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
+import { AuthTable } from "@cyberstrike/console-core/schema/auth.sql.js"
+import { Identifier } from "@cyberstrike/console-core/identifier.js"
 
 type Env = {
   AuthStorage: KVNamespace
@@ -35,7 +35,7 @@ export const subjects = createSubjects({
 
 const MY_THEME: Theme = {
   ...THEME_OPENAUTH,
-  logo: "https://whykido.dev/favicon-v3.svg",
+  logo: "https://cyberstrike.io/favicon-v3.svg",
 }
 
 export default {

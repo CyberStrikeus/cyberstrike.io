@@ -1,16 +1,16 @@
 import { Router } from "@solidjs/router"
 import { FileRoutes } from "@solidjs/start/router"
-import { Font } from "@whykido/ui/font"
+import { Font } from "@cyberstrike/ui/font"
 import { MetaProvider } from "@solidjs/meta"
-import { MarkedProvider } from "@whykido/ui/context/marked"
-import { DialogProvider } from "@whykido/ui/context/dialog"
-import { I18nProvider, type UiI18nParams } from "@whykido/ui/context"
-import { dict as uiEn } from "@whykido/ui/i18n/en"
-import { dict as uiZh } from "@whykido/ui/i18n/zh"
+import { MarkedProvider } from "@cyberstrike/ui/context/marked"
+import { DialogProvider } from "@cyberstrike/ui/context/dialog"
+import { I18nProvider, type UiI18nParams } from "@cyberstrike/ui/context"
+import { dict as uiEn } from "@cyberstrike/ui/i18n/en"
+import { dict as uiZh } from "@cyberstrike/ui/i18n/zh"
 import { createEffect, createMemo, Suspense, type ParentProps } from "solid-js"
 import { getRequestEvent } from "solid-js/web"
 import "./app.css"
-import { Favicon } from "@whykido/ui/favicon"
+import { Favicon } from "@cyberstrike/ui/favicon"
 
 function resolveTemplate(text: string, params?: UiI18nParams) {
   if (!params) return text

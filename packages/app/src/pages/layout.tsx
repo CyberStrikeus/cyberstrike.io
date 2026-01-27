@@ -19,23 +19,23 @@ import { A, useNavigate, useParams } from "@solidjs/router"
 import { useLayout, getAvatarColors, LocalProject } from "@/context/layout"
 import { useGlobalSync } from "@/context/global-sync"
 import { Persist, persisted } from "@/utils/persist"
-import { base64Decode, base64Encode } from "@whykido/util/encode"
-import { Avatar } from "@whykido/ui/avatar"
-import { ResizeHandle } from "@whykido/ui/resize-handle"
-import { Button } from "@whykido/ui/button"
-import { Icon } from "@whykido/ui/icon"
-import { IconButton } from "@whykido/ui/icon-button"
-import { InlineInput } from "@whykido/ui/inline-input"
-import { Tooltip, TooltipKeybind } from "@whykido/ui/tooltip"
-import { HoverCard } from "@whykido/ui/hover-card"
-import { MessageNav } from "@whykido/ui/message-nav"
-import { DropdownMenu } from "@whykido/ui/dropdown-menu"
-import { Collapsible } from "@whykido/ui/collapsible"
-import { DiffChanges } from "@whykido/ui/diff-changes"
-import { Spinner } from "@whykido/ui/spinner"
-import { Dialog } from "@whykido/ui/dialog"
-import { getFilename } from "@whykido/util/path"
-import { Session, type Message, type TextPart } from "@whykido/sdk/v2/client"
+import { base64Decode, base64Encode } from "@cyberstrike/util/encode"
+import { Avatar } from "@cyberstrike/ui/avatar"
+import { ResizeHandle } from "@cyberstrike/ui/resize-handle"
+import { Button } from "@cyberstrike/ui/button"
+import { Icon } from "@cyberstrike/ui/icon"
+import { IconButton } from "@cyberstrike/ui/icon-button"
+import { InlineInput } from "@cyberstrike/ui/inline-input"
+import { Tooltip, TooltipKeybind } from "@cyberstrike/ui/tooltip"
+import { HoverCard } from "@cyberstrike/ui/hover-card"
+import { MessageNav } from "@cyberstrike/ui/message-nav"
+import { DropdownMenu } from "@cyberstrike/ui/dropdown-menu"
+import { Collapsible } from "@cyberstrike/ui/collapsible"
+import { DiffChanges } from "@cyberstrike/ui/diff-changes"
+import { Spinner } from "@cyberstrike/ui/spinner"
+import { Dialog } from "@cyberstrike/ui/dialog"
+import { getFilename } from "@cyberstrike/util/path"
+import { Session, type Message, type TextPart } from "@cyberstrike/sdk/v2/client"
 import { usePlatform } from "@/context/platform"
 import { useSettings } from "@/context/settings"
 import { createStore, produce, reconcile } from "solid-js/store"
@@ -49,17 +49,17 @@ import {
 } from "@thisbeyond/solid-dnd"
 import type { DragEvent } from "@thisbeyond/solid-dnd"
 import { useProviders } from "@/hooks/use-providers"
-import { showToast, Toast, toaster } from "@whykido/ui/toast"
+import { showToast, Toast, toaster } from "@cyberstrike/ui/toast"
 import { useGlobalSDK } from "@/context/global-sdk"
 import { useNotification } from "@/context/notification"
 import { usePermission } from "@/context/permission"
-import { Binary } from "@whykido/util/binary"
-import { retry } from "@whykido/util/retry"
+import { Binary } from "@cyberstrike/util/binary"
+import { retry } from "@cyberstrike/util/retry"
 import { playSound, soundSrc } from "@/utils/sound"
 import { Worktree as WorktreeState } from "@/utils/worktree"
 
-import { useDialog } from "@whykido/ui/context/dialog"
-import { useTheme, type ColorScheme } from "@whykido/ui/theme"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
+import { useTheme, type ColorScheme } from "@cyberstrike/ui/theme"
 import { DialogSelectProvider } from "@/components/dialog-select-provider"
 import { DialogSelectServer } from "@/components/dialog-select-server"
 import { DialogSettings } from "@/components/dialog-settings"
@@ -1568,7 +1568,7 @@ export default function Layout(props: ParentProps) {
         <div class="size-full rounded overflow-clip">
           <Avatar
             fallback={name()}
-            src={props.project.id === opencode ? "https://whykido.dev/favicon.svg" : props.project.icon?.override}
+            src={props.project.id === opencode ? "https://cyberstrike.io/favicon.svg" : props.project.icon?.override}
             {...getAvatarColors(props.project.icon?.color)}
             class="size-full rounded"
             style={
@@ -2694,7 +2694,7 @@ export default function Layout(props: ParentProps) {
                 icon="help"
                 variant="ghost"
                 size="large"
-                onClick={() => platform.openLink("https://whykido.dev/desktop-feedback")}
+                onClick={() => platform.openLink("https://cyberstrike.io/desktop-feedback")}
                 aria-label={language.t("sidebar.help")}
               />
             </Tooltip>

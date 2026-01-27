@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { Script } from "@whykido/script"
+import { Script } from "@cyberstrike/script"
 import { $ } from "bun"
 
 const dir = new URL("..", import.meta.url).pathname

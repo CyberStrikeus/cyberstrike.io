@@ -1,5 +1,5 @@
-import { createWhykidoClient } from "@whykido/sdk/v2/client"
-import { base64Encode } from "@whykido/util/encode"
+import { createCyberstrikeClient } from "@cyberstrike/sdk/v2/client"
+import { base64Encode } from "@cyberstrike/util/encode"
 
 export const serverHost = process.env.PLAYWRIGHT_SERVER_HOST ?? "localhost"
 export const serverPort = process.env.PLAYWRIGHT_SERVER_PORT ?? "4096"
@@ -14,7 +14,7 @@ export const promptSelector = '[data-component="prompt-input"]'
 export const terminalSelector = '[data-component="terminal"]'
 
 export function createSdk(directory?: string) {
-  return createWhykidoClient({ baseUrl: serverUrl, directory, throwOnError: true })
+  return createCyberstrikeClient({ baseUrl: serverUrl, directory, throwOnError: true })
 }
 
 export async function getWorktree() {

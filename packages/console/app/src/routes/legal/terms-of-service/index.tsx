@@ -36,7 +36,7 @@ export default function TermsOfService() {
                 <strong>ANOMALY INNOVATIONS, INC.</strong> ("OpenCode," "we" and "us"). Your use of the Services in any
                 way means that you agree to all of these Terms, and these Terms will remain in effect while you use the
                 Services. These Terms include the provisions in this document as well as those in the Privacy Policy{" "}
-                <a href="/legal/privacy-policy">https://whykido.dev/legal/privacy-policy</a>.{" "}
+                <a href="/legal/privacy-policy">https://cyberstrike.io/legal/privacy-policy</a>.{" "}
                 <strong>
                   Your use of or participation in certain Services may also be subject to additional policies, rules
                   and/or conditions ("Additional Terms"), which are incorporated herein by reference, and you understand
@@ -70,7 +70,7 @@ export default function TermsOfService() {
               <p>
                 OpenCode is an AI-powered coding agent that helps you write, understand, and modify code using large
                 language models. Certain of these large language models are provided by third parties ("Third Party
-                Models") and certain of these models are provided directly by us if you use the Whykido Zen paid
+                Models") and certain of these models are provided directly by us if you use the Cyberstrike Zen paid
                 offering ("Zen"). Regardless of whether you use Third Party Models or Zen, OpenCode enables you to
                 access the functionality of models through a coding agent running within your terminal.
               </p>
@@ -79,7 +79,7 @@ export default function TermsOfService() {
               <p>
                 We are constantly trying to improve our Services, so these Terms may need to change along with our
                 Services. We reserve the right to change the Terms at any time, but if we do, we will place a notice on
-                our site located at whykido.dev, send you an email, and/or notify you by some other means.
+                our site located at cyberstrike.io, send you an email, and/or notify you by some other means.
               </p>
 
               <p>
@@ -97,7 +97,7 @@ export default function TermsOfService() {
               <p>
                 OpenCode takes the privacy of its users very seriously. For the current OpenCode Privacy Policy, please
                 click here{" "}
-                <a href="https://whykido.dev/legal/privacy-policy">https://whykido.dev/legal/privacy-policy</a>.
+                <a href="https://cyberstrike.io/legal/privacy-policy">https://cyberstrike.io/legal/privacy-policy</a>.
               </p>
 
               <h3>Children's Online Privacy Protection Act</h3>
@@ -259,7 +259,7 @@ export default function TermsOfService() {
               <h3>Paid Services</h3>
               <p>
                 Certain of our Services, including Zen, may be subject to payments now or in the future (the "Paid
-                Services"). Please see our Paid Services page <a href="/zen">https://whykido.dev/zen</a> for a
+                Services"). Please see our Paid Services page <a href="/zen">https://cyberstrike.io/zen</a> for a
                 description of the current Paid Services. Please note that any payment terms presented to you in the
                 process of using or signing up for a Paid Service are deemed part of these Terms.
               </p>
@@ -300,7 +300,7 @@ export default function TermsOfService() {
                 CONFIRMED BY US) THAT YOU HAVE TERMINATED THIS AUTHORIZATION OR WISH TO CHANGE YOUR PAYMENT METHOD. SUCH
                 NOTICE WILL NOT AFFECT CHARGES SUBMITTED BEFORE WE REASONABLY COULD ACT. TO TERMINATE YOUR AUTHORIZATION
                 OR CHANGE YOUR PAYMENT METHOD, GO TO ACCOUNT SETTINGS{" "}
-                <a href="https://whykido.dev/auth">https://whykido.dev/auth</a>.
+                <a href="https://cyberstrike.io/auth">https://cyberstrike.io/auth</a>.
               </p>
 
               <h3>Free Trials and Other Promotions</h3>
@@ -315,7 +315,7 @@ export default function TermsOfService() {
               <h2 id="what-if-i-want-to-stop">What if I want to stop using the Services?</h2>
               <p>
                 You're free to do that at any time; please refer to our Privacy Policy{" "}
-                <a href="/legal/privacy-policy">https://whykido.dev/legal/privacy-policy</a>, as well as the licenses
+                <a href="/legal/privacy-policy">https://cyberstrike.io/legal/privacy-policy</a>, as well as the licenses
                 above, to understand how we treat information you provide to us after you have stopped using our
                 Services.
               </p>

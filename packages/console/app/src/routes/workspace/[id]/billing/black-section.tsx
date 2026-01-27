@@ -1,11 +1,11 @@
 import { action, useParams, useAction, useSubmission, json, query, createAsync } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { Show } from "solid-js"
-import { Billing } from "@whykido/console-core/billing.js"
-import { Database, eq, and, isNull, sql } from "@whykido/console-core/drizzle/index.js"
-import { BillingTable, SubscriptionTable } from "@whykido/console-core/schema/billing.sql.js"
-import { Actor } from "@whykido/console-core/actor.js"
-import { Black } from "@whykido/console-core/black.js"
+import { Billing } from "@cyberstrike/console-core/billing.js"
+import { Database, eq, and, isNull, sql } from "@cyberstrike/console-core/drizzle/index.js"
+import { BillingTable, SubscriptionTable } from "@cyberstrike/console-core/schema/billing.sql.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { Black } from "@cyberstrike/console-core/black.js"
 import { withActor } from "~/context/auth.withActor"
 import { queryBillingInfo } from "../../common"
 import styles from "./black-section.module.css"
@@ -179,7 +179,7 @@ export function BlackSection() {
             <div data-slot="section-title">
               <h2>Subscription</h2>
               <div data-slot="title-row">
-                <p>You are subscribed to Whykido Black for ${sub().plan} per month.</p>
+                <p>You are subscribed to Cyberstrike Black for ${sub().plan} per month.</p>
                 <button
                   data-color="primary"
                   disabled={sessionSubmission.pending || store.sessionRedirecting}
@@ -235,8 +235,8 @@ export function BlackSection() {
             <div data-slot="title-row">
               <p>
                 {billing()?.timeSubscriptionSelected
-                  ? `We're ready to enroll you into the $${billing()?.subscriptionPlan} per month Whykido Black plan.`
-                  : `You are on the waitlist for the $${billing()?.subscriptionPlan} per month Whykido Black plan.`}
+                  ? `We're ready to enroll you into the $${billing()?.subscriptionPlan} per month Cyberstrike Black plan.`
+                  : `You are on the waitlist for the $${billing()?.subscriptionPlan} per month Cyberstrike Black plan.`}
               </p>
               <button
                 data-color="danger"

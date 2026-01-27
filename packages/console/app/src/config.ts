@@ -3,11 +3,11 @@
  */
 export const config = {
   // Base URL
-  baseUrl: "https://whykido.dev",
+  baseUrl: "https://cyberstrike.io",
 
   // GitHub
   github: {
-    repoUrl: "https://github.com/whykido/whykido",
+    repoUrl: "https://github.com/cyberstrike/cyberstrike",
     starsFormatted: {
       compact: "0",
       full: "0",
@@ -16,8 +16,8 @@ export const config = {
 
   // Social links
   social: {
-    twitter: "https://x.com/whykido",
-    discord: "https://whykido.dev/discord",
+    twitter: "https://x.com/cyberstrike",
+    discord: "https://cyberstrike.io/discord",
   },
 
   // Static stats (used on landing page)

@@ -1,4 +1,4 @@
-import { ZenData } from "@whykido/console-core/model.js"
+import { ZenData } from "@cyberstrike/console-core/model.js"
 import {
   fromAnthropicChunk,
   fromAnthropicRequest,

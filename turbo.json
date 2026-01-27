@@ -6,11 +6,11 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "whykido#test": {
+    "cyberstrike#test": {
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "@whykido/app#test": {
+    "@cyberstrike/app#test": {
       "dependsOn": ["^build"],
       "outputs": []
     }

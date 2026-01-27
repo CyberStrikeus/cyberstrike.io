@@ -118,12 +118,12 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} APIキー",
   "provider.connect.apiKey.placeholder": "APIキー",
   "provider.connect.apiKey.required": "APIキーが必要です",
-  "provider.connect.whykidoZen.line1":
-    "Whykido Zenは、コーディングエージェント向けに最適化された信頼性の高いモデルへのアクセスを提供します。",
-  "provider.connect.whykidoZen.line2": "1つのAPIキーで、Claude、GPT、Gemini、GLMなどのモデルにアクセスできます。",
-  "provider.connect.whykidoZen.visit.prefix": " ",
-  "provider.connect.whykidoZen.visit.link": "whykido.dev/zen",
-  "provider.connect.whykidoZen.visit.suffix": " にアクセスしてAPIキーを取得してください。",
+  "provider.connect.cyberstrikeZen.line1":
+    "Cyberstrike Zenは、コーディングエージェント向けに最適化された信頼性の高いモデルへのアクセスを提供します。",
+  "provider.connect.cyberstrikeZen.line2": "1つのAPIキーで、Claude、GPT、Gemini、GLMなどのモデルにアクセスできます。",
+  "provider.connect.cyberstrikeZen.visit.prefix": " ",
+  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
+  "provider.connect.cyberstrikeZen.visit.suffix": " にアクセスしてAPIキーを取得してください。",
   "provider.connect.oauth.code.visit.prefix": " ",
   "provider.connect.oauth.code.visit.link": "このリンク",
   "provider.connect.oauth.code.visit.suffix":
@@ -393,7 +393,7 @@ export const dict = {
   "error.chain.responseBody": "レスポンス本文:\n{{body}}",
   "error.chain.didYouMean": "もしかして: {{suggestions}}",
   "error.chain.modelNotFound": "モデルが見つかりません: {{provider}}/{{model}}",
-  "error.chain.checkConfig": "config (whykido.jsonc) のプロバイダー/モデル名を確認してください",
+  "error.chain.checkConfig": "config (cyberstrike.jsonc) のプロバイダー/モデル名を確認してください",
   "error.chain.mcpFailed": 'MCPサーバー "{{name}}" が失敗しました。注意: OpenCodeはまだMCP認証をサポートしていません。',
   "error.chain.providerAuthFailed": "プロバイダー認証に失敗しました ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
@@ -508,7 +508,7 @@ export const dict = {
   "sidebar.project.recentSessions": "最近のセッション",
   "sidebar.project.viewAllSessions": "すべてのセッションを表示",
 
-  "app.name.desktop": "Whykido Desktop",
+  "app.name.desktop": "Cyberstrike Desktop",
   "settings.section.desktop": "デスクトップ",
   "settings.section.server": "サーバー",
   "settings.tab.general": "一般",

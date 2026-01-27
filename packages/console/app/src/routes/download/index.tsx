@@ -89,7 +89,7 @@ export default function Download() {
         <div data-component="content">
           <section data-component="download-hero">
             <div data-component="hero-icon">
-              <img src={desktopAppIcon} alt="Whykido Desktop" />
+              <img src={desktopAppIcon} alt="Cyberstrike Desktop" />
             </div>
             <div data-component="hero-text">
               <h1>Download OpenCode</h1>
@@ -110,10 +110,10 @@ export default function Download() {
             <div data-component="section-content">
               <button
                 data-component="cli-row"
-                onClick={handleCopyClick("curl -fsSL https://whykido.dev/install | bash")}
+                onClick={handleCopyClick("curl -fsSL https://cyberstrike.io/install | bash")}
               >
                 <code>
-                  curl -fsSL https://<strong>whykido.dev/install</strong> | bash
+                  curl -fsSL https://<strong>cyberstrike.io/install</strong> | bash
                 </code>
                 <CopyStatus />
               </button>
@@ -146,7 +146,7 @@ export default function Download() {
 
           <section data-component="download-section">
             <div data-component="section-label">
-              <span>[2]</span> Whykido Desktop (Beta)
+              <span>[2]</span> Cyberstrike Desktop (Beta)
             </div>
             <div data-component="section-content">
               <button data-component="cli-row" onClick={handleCopyClick("brew install --cask opencode-desktop")}>
@@ -288,7 +288,7 @@ export default function Download() {
                   </span>
                   <span>VS Code</span>
                 </div>
-                <a href="https://whykido.dev/docs/ide/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/ide/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -312,7 +312,7 @@ export default function Download() {
                   </span>
                   <span>Cursor</span>
                 </div>
-                <a href="https://whykido.dev/docs/ide/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/ide/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -329,7 +329,7 @@ export default function Download() {
                   </span>
                   <span>Zed</span>
                 </div>
-                <a href="https://whykido.dev/docs/ide/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/ide/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -346,7 +346,7 @@ export default function Download() {
                   </span>
                   <span>Windsurf</span>
                 </div>
-                <a href="https://whykido.dev/docs/ide/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/ide/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -363,7 +363,7 @@ export default function Download() {
                   </span>
                   <span>VSCodium</span>
                 </div>
-                <a href="https://whykido.dev/docs/ide/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/ide/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -387,7 +387,7 @@ export default function Download() {
                   </span>
                   <span>GitHub</span>
                 </div>
-                <a href="https://whykido.dev/docs/github/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/github/" data-component="action-button">
                   Install
                 </a>
               </div>
@@ -404,7 +404,7 @@ export default function Download() {
                   </span>
                   <span>GitLab</span>
                 </div>
-                <a href="https://whykido.dev/docs/gitlab/" data-component="action-button">
+                <a href="https://cyberstrike.io/docs/gitlab/" data-component="action-button">
                   Install
                 </a>
               </div>

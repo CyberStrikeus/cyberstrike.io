@@ -1,10 +1,10 @@
-import { FileDiff, Message, Model, Part, Session } from "@whykido/sdk/v2"
-import { fn } from "@whykido/util/fn"
-import { iife } from "@whykido/util/iife"
-import { Identifier } from "@whykido/util/identifier"
+import { FileDiff, Message, Model, Part, Session } from "@cyberstrike/sdk/v2"
+import { fn } from "@cyberstrike/util/fn"
+import { iife } from "@cyberstrike/util/iife"
+import { Identifier } from "@cyberstrike/util/identifier"
 import z from "zod"
 import { Storage } from "./storage"
-import { Binary } from "@whykido/util/binary"
+import { Binary } from "@cyberstrike/util/binary"
 
 export namespace Share {
   export const Info = z.object({

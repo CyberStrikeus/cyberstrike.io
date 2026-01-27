@@ -118,13 +118,13 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} API ключ",
   "provider.connect.apiKey.placeholder": "API ключ",
   "provider.connect.apiKey.required": "API ключ обязателен",
-  "provider.connect.whykidoZen.line1":
-    "Whykido Zen даёт вам доступ к отобранным надёжным оптимизированным моделям для агентов программирования.",
-  "provider.connect.whykidoZen.line2":
+  "provider.connect.cyberstrikeZen.line1":
+    "Cyberstrike Zen даёт вам доступ к отобранным надёжным оптимизированным моделям для агентов программирования.",
+  "provider.connect.cyberstrikeZen.line2":
     "С одним API ключом вы получите доступ к таким моделям как Claude, GPT, Gemini, GLM и другим.",
-  "provider.connect.whykidoZen.visit.prefix": "Посетите ",
-  "provider.connect.whykidoZen.visit.link": "whykido.dev/zen",
-  "provider.connect.whykidoZen.visit.suffix": " чтобы получить ваш API ключ.",
+  "provider.connect.cyberstrikeZen.visit.prefix": "Посетите ",
+  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
+  "provider.connect.cyberstrikeZen.visit.suffix": " чтобы получить ваш API ключ.",
   "provider.connect.oauth.code.visit.prefix": "Посетите ",
   "provider.connect.oauth.code.visit.link": "эту ссылку",
   "provider.connect.oauth.code.visit.suffix":
@@ -395,7 +395,7 @@ export const dict = {
   "error.chain.responseBody": "Тело ответа:\n{{body}}",
   "error.chain.didYouMean": "Возможно, вы имели в виду: {{suggestions}}",
   "error.chain.modelNotFound": "Модель не найдена: {{provider}}/{{model}}",
-  "error.chain.checkConfig": "Проверьте названия провайдера/модели в конфиге (whykido.jsonc)",
+  "error.chain.checkConfig": "Проверьте названия провайдера/модели в конфиге (cyberstrike.jsonc)",
   "error.chain.mcpFailed":
     'MCP сервер "{{name}}" завершился с ошибкой. Обратите внимание, что OpenCode пока не поддерживает MCP авторизацию.',
   "error.chain.providerAuthFailed": "Ошибка аутентификации провайдера ({{provider}}): {{message}}",
@@ -513,7 +513,7 @@ export const dict = {
   "sidebar.project.recentSessions": "Недавние сессии",
   "sidebar.project.viewAllSessions": "Посмотреть все сессии",
 
-  "app.name.desktop": "Whykido Desktop",
+  "app.name.desktop": "Cyberstrike Desktop",
   "settings.section.desktop": "Приложение",
   "settings.section.server": "Сервер",
   "settings.tab.general": "Основные",

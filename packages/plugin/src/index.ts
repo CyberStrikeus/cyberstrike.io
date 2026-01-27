@@ -1,6 +1,6 @@
 import type {
   Event,
-  createWhykidoClient,
+  createCyberstrikeClient,
   Project,
   Model,
   Provider,
@@ -10,7 +10,7 @@ import type {
   Part,
   Auth,
   Config,
-} from "@whykido/sdk"
+} from "@cyberstrike/sdk"
 
 import type { BunShell } from "./shell"
 import { type ToolDefinition } from "./tool"
@@ -24,7 +24,7 @@ export type ProviderContext = {
 }
 
 export type PluginInput = {
-  client: ReturnType<typeof createWhykidoClient>
+  client: ReturnType<typeof createCyberstrikeClient>
   project: Project
   directory: string
   worktree: string

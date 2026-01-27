@@ -31,7 +31,7 @@ export default defineConfig({
     configSchema(),
     solidJs(),
     starlight({
-      title: "Whykido",
+      title: "Cyberstrike",
       favicon: "/favicon-v3.svg",
       head: [
         {
@@ -137,7 +137,7 @@ function configSchema() {
     hooks: {
       "astro:build:done": async () => {
         console.log("generating config schema")
-        spawnSync("../whykido/script/schema.ts", ["./dist/config.json"])
+        spawnSync("../cyberstrike/script/schema.ts", ["./dist/config.json"])
       },
     },
   }

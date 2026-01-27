@@ -1,12 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "whykido",
+  "name": "cyberstrike",
   "description": "AI-powered penetration testing agent framework",
   "private": true,
   "type": "module",
   "packageManager": "bun@1.3.5",
   "scripts": {
-    "dev": "bun run --cwd packages/whykido --conditions=browser src/index.ts",
+    "dev": "bun run --cwd packages/cyberstrike --conditions=browser src/index.ts",
     "typecheck": "bun turbo typecheck",
     "prepare": "husky",
     "random": "echo 'Random script'",
@@ -72,14 +72,14 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.933.0",
-    "@whykido/plugin": "workspace:*",
-    "@whykido/script": "workspace:*",
-    "@whykido/sdk": "workspace:*",
+    "@cyberstrike/plugin": "workspace:*",
+    "@cyberstrike/script": "workspace:*",
+    "@cyberstrike/sdk": "workspace:*",
     "typescript": "catalog:"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/whykido/whykido"
+    "url": "https://github.com/cyberstrike/cyberstrike"
   },
   "license": "MIT",
   "prettier": {

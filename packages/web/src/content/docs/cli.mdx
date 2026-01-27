@@ -1,30 +1,30 @@
 ---
 title: CLI
-description: Whykido CLI options and commands.
+description: Cyberstrike CLI options and commands.
 ---
 
 import { Tabs, TabItem } from "@astrojs/starlight/components"
 
-The Whykido CLI by default starts the [TUI](/docs/tui) when run without any arguments.
+The Cyberstrike CLI by default starts the [TUI](/docs/tui) when run without any arguments.
 
 ```bash
-whykido
+cyberstrike
 ```
 
-But it also accepts commands as documented on this page. This allows you to interact with Whykido programmatically.
+But it also accepts commands as documented on this page. This allows you to interact with Cyberstrike programmatically.
 
 ```bash
-whykido run "Explain how closures work in JavaScript"
+cyberstrike run "Explain how closures work in JavaScript"
 ```
 
 ---
 
 ### tui
 
-Start the Whykido terminal user interface.
+Start the Cyberstrike terminal user interface.
 
 ```bash
-whykido [project]
+cyberstrike [project]
 ```
 
 #### Flags
@@ -43,36 +43,36 @@ whykido [project]
 
 ## Commands
 
-The Whykido CLI also has the following commands.
+The Cyberstrike CLI also has the following commands.
 
 ---
 
 ### agent
 
-Manage agents for Whykido.
+Manage agents for Cyberstrike.
 
 ```bash
-whykido agent [command]
+cyberstrike agent [command]
 ```
 
 ---
 
 ### attach
 
-Attach a terminal to an already running Whykido backend server started via `serve` or `web` commands.
+Attach a terminal to an already running Cyberstrike backend server started via `serve` or `web` commands.
 
 ```bash
-whykido attach [url]
+cyberstrike attach [url]
 ```
 
-This allows using the TUI with a remote Whykido backend. For example:
+This allows using the TUI with a remote Cyberstrike backend. For example:
 
 ```bash
 # Start the backend server for web/mobile access
-whykido web --port 4096 --hostname 0.0.0.0
+cyberstrike web --port 4096 --hostname 0.0.0.0
 
 # In another terminal, attach the TUI to the running backend
-whykido attach http://10.20.30.40:4096
+cyberstrike attach http://10.20.30.40:4096
 ```
 
 #### Flags
@@ -89,7 +89,7 @@ whykido attach http://10.20.30.40:4096
 Create a new agent with custom configuration.
 
 ```bash
-whykido agent create
+cyberstrike agent create
 ```
 
 This command will guide you through creating a new agent with a custom system prompt and tool configuration.
@@ -101,7 +101,7 @@ This command will guide you through creating a new agent with a custom system pr
 List all available agents.
 
 ```bash
-whykido agent list
+cyberstrike agent list
 ```
 
 ---
@@ -111,20 +111,20 @@ whykido agent list
 Command to manage credentials and login for providers.
 
 ```bash
-whykido auth [command]
+cyberstrike auth [command]
 ```
 
 ---
 
 #### login
 
-Whykido is powered by the provider list at [Models.dev](https://models.dev), so you can use `whykido auth login` to configure API keys for any provider you'd like to use. This is stored in `~/.local/share/whykido/auth.json`.
+Cyberstrike is powered by the provider list at [Models.dev](https://models.dev), so you can use `cyberstrike auth login` to configure API keys for any provider you'd like to use. This is stored in `~/.local/share/cyberstrike/auth.json`.
 
 ```bash
-whykido auth login
+cyberstrike auth login
 ```
 
-When Whykido starts up it loads the providers from the credentials file. And if there are any keys defined in your environments or a `.env` file in your project.
+When Cyberstrike starts up it loads the providers from the credentials file. And if there are any keys defined in your environments or a `.env` file in your project.
 
 ---
 
@@ -133,13 +133,13 @@ When Whykido starts up it loads the providers from the credentials file. And if 
 Lists all the authenticated providers as stored in the credentials file.
 
 ```bash
-whykido auth list
+cyberstrike auth list
 ```
 
 Or the short version.
 
 ```bash
-whykido auth ls
+cyberstrike auth ls
 ```
 
 ---
@@ -149,7 +149,7 @@ whykido auth ls
 Logs you out of a provider by clearing it from the credentials file.
 
 ```bash
-whykido auth logout
+cyberstrike auth logout
 ```
 
 ---
@@ -159,7 +159,7 @@ whykido auth logout
 Manage the GitHub agent for repository automation.
 
 ```bash
-whykido github [command]
+cyberstrike github [command]
 ```
 
 ---
@@ -169,7 +169,7 @@ whykido github [command]
 Install the GitHub agent in your repository.
 
 ```bash
-whykido github install
+cyberstrike github install
 ```
 
 This sets up the necessary GitHub Actions workflow and guides you through the configuration process. [Learn more](/docs/github).
@@ -181,7 +181,7 @@ This sets up the necessary GitHub Actions workflow and guides you through the co
 Run the GitHub agent. This is typically used in GitHub Actions.
 
 ```bash
-whykido github run
+cyberstrike github run
 ```
 
 ##### Flags
@@ -198,7 +198,7 @@ whykido github run
 Manage Model Context Protocol servers.
 
 ```bash
-whykido mcp [command]
+cyberstrike mcp [command]
 ```
 
 ---
@@ -208,7 +208,7 @@ whykido mcp [command]
 Add an MCP server to your configuration.
 
 ```bash
-whykido mcp add
+cyberstrike mcp add
 ```
 
 This command will guide you through adding either a local or remote MCP server.
@@ -220,13 +220,13 @@ This command will guide you through adding either a local or remote MCP server.
 List all configured MCP servers and their connection status.
 
 ```bash
-whykido mcp list
+cyberstrike mcp list
 ```
 
 Or use the short version.
 
 ```bash
-whykido mcp ls
+cyberstrike mcp ls
 ```
 
 ---
@@ -236,7 +236,7 @@ whykido mcp ls
 Authenticate with an OAuth-enabled MCP server.
 
 ```bash
-whykido mcp auth [name]
+cyberstrike mcp auth [name]
 ```
 
 If you don't provide a server name, you'll be prompted to select from available OAuth-capable servers.
@@ -244,13 +244,13 @@ If you don't provide a server name, you'll be prompted to select from available 
 You can also list OAuth-capable servers and their authentication status.
 
 ```bash
-whykido mcp auth list
+cyberstrike mcp auth list
 ```
 
 Or use the short version.
 
 ```bash
-whykido mcp auth ls
+cyberstrike mcp auth ls
 ```
 
 ---
@@ -260,7 +260,7 @@ whykido mcp auth ls
 Remove OAuth credentials for an MCP server.
 
 ```bash
-whykido mcp logout [name]
+cyberstrike mcp logout [name]
 ```
 
 ---
@@ -270,7 +270,7 @@ whykido mcp logout [name]
 Debug OAuth connection issues for an MCP server.
 
 ```bash
-whykido mcp debug <name>
+cyberstrike mcp debug <name>
 ```
 
 ---
@@ -280,7 +280,7 @@ whykido mcp debug <name>
 List all available models from configured providers.
 
 ```bash
-whykido models [provider]
+cyberstrike models [provider]
 ```
 
 This command displays all models available across your configured providers in the format `provider/model`.
@@ -290,7 +290,7 @@ This is useful for figuring out the exact model name to use in [your config](/do
 You can optionally pass a provider ID to filter models by that provider.
 
 ```bash
-whykido models anthropic
+cyberstrike models anthropic
 ```
 
 #### Flags
@@ -300,36 +300,36 @@ whykido models anthropic
 | `--refresh` | Refresh the models cache from models.dev                     |
 | `--verbose` | Use more verbose model output (includes metadata like costs) |
 
-Use the `--refresh` flag to update the cached model list. This is useful when new models have been added to a provider and you want to see them in Whykido.
+Use the `--refresh` flag to update the cached model list. This is useful when new models have been added to a provider and you want to see them in Cyberstrike.
 
 ```bash
-whykido models --refresh
+cyberstrike models --refresh
 ```
 
 ---
 
 ### run
 
-Run whykido in non-interactive mode by passing a prompt directly.
+Run cyberstrike in non-interactive mode by passing a prompt directly.
 
 ```bash
-whykido run [message..]
+cyberstrike run [message..]
 ```
 
 This is useful for scripting, automation, or when you want a quick answer without launching the full TUI. For example.
 
-```bash "whykido run"
-whykido run Explain the use of context in Go
+```bash "cyberstrike run"
+cyberstrike run Explain the use of context in Go
 ```
 
-You can also attach to a running `whykido serve` instance to avoid MCP server cold boot times on every run:
+You can also attach to a running `cyberstrike serve` instance to avoid MCP server cold boot times on every run:
 
 ```bash
 # Start a headless server in one terminal
-whykido serve
+cyberstrike serve
 
 # In another terminal, run commands that attach to it
-whykido run --attach http://localhost:4096 "Explain async/await in JavaScript"
+cyberstrike run --attach http://localhost:4096 "Explain async/await in JavaScript"
 ```
 
 #### Flags
@@ -345,20 +345,20 @@ whykido run --attach http://localhost:4096 "Explain async/await in JavaScript"
 | `--file`     | `-f`  | File(s) to attach to message                                       |
 | `--format`   |       | Format: default (formatted) or json (raw JSON events)              |
 | `--title`    |       | Title for the session (uses truncated prompt if no value provided) |
-| `--attach`   |       | Attach to a running whykido server (e.g., http://localhost:4096)  |
+| `--attach`   |       | Attach to a running cyberstrike server (e.g., http://localhost:4096)  |
 | `--port`     |       | Port for the local server (defaults to random port)                |
 
 ---
 
 ### serve
 
-Start a headless Whykido server for API access. Check out the [server docs](/docs/server) for the full HTTP interface.
+Start a headless Cyberstrike server for API access. Check out the [server docs](/docs/server) for the full HTTP interface.
 
 ```bash
-whykido serve
+cyberstrike serve
 ```
 
-This starts an HTTP server that provides API access to whykido functionality without the TUI interface. Set `WHYKIDO_SERVER_PASSWORD` to enable HTTP basic auth (username defaults to `whykido`).
+This starts an HTTP server that provides API access to cyberstrike functionality without the TUI interface. Set `CYBERSTRIKE_SERVER_PASSWORD` to enable HTTP basic auth (username defaults to `cyberstrike`).
 
 #### Flags
 
@@ -373,20 +373,20 @@ This starts an HTTP server that provides API access to whykido functionality wit
 
 ### session
 
-Manage Whykido sessions.
+Manage Cyberstrike sessions.
 
 ```bash
-whykido session [command]
+cyberstrike session [command]
 ```
 
 ---
 
 #### list
 
-List all Whykido sessions.
+List all Cyberstrike sessions.
 
 ```bash
-whykido session list
+cyberstrike session list
 ```
 
 ##### Flags
@@ -400,10 +400,10 @@ whykido session list
 
 ### stats
 
-Show token usage and cost statistics for your Whykido sessions.
+Show token usage and cost statistics for your Cyberstrike sessions.
 
 ```bash
-whykido stats
+cyberstrike stats
 ```
 
 #### Flags
@@ -422,7 +422,7 @@ whykido stats
 Export session data as JSON.
 
 ```bash
-whykido export [sessionID]
+cyberstrike export [sessionID]
 ```
 
 If you don't provide a session ID, you'll be prompted to select from available sessions.
@@ -431,30 +431,30 @@ If you don't provide a session ID, you'll be prompted to select from available s
 
 ### import
 
-Import session data from a JSON file or Whykido share URL.
+Import session data from a JSON file or Cyberstrike share URL.
 
 ```bash
-whykido import <file>
+cyberstrike import <file>
 ```
 
-You can import from a local file or an Whykido share URL.
+You can import from a local file or an Cyberstrike share URL.
 
 ```bash
-whykido import session.json
-whykido import https://opncd.ai/s/abc123
+cyberstrike import session.json
+cyberstrike import https://opncd.ai/s/abc123
 ```
 
 ---
 
 ### web
 
-Start a headless Whykido server with a web interface.
+Start a headless Cyberstrike server with a web interface.
 
 ```bash
-whykido web
+cyberstrike web
 ```
 
-This starts an HTTP server and opens a web browser to access Whykido through a web interface. Set `WHYKIDO_SERVER_PASSWORD` to enable HTTP basic auth (username defaults to `whykido`).
+This starts an HTTP server and opens a web browser to access Cyberstrike through a web interface. Set `CYBERSTRIKE_SERVER_PASSWORD` to enable HTTP basic auth (username defaults to `cyberstrike`).
 
 #### Flags
 
@@ -472,7 +472,7 @@ This starts an HTTP server and opens a web browser to access Whykido through a w
 Start an ACP (Agent Client Protocol) server.
 
 ```bash
-whykido acp
+cyberstrike acp
 ```
 
 This command starts an ACP server that communicates via stdin/stdout using nd-JSON.
@@ -489,10 +489,10 @@ This command starts an ACP server that communicates via stdin/stdout using nd-JS
 
 ### uninstall
 
-Uninstall Whykido and remove all related files.
+Uninstall Cyberstrike and remove all related files.
 
 ```bash
-whykido uninstall
+cyberstrike uninstall
 ```
 
 #### Flags
@@ -508,22 +508,22 @@ whykido uninstall
 
 ### upgrade
 
-Updates whykido to the latest version or a specific version.
+Updates cyberstrike to the latest version or a specific version.
 
 ```bash
-whykido upgrade [target]
+cyberstrike upgrade [target]
 ```
 
 To upgrade to the latest version.
 
 ```bash
-whykido upgrade
+cyberstrike upgrade
 ```
 
 To upgrade to a specific version.
 
 ```bash
-whykido upgrade v0.1.48
+cyberstrike upgrade v0.1.48
 ```
 
 #### Flags
@@ -536,7 +536,7 @@ whykido upgrade v0.1.48
 
 ## Global Flags
 
-The whykido CLI takes the following global flags.
+The cyberstrike CLI takes the following global flags.
 
 | Flag           | Short | Description                          |
 | -------------- | ----- | ------------------------------------ |
@@ -549,30 +549,30 @@ The whykido CLI takes the following global flags.
 
 ## Environment variables
 
-Whykido can be configured using environment variables.
+Cyberstrike can be configured using environment variables.
 
 | Variable                              | Type    | Description                                       |
 | ------------------------------------- | ------- | ------------------------------------------------- |
-| `WHYKIDO_AUTO_SHARE`                 | boolean | Automatically share sessions                      |
-| `WHYKIDO_GIT_BASH_PATH`              | string  | Path to Git Bash executable on Windows            |
-| `WHYKIDO_CONFIG`                     | string  | Path to config file                               |
-| `WHYKIDO_CONFIG_DIR`                 | string  | Path to config directory                          |
-| `WHYKIDO_CONFIG_CONTENT`             | string  | Inline json config content                        |
-| `WHYKIDO_DISABLE_AUTOUPDATE`         | boolean | Disable automatic update checks                   |
-| `WHYKIDO_DISABLE_PRUNE`              | boolean | Disable pruning of old data                       |
-| `WHYKIDO_DISABLE_TERMINAL_TITLE`     | boolean | Disable automatic terminal title updates          |
-| `WHYKIDO_PERMISSION`                 | string  | Inlined json permissions config                   |
-| `WHYKIDO_DISABLE_DEFAULT_PLUGINS`    | boolean | Disable default plugins                           |
-| `WHYKIDO_DISABLE_LSP_DOWNLOAD`       | boolean | Disable automatic LSP server downloads            |
-| `WHYKIDO_ENABLE_EXPERIMENTAL_MODELS` | boolean | Enable experimental models                        |
-| `WHYKIDO_DISABLE_AUTOCOMPACT`        | boolean | Disable automatic context compaction              |
-| `WHYKIDO_DISABLE_CLAUDE_CODE`        | boolean | Disable reading from `.claude` (prompt + skills)  |
-| `WHYKIDO_DISABLE_CLAUDE_CODE_PROMPT` | boolean | Disable reading `~/.claude/CLAUDE.md`             |
-| `WHYKIDO_DISABLE_CLAUDE_CODE_SKILLS` | boolean | Disable loading `.claude/skills`                  |
-| `WHYKIDO_CLIENT`                     | string  | Client identifier (defaults to `cli`)             |
-| `WHYKIDO_ENABLE_EXA`                 | boolean | Enable Exa web search tools                       |
-| `WHYKIDO_SERVER_PASSWORD`            | string  | Enable basic auth for `serve`/`web`               |
-| `WHYKIDO_SERVER_USERNAME`            | string  | Override basic auth username (default `whykido`) |
+| `CYBERSTRIKE_AUTO_SHARE`                 | boolean | Automatically share sessions                      |
+| `CYBERSTRIKE_GIT_BASH_PATH`              | string  | Path to Git Bash executable on Windows            |
+| `CYBERSTRIKE_CONFIG`                     | string  | Path to config file                               |
+| `CYBERSTRIKE_CONFIG_DIR`                 | string  | Path to config directory                          |
+| `CYBERSTRIKE_CONFIG_CONTENT`             | string  | Inline json config content                        |
+| `CYBERSTRIKE_DISABLE_AUTOUPDATE`         | boolean | Disable automatic update checks                   |
+| `CYBERSTRIKE_DISABLE_PRUNE`              | boolean | Disable pruning of old data                       |
+| `CYBERSTRIKE_DISABLE_TERMINAL_TITLE`     | boolean | Disable automatic terminal title updates          |
+| `CYBERSTRIKE_PERMISSION`                 | string  | Inlined json permissions config                   |
+| `CYBERSTRIKE_DISABLE_DEFAULT_PLUGINS`    | boolean | Disable default plugins                           |
+| `CYBERSTRIKE_DISABLE_LSP_DOWNLOAD`       | boolean | Disable automatic LSP server downloads            |
+| `CYBERSTRIKE_ENABLE_EXPERIMENTAL_MODELS` | boolean | Enable experimental models                        |
+| `CYBERSTRIKE_DISABLE_AUTOCOMPACT`        | boolean | Disable automatic context compaction              |
+| `CYBERSTRIKE_DISABLE_CLAUDE_CODE`        | boolean | Disable reading from `.claude` (prompt + skills)  |
+| `CYBERSTRIKE_DISABLE_CLAUDE_CODE_PROMPT` | boolean | Disable reading `~/.claude/CLAUDE.md`             |
+| `CYBERSTRIKE_DISABLE_CLAUDE_CODE_SKILLS` | boolean | Disable loading `.claude/skills`                  |
+| `CYBERSTRIKE_CLIENT`                     | string  | Client identifier (defaults to `cli`)             |
+| `CYBERSTRIKE_ENABLE_EXA`                 | boolean | Enable Exa web search tools                       |
+| `CYBERSTRIKE_SERVER_PASSWORD`            | string  | Enable basic auth for `serve`/`web`               |
+| `CYBERSTRIKE_SERVER_USERNAME`            | string  | Override basic auth username (default `cyberstrike`) |
 
 ---
 
@@ -582,12 +582,12 @@ These environment variables enable experimental features that may change or be r
 
 | Variable                                        | Type    | Description                             |
 | ----------------------------------------------- | ------- | --------------------------------------- |
-| `WHYKIDO_EXPERIMENTAL`                         | boolean | Enable all experimental features        |
-| `WHYKIDO_EXPERIMENTAL_ICON_DISCOVERY`          | boolean | Enable icon discovery                   |
-| `WHYKIDO_EXPERIMENTAL_DISABLE_COPY_ON_SELECT`  | boolean | Disable copy on select in TUI           |
-| `WHYKIDO_EXPERIMENTAL_BASH_MAX_OUTPUT_LENGTH`  | number  | Max output length for bash commands     |
-| `WHYKIDO_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS` | number  | Default timeout for bash commands in ms |
-| `WHYKIDO_EXPERIMENTAL_OUTPUT_TOKEN_MAX`        | number  | Max output tokens for LLM responses     |
-| `WHYKIDO_EXPERIMENTAL_FILEWATCHER`             | boolean | Enable file watcher for entire dir      |
-| `WHYKIDO_EXPERIMENTAL_OXFMT`                   | boolean | Enable oxfmt formatter                  |
-| `WHYKIDO_EXPERIMENTAL_LSP_TOOL`                | boolean | Enable experimental LSP tool            |
+| `CYBERSTRIKE_EXPERIMENTAL`                         | boolean | Enable all experimental features        |
+| `CYBERSTRIKE_EXPERIMENTAL_ICON_DISCOVERY`          | boolean | Enable icon discovery                   |
+| `CYBERSTRIKE_EXPERIMENTAL_DISABLE_COPY_ON_SELECT`  | boolean | Disable copy on select in TUI           |
+| `CYBERSTRIKE_EXPERIMENTAL_BASH_MAX_OUTPUT_LENGTH`  | number  | Max output length for bash commands     |
+| `CYBERSTRIKE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS` | number  | Default timeout for bash commands in ms |
+| `CYBERSTRIKE_EXPERIMENTAL_OUTPUT_TOKEN_MAX`        | number  | Max output tokens for LLM responses     |
+| `CYBERSTRIKE_EXPERIMENTAL_FILEWATCHER`             | boolean | Enable file watcher for entire dir      |
+| `CYBERSTRIKE_EXPERIMENTAL_OXFMT`                   | boolean | Enable oxfmt formatter                  |
+| `CYBERSTRIKE_EXPERIMENTAL_LSP_TOOL`                | boolean | Enable experimental LSP tool            |

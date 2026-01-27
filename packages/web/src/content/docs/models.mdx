@@ -3,13 +3,13 @@ title: Models
 description: Configuring an LLM provider and model.
 ---
 
-Whykido uses the [AI SDK](https://ai-sdk.dev/) and [Models.dev](https://models.dev) to support **75+ LLM providers** and it supports running local models.
+Cyberstrike uses the [AI SDK](https://ai-sdk.dev/) and [Models.dev](https://models.dev) to support **75+ LLM providers** and it supports running local models.
 
 ---
 
 ## Providers
 
-Most popular providers are preloaded by default. If you've added the credentials for a provider through the `/connect` command, they'll be available when you start Whykido.
+Most popular providers are preloaded by default. If you've added the credentials for a provider through the `/connect` command, they'll be available when you start Cyberstrike.
 
 Learn more about [providers](/docs/providers).
 
@@ -35,7 +35,7 @@ Consider using one of the models we recommend.
 
 However, there are only a few of them that are good at both generating code and tool calling.
 
-Here are several models that work well with Whykido, in no particular order. (This is not an exhaustive list nor is it necessarily up to date):
+Here are several models that work well with Cyberstrike, in no particular order. (This is not an exhaustive list nor is it necessarily up to date):
 
 - GPT 5.2
 - GPT 5.1 Codex
@@ -49,16 +49,16 @@ Here are several models that work well with Whykido, in no particular order. (Th
 ## Set a default
 
 To set one of these as the default model, you can set the `model` key in your
-Whykido config.
+Cyberstrike config.
 
-```json title="whykido.json" {3}
+```json title="cyberstrike.json" {3}
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "model": "lmstudio/google/gemma-3n-e4b"
 }
 ```
 
-Here the full ID is `provider_id/model_id`. For example, if you're using [Whykido Zen](/docs/zen), you would use `whykido/gpt-5.1-codex` for GPT 5.1 Codex.
+Here the full ID is `provider_id/model_id`. For example, if you're using [Cyberstrike Zen](/docs/zen), you would use `cyberstrike/gpt-5.1-codex` for GPT 5.1 Codex.
 
 If you've configured a [custom provider](/docs/providers#custom), the `provider_id` is key from the `provider` part of your config, and the `model_id` is the key from `provider.models`.
 
@@ -68,9 +68,9 @@ If you've configured a [custom provider](/docs/providers#custom), the `provider_
 
 You can globally configure a model's options through the config.
 
-```jsonc title="whykido.jsonc" {7-12,19-24}
+```jsonc title="cyberstrike.jsonc" {7-12,19-24}
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "provider": {
     "openai": {
       "models": {
@@ -107,11 +107,11 @@ You can also configure these options for any agents that you are using. The agen
 
 You can also define custom variants that extend built-in ones. Variants let you configure different settings for the same model without creating duplicate entries:
 
-```jsonc title="whykido.jsonc" {6-21}
+```jsonc title="cyberstrike.jsonc" {6-21}
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "provider": {
-    "whykido": {
+    "cyberstrike": {
       "models": {
         "gpt-5": {
           "variants": {
@@ -137,11 +137,11 @@ You can also define custom variants that extend built-in ones. Variants let you 
 
 ## Variants
 
-Many models support multiple variants with different configurations. Whykido ships with built-in default variants for popular providers.
+Many models support multiple variants with different configurations. Cyberstrike ships with built-in default variants for popular providers.
 
 ### Built-in variants
 
-Whykido ships with default variants for many providers:
+Cyberstrike ships with default variants for many providers:
 
 **Anthropic**:
 
@@ -172,9 +172,9 @@ This list is not comprehensive. Many other providers have built-in defaults too.
 
 You can override existing variants or add your own:
 
-```jsonc title="whykido.jsonc" {7-18}
+```jsonc title="cyberstrike.jsonc" {7-18}
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "provider": {
     "openai": {
       "models": {
@@ -203,15 +203,15 @@ Use the keybind `variant_cycle` to quickly switch between variants. [Learn more]
 
 ## Loading models
 
-When Whykido starts up, it checks for models in the following priority order:
+When Cyberstrike starts up, it checks for models in the following priority order:
 
 1. The `--model` or `-m` command line flag. The format is the same as in the config file: `provider_id/model_id`.
 
-2. The model list in the Whykido config.
+2. The model list in the Cyberstrike config.
 
-   ```json title="whykido.json"
+   ```json title="cyberstrike.json"
    {
-     "$schema": "https://whykido.dev/config.json",
+     "$schema": "https://cyberstrike.io/config.json",
      "model": "anthropic/claude-sonnet-4-20250514"
    }
    ```

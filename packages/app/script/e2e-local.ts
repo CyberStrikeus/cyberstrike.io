@@ -58,28 +58,28 @@ const sandbox = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-e2e-"))
 
 const serverEnv = {
   ...process.env,
-  WHYKIDO_DISABLE_SHARE: "true",
-  WHYKIDO_DISABLE_LSP_DOWNLOAD: "true",
-  WHYKIDO_DISABLE_DEFAULT_PLUGINS: "true",
-  WHYKIDO_EXPERIMENTAL_DISABLE_FILEWATCHER: "true",
-  WHYKIDO_TEST_HOME: path.join(sandbox, "home"),
+  CYBERSTRIKE_DISABLE_SHARE: "true",
+  CYBERSTRIKE_DISABLE_LSP_DOWNLOAD: "true",
+  CYBERSTRIKE_DISABLE_DEFAULT_PLUGINS: "true",
+  CYBERSTRIKE_EXPERIMENTAL_DISABLE_FILEWATCHER: "true",
+  CYBERSTRIKE_TEST_HOME: path.join(sandbox, "home"),
   XDG_DATA_HOME: path.join(sandbox, "share"),
   XDG_CACHE_HOME: path.join(sandbox, "cache"),
   XDG_CONFIG_HOME: path.join(sandbox, "config"),
   XDG_STATE_HOME: path.join(sandbox, "state"),
-  WHYKIDO_E2E_PROJECT_DIR: repoDir,
-  WHYKIDO_E2E_SESSION_TITLE: "E2E Session",
-  WHYKIDO_E2E_MESSAGE: "Seeded for UI e2e",
-  WHYKIDO_E2E_MODEL: "opencode/gpt-5-nano",
-  WHYKIDO_CLIENT: "app",
+  CYBERSTRIKE_E2E_PROJECT_DIR: repoDir,
+  CYBERSTRIKE_E2E_SESSION_TITLE: "E2E Session",
+  CYBERSTRIKE_E2E_MESSAGE: "Seeded for UI e2e",
+  CYBERSTRIKE_E2E_MODEL: "opencode/gpt-5-nano",
+  CYBERSTRIKE_CLIENT: "app",
 } satisfies Record<string, string>
 
 const runnerEnv = {
   ...serverEnv,
   PLAYWRIGHT_SERVER_HOST: "127.0.0.1",
   PLAYWRIGHT_SERVER_PORT: String(serverPort),
-  VITE_WHYKIDO_SERVER_HOST: "127.0.0.1",
-  VITE_WHYKIDO_SERVER_PORT: String(serverPort),
+  VITE_CYBERSTRIKE_SERVER_HOST: "127.0.0.1",
+  VITE_CYBERSTRIKE_SERVER_PORT: String(serverPort),
   PLAYWRIGHT_PORT: String(webPort),
 } satisfies Record<string, string>
 

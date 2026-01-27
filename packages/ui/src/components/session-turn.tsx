@@ -6,15 +6,15 @@ import {
   type PermissionRequest,
   TextPart,
   ToolPart,
-} from "@whykido/sdk/v2/client"
-import { type FileDiff } from "@whykido/sdk/v2"
+} from "@cyberstrike/sdk/v2/client"
+import { type FileDiff } from "@cyberstrike/sdk/v2"
 import { useData } from "../context"
 import { useDiffComponent } from "../context/diff"
 import { type UiI18nKey, type UiI18nParams, useI18n } from "../context/i18n"
-import { findLast } from "@whykido/util/array"
-import { getDirectory, getFilename } from "@whykido/util/path"
+import { findLast } from "@cyberstrike/util/array"
+import { getDirectory, getFilename } from "@cyberstrike/util/path"
 
-import { Binary } from "@whykido/util/binary"
+import { Binary } from "@cyberstrike/util/binary"
 import { createEffect, createMemo, createSignal, For, Match, on, onCleanup, ParentProps, Show, Switch } from "solid-js"
 import { DiffChanges } from "./diff-changes"
 import { Message, Part } from "./message-part"

@@ -1,13 +1,13 @@
 import { createEffect, createSignal, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
-import { createSimpleContext } from "@whykido/ui/context"
-import { useDialog } from "@whykido/ui/context/dialog"
+import { createSimpleContext } from "@cyberstrike/ui/context"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
 import { usePlatform } from "@/context/platform"
 import { useSettings } from "@/context/settings"
 import { persisted } from "@/utils/persist"
 import { DialogReleaseNotes, type Highlight } from "@/components/dialog-release-notes"
 
-const CHANGELOG_URL = "https://whykido.dev/changelog.json"
+const CHANGELOG_URL = "https://cyberstrike.io/changelog.json"
 
 type Store = {
   version?: string

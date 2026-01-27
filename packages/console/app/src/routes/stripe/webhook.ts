@@ -1,13 +1,13 @@
-import { Billing } from "@whykido/console-core/billing.js"
+import { Billing } from "@cyberstrike/console-core/billing.js"
 import type { APIEvent } from "@solidjs/start/server"
-import { and, Database, eq, isNull, sql } from "@whykido/console-core/drizzle/index.js"
-import { BillingTable, PaymentTable, SubscriptionTable } from "@whykido/console-core/schema/billing.sql.js"
-import { Identifier } from "@whykido/console-core/identifier.js"
-import { centsToMicroCents } from "@whykido/console-core/util/price.js"
-import { Actor } from "@whykido/console-core/actor.js"
-import { Resource } from "@whykido/console-resource"
-import { UserTable } from "@whykido/console-core/schema/user.sql.js"
-import { AuthTable } from "@whykido/console-core/schema/auth.sql.js"
+import { and, Database, eq, isNull, sql } from "@cyberstrike/console-core/drizzle/index.js"
+import { BillingTable, PaymentTable, SubscriptionTable } from "@cyberstrike/console-core/schema/billing.sql.js"
+import { Identifier } from "@cyberstrike/console-core/identifier.js"
+import { centsToMicroCents } from "@cyberstrike/console-core/util/price.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { Resource } from "@cyberstrike/console-resource"
+import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
+import { AuthTable } from "@cyberstrike/console-core/schema/auth.sql.js"
 
 export async function POST(input: APIEvent) {
   const body = await Billing.stripe().webhooks.constructEventAsync(

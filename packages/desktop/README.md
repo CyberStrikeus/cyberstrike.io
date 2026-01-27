@@ -1,4 +1,4 @@
-# Whykido Desktop
+# Cyberstrike Desktop
 
 Native OpenCode desktop app, built with Tauri v2.
 

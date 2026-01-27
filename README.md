@@ -1,11 +1,11 @@
-# whykido
+# Cyberstrike
 
 AI-powered penetration testing agent framework.
 
 ```
-█░░░█ █░░█ █░░█ █░█  ▀█▀ █▀▀▄ █▀▀█
-█▄█▄█ █▀▀█ █▄▄█ █▀▄   █  █░░█ █░░█
-▀░░░▀ ▀░░▀ ░░░█ ▀░▀  ▀▀▀ ▀▀▀░ ▀▀▀▀
+█▀▀ █░░█ █▀▀▄ █▀▀ █▀▀▄ █▀▀ ▀▀█▀▀ █▀▀▄ ▀█▀ █░█ █▀▀
+█░░ █▄▄█ █▀▀▄ █▀▀ █▄▄▀ ▀▀█ ░░█░░ █▄▄▀ ░█░ █▀▄ █▀▀
+▀▀▀ ░░░█ ▀▀▀░ ▀▀▀ ▀░▀▀ ▀▀▀ ░░▀░░ ▀░▀▀ ▀▀▀ ▀░▀ ▀▀▀
 ```
 
 ---
@@ -14,10 +14,10 @@ AI-powered penetration testing agent framework.
 
 ```bash
 # Install dependencies
-cd packages/whykido
+cd packages/cyberstrike
 bun install
 
-# Run whykido
+# Run cyberstrike
 bun run dev
 
 # Or with a specific agent
@@ -124,14 +124,14 @@ The agents can use various security tools via Bash:
 ## Project Structure
 
 ```
-whykido.dev/
-├── packages/whykido/          # Main CLI package
+cyberstrike.io/
+├── packages/cyberstrike/          # Main CLI package
 │   ├── src/
 │   │   ├── agent/              # Agent definitions
 │   │   │   └── prompt/         # Agent prompts (pentest agents)
 │   │   ├── session/prompt/     # System prompts
 │   │   └── tool/               # Tool implementations
-│   └── bin/whykido             # CLI entry point
+│   └── bin/cyberstrike             # CLI entry point
 ├── knowledge/                  # Security knowledge base
 │   ├── web-application/        # WSTG checklists
 │   │   ├── WSTG-INFO/

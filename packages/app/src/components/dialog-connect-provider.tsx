@@ -1,16 +1,16 @@
-import type { ProviderAuthAuthorization } from "@whykido/sdk/v2/client"
-import { Button } from "@whykido/ui/button"
-import { useDialog } from "@whykido/ui/context/dialog"
-import { Dialog } from "@whykido/ui/dialog"
-import { Icon } from "@whykido/ui/icon"
-import { IconButton } from "@whykido/ui/icon-button"
-import type { IconName } from "@whykido/ui/icons/provider"
-import { List, type ListRef } from "@whykido/ui/list"
-import { ProviderIcon } from "@whykido/ui/provider-icon"
-import { Spinner } from "@whykido/ui/spinner"
-import { TextField } from "@whykido/ui/text-field"
-import { showToast } from "@whykido/ui/toast"
-import { iife } from "@whykido/util/iife"
+import type { ProviderAuthAuthorization } from "@cyberstrike/sdk/v2/client"
+import { Button } from "@cyberstrike/ui/button"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
+import { Dialog } from "@cyberstrike/ui/dialog"
+import { Icon } from "@cyberstrike/ui/icon"
+import { IconButton } from "@cyberstrike/ui/icon-button"
+import type { IconName } from "@cyberstrike/ui/icons/provider"
+import { List, type ListRef } from "@cyberstrike/ui/list"
+import { ProviderIcon } from "@cyberstrike/ui/provider-icon"
+import { Spinner } from "@cyberstrike/ui/spinner"
+import { TextField } from "@cyberstrike/ui/text-field"
+import { showToast } from "@cyberstrike/ui/toast"
+import { iife } from "@cyberstrike/util/iife"
 import { createMemo, Match, onCleanup, onMount, Switch } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { Link } from "@/components/link"
@@ -247,17 +247,17 @@ export function DialogConnectProvider(props: { provider: string }) {
                       <Match when={provider().id === "opencode"}>
                         <div class="flex flex-col gap-4">
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.whykidoZen.line1")}
+                            {language.t("provider.connect.cyberstrikeZen.line1")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.whykidoZen.line2")}
+                            {language.t("provider.connect.cyberstrikeZen.line2")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.whykidoZen.visit.prefix")}
-                            <Link href="https://whykido.dev/zen" tabIndex={-1}>
-                              {language.t("provider.connect.whykidoZen.visit.link")}
+                            {language.t("provider.connect.cyberstrikeZen.visit.prefix")}
+                            <Link href="https://cyberstrike.io/zen" tabIndex={-1}>
+                              {language.t("provider.connect.cyberstrikeZen.visit.link")}
                             </Link>
-                            {language.t("provider.connect.whykidoZen.visit.suffix")}
+                            {language.t("provider.connect.cyberstrikeZen.visit.suffix")}
                           </div>
                         </div>
                       </Match>

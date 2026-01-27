@@ -1,4 +1,4 @@
-import { Resource } from "@whykido/console-resource"
+import { Resource } from "@cyberstrike/console-resource"
 import type { TraceItem } from "@cloudflare/workers-types"
 
 export default {

@@ -1,12 +1,12 @@
 import { createMemo, onCleanup } from "solid-js"
 import { createStore, produce } from "solid-js/store"
-import { createSimpleContext } from "@whykido/ui/context"
-import type { PermissionRequest } from "@whykido/sdk/v2/client"
+import { createSimpleContext } from "@cyberstrike/ui/context"
+import type { PermissionRequest } from "@cyberstrike/sdk/v2/client"
 import { Persist, persisted } from "@/utils/persist"
 import { useGlobalSDK } from "@/context/global-sdk"
 import { useGlobalSync } from "./global-sync"
 import { useParams } from "@solidjs/router"
-import { base64Decode, base64Encode } from "@whykido/util/encode"
+import { base64Decode, base64Encode } from "@cyberstrike/util/encode"
 
 type PermissionRespondFn = (input: {
   sessionID: string

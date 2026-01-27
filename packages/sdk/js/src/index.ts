@@ -1,16 +1,16 @@
 export * from "./client.js"
 export * from "./server.js"
 
-import { createWhykidoClient } from "./client.js"
-import { createWhykidoServer } from "./server.js"
+import { createCyberstrikeClient } from "./client.js"
+import { createCyberstrikeServer } from "./server.js"
 import type { ServerOptions } from "./server.js"
 
-export async function createWhykido(options?: ServerOptions) {
-  const server = await createWhykidoServer({
+export async function createCyberstrike(options?: ServerOptions) {
+  const server = await createCyberstrikeServer({
     ...options,
   })
 
-  const client = createWhykidoClient({
+  const client = createCyberstrikeClient({
     baseUrl: server.url,
   })
 

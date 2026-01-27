@@ -118,13 +118,13 @@ export const dict = {
   "provider.connect.apiKey.label": "Klucz API {{provider}}",
   "provider.connect.apiKey.placeholder": "Klucz API",
   "provider.connect.apiKey.required": "Klucz API jest wymagany",
-  "provider.connect.whykidoZen.line1":
-    "Whykido Zen daje dostęp do wybranego zestawu niezawodnych, zoptymalizowanych modeli dla agentów kodujących.",
-  "provider.connect.whykidoZen.line2":
+  "provider.connect.cyberstrikeZen.line1":
+    "Cyberstrike Zen daje dostęp do wybranego zestawu niezawodnych, zoptymalizowanych modeli dla agentów kodujących.",
+  "provider.connect.cyberstrikeZen.line2":
     "Z jednym kluczem API uzyskasz dostęp do modeli takich jak Claude, GPT, Gemini, GLM i więcej.",
-  "provider.connect.whykidoZen.visit.prefix": "Odwiedź ",
-  "provider.connect.whykidoZen.visit.link": "whykido.dev/zen",
-  "provider.connect.whykidoZen.visit.suffix": ", aby odebrać swój klucz API.",
+  "provider.connect.cyberstrikeZen.visit.prefix": "Odwiedź ",
+  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
+  "provider.connect.cyberstrikeZen.visit.suffix": ", aby odebrać swój klucz API.",
   "provider.connect.oauth.code.visit.prefix": "Odwiedź ",
   "provider.connect.oauth.code.visit.link": "ten link",
   "provider.connect.oauth.code.visit.suffix":
@@ -394,7 +394,7 @@ export const dict = {
   "error.chain.responseBody": "Treść odpowiedzi:\n{{body}}",
   "error.chain.didYouMean": "Czy miałeś na myśli: {{suggestions}}",
   "error.chain.modelNotFound": "Model nie znaleziony: {{provider}}/{{model}}",
-  "error.chain.checkConfig": "Sprawdź swoją konfigurację (whykido.jsonc) nazwy dostawców/modeli",
+  "error.chain.checkConfig": "Sprawdź swoją konfigurację (cyberstrike.jsonc) nazwy dostawców/modeli",
   "error.chain.mcpFailed":
     'Serwer MCP "{{name}}" nie powiódł się. Uwaga, OpenCode nie obsługuje jeszcze uwierzytelniania MCP.',
   "error.chain.providerAuthFailed": "Uwierzytelnianie dostawcy nie powiodło się ({{provider}}): {{message}}",
@@ -510,7 +510,7 @@ export const dict = {
   "sidebar.project.recentSessions": "Ostatnie sesje",
   "sidebar.project.viewAllSessions": "Zobacz wszystkie sesje",
 
-  "app.name.desktop": "Whykido Desktop",
+  "app.name.desktop": "Cyberstrike Desktop",
   "settings.section.desktop": "Pulpit",
   "settings.section.server": "Serwer",
   "settings.tab.general": "Ogólne",

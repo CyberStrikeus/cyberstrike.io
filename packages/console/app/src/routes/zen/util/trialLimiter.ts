@@ -1,7 +1,7 @@
-import { Database, eq, sql } from "@whykido/console-core/drizzle/index.js"
-import { IpTable } from "@whykido/console-core/schema/ip.sql.js"
+import { Database, eq, sql } from "@cyberstrike/console-core/drizzle/index.js"
+import { IpTable } from "@cyberstrike/console-core/schema/ip.sql.js"
 import { UsageInfo } from "./provider/provider"
-import { ZenData } from "@whykido/console-core/model.js"
+import { ZenData } from "@cyberstrike/console-core/model.js"
 
 export function createTrialLimiter(trial: ZenData.Trial | undefined, ip: string, client: string) {
   if (!trial) return

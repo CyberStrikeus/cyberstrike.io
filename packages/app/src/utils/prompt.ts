@@ -1,4 +1,4 @@
-import type { AgentPart as MessageAgentPart, FilePart, Part, TextPart } from "@whykido/sdk/v2"
+import type { AgentPart as MessageAgentPart, FilePart, Part, TextPart } from "@cyberstrike/sdk/v2"
 import type { AgentPart, FileAttachmentPart, ImageAttachmentPart, Prompt } from "@/context/prompt"
 
 type Inline =

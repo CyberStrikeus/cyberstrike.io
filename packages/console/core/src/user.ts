@@ -138,7 +138,7 @@ export namespace User {
             .then((rows) => rows[0]),
         )
 
-        const { InviteEmail } = await import("@whykido/console-mail/InviteEmail.jsx")
+        const { InviteEmail } = await import("@cyberstrike/console-mail/InviteEmail.jsx")
         await AWS.sendEmail({
           to: email,
           subject: `You've been invited to join the ${emailInfo.workspaceName} workspace on OpenCode`,
@@ -146,7 +146,7 @@ export namespace User {
             // @ts-ignore
             InviteEmail({
               inviter: emailInfo.inviterEmail,
-              assetsUrl: `https://whykido.dev/email`,
+              assetsUrl: `https://cyberstrike.io/email`,
               workspaceID: workspaceID,
               workspaceName: emailInfo.workspaceName,
             }),

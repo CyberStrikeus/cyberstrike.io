@@ -51,7 +51,7 @@ const platform: Platform = {
       .then(() => {
         const notification = new Notification(title, {
           body: description ?? "",
-          icon: "https://whykido.dev/favicon-96x96-v3.png",
+          icon: "https://cyberstrike.io/favicon-96x96-v3.png",
         })
         notification.onclick = () => {
           window.focus()

@@ -45,7 +45,7 @@ jobs:
         if: steps.commits.outputs.has_commits == 'true'
         uses: sst/opencode/github@latest
         env:
-          WHYKIDO_API_KEY: ${{ secrets.WHYKIDO_API_KEY }}
+          CYBERSTRIKE_API_KEY: ${{ secrets.CYBERSTRIKE_API_KEY }}
         with:
           model: opencode/gpt-5.2
           agent: docs

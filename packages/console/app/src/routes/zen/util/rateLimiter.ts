@@ -1,5 +1,5 @@
-import { Database, eq, and, sql, inArray } from "@whykido/console-core/drizzle/index.js"
-import { IpRateLimitTable } from "@whykido/console-core/schema/ip.sql.js"
+import { Database, eq, and, sql, inArray } from "@cyberstrike/console-core/drizzle/index.js"
+import { IpRateLimitTable } from "@cyberstrike/console-core/schema/ip.sql.js"
 import { RateLimitError } from "./error"
 import { logger } from "./logger"
 

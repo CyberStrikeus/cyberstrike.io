@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "@whykido/script",
+  "name": "@cyberstrike/script",
   "license": "MIT",
   "devDependencies": {
     "@types/bun": "catalog:"

@@ -122,13 +122,13 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} API key",
   "provider.connect.apiKey.placeholder": "API key",
   "provider.connect.apiKey.required": "API key is required",
-  "provider.connect.whykidoZen.line1":
-    "Whykido Zen gives you access to a curated set of reliable optimized models for coding agents.",
-  "provider.connect.whykidoZen.line2":
+  "provider.connect.cyberstrikeZen.line1":
+    "Cyberstrike Zen gives you access to a curated set of reliable optimized models for coding agents.",
+  "provider.connect.cyberstrikeZen.line2":
     "With a single API key you'll get access to models such as Claude, GPT, Gemini, GLM and more.",
-  "provider.connect.whykidoZen.visit.prefix": "Visit ",
-  "provider.connect.whykidoZen.visit.link": "whykido.dev/zen",
-  "provider.connect.whykidoZen.visit.suffix": " to collect your API key.",
+  "provider.connect.cyberstrikeZen.visit.prefix": "Visit ",
+  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
+  "provider.connect.cyberstrikeZen.visit.suffix": " to collect your API key.",
   "provider.connect.oauth.code.visit.prefix": "Visit ",
   "provider.connect.oauth.code.visit.link": "this link",
   "provider.connect.oauth.code.visit.suffix":
@@ -399,7 +399,7 @@ export const dict = {
   "error.chain.responseBody": "Response body:\n{{body}}",
   "error.chain.didYouMean": "Did you mean: {{suggestions}}",
   "error.chain.modelNotFound": "Model not found: {{provider}}/{{model}}",
-  "error.chain.checkConfig": "Check your config (whykido.jsonc) provider/model names",
+  "error.chain.checkConfig": "Check your config (cyberstrike.jsonc) provider/model names",
   "error.chain.mcpFailed": 'MCP server "{{name}}" failed. Note, OpenCode does not support MCP authentication yet.',
   "error.chain.providerAuthFailed": "Provider authentication failed ({{provider}}): {{message}}",
   "error.chain.providerInitFailed":
@@ -516,7 +516,7 @@ export const dict = {
   "sidebar.project.recentSessions": "Recent sessions",
   "sidebar.project.viewAllSessions": "View all sessions",
 
-  "app.name.desktop": "Whykido Desktop",
+  "app.name.desktop": "Cyberstrike Desktop",
 
   "settings.section.desktop": "Desktop",
   "settings.section.server": "Server",

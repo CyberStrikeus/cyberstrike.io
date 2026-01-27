@@ -1,4 +1,4 @@
-name: whykido
+name: cyberstrike
 
 on:
   issue_comment:
@@ -7,12 +7,12 @@ on:
     types: [created]
 
 jobs:
-  whykido:
+  cyberstrike:
     if: |
       contains(github.event.comment.body, ' /wk') ||
       startsWith(github.event.comment.body, '/wk') ||
-      contains(github.event.comment.body, ' /whykido') ||
-      startsWith(github.event.comment.body, '/whykido')
+      contains(github.event.comment.body, ' /cyberstrike') ||
+      startsWith(github.event.comment.body, '/cyberstrike')
     runs-on: blacksmith-4vcpu-ubuntu-2404
     permissions:
       id-token: write
@@ -25,10 +25,10 @@ jobs:
 
       - uses: ./.github/actions/setup-bun
 
-      - name: Run whykido
+      - name: Run cyberstrike
         uses: anomalyco/opencode/github@latest
         env:
-          WHYKIDO_API_KEY: ${{ secrets.WHYKIDO_API_KEY }}
-          WHYKIDO_PERMISSION: '{"bash": "deny"}'
+          CYBERSTRIKE_API_KEY: ${{ secrets.CYBERSTRIKE_API_KEY }}
+          CYBERSTRIKE_PERMISSION: '{"bash": "deny"}'
         with:
           model: opencode/claude-opus-4-5

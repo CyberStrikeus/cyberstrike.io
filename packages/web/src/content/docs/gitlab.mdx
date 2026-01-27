@@ -1,41 +1,41 @@
 ---
 title: GitLab
-description: Use Whykido in GitLab issues and merge requests.
+description: Use Cyberstrike in GitLab issues and merge requests.
 ---
 
-Whykido integrates with your GitLab workflow through your GitLab CI/CD pipeline or with GitLab Duo.
+Cyberstrike integrates with your GitLab workflow through your GitLab CI/CD pipeline or with GitLab Duo.
 
-In both cases, Whykido will run on your GitLab runners.
+In both cases, Cyberstrike will run on your GitLab runners.
 
 ---
 
 ## GitLab CI
 
-Whykido works in a regular GitLab pipeline. You can build it into a pipeline as a [CI component](https://docs.gitlab.com/ee/ci/components/)
+Cyberstrike works in a regular GitLab pipeline. You can build it into a pipeline as a [CI component](https://docs.gitlab.com/ee/ci/components/)
 
-Here we are using a community-created CI/CD component for Whykido — [nagyv/gitlab-opencode](https://gitlab.com/nagyv/gitlab-opencode).
+Here we are using a community-created CI/CD component for Cyberstrike — [nagyv/gitlab-opencode](https://gitlab.com/nagyv/gitlab-opencode).
 
 ---
 
 ### Features
 
-- **Use custom configuration per job**: Configure Whykido with a custom configuration directory, for example `./config/#custom-directory` to enable or disable functionality per Whykido invocation.
-- **Minimal setup**: The CI component sets up Whykido in the background, you only need to create the Whykido configuration and the initial prompt.
+- **Use custom configuration per job**: Configure Cyberstrike with a custom configuration directory, for example `./config/#custom-directory` to enable or disable functionality per Cyberstrike invocation.
+- **Minimal setup**: The CI component sets up Cyberstrike in the background, you only need to create the Cyberstrike configuration and the initial prompt.
 - **Flexible**: The CI component supports several inputs for customizing its behavior
 
 ---
 
 ### Setup
 
-1. Store your Whykido authentication JSON as a File type CI environment variables under **Settings** > **CI/CD** > **Variables**. Make sure to mark them as "Masked and hidden".
+1. Store your Cyberstrike authentication JSON as a File type CI environment variables under **Settings** > **CI/CD** > **Variables**. Make sure to mark them as "Masked and hidden".
 2. Add the following to your `.gitlab-ci.yml` file.
 
    ```yaml title=".gitlab-ci.yml"
    include:
-     - component: $CI_SERVER_FQDN/nagyv/gitlab-whykido/whykido@2
+     - component: $CI_SERVER_FQDN/nagyv/gitlab-cyberstrike/cyberstrike@2
        inputs:
-         config_dir: ${CI_PROJECT_DIR}/whykido-config
-         auth_json: $WHYKIDO_AUTH_JSON # The variable name for your Whykido authentication JSON
+         config_dir: ${CI_PROJECT_DIR}/cyberstrike-config
+         auth_json: $CYBERSTRIKE_AUTH_JSON # The variable name for your Cyberstrike authentication JSON
          command: optional-custom-command
          message: "Your prompt here"
    ```
@@ -46,23 +46,23 @@ For more inputs and use cases [check out the docs](https://gitlab.com/explore/ca
 
 ## GitLab Duo
 
-Whykido integrates with your GitLab workflow.
-Mention `@whykido` in a comment, and Whykido will execute tasks within your GitLab CI pipeline.
+Cyberstrike integrates with your GitLab workflow.
+Mention `@cyberstrike` in a comment, and Cyberstrike will execute tasks within your GitLab CI pipeline.
 
 ---
 
 ### Features
 
-- **Triage issues**: Ask Whykido to look into an issue and explain it to you.
-- **Fix and implement**: Ask Whykido to fix an issue or implement a feature.
+- **Triage issues**: Ask Cyberstrike to look into an issue and explain it to you.
+- **Fix and implement**: Ask Cyberstrike to fix an issue or implement a feature.
   It will create a new branch and raise a merge request with the changes.
-- **Secure**: Whykido runs on your GitLab runners.
+- **Secure**: Cyberstrike runs on your GitLab runners.
 
 ---
 
 ### Setup
 
-Whykido runs in your GitLab CI/CD pipeline, here's what you'll need to set it up:
+Cyberstrike runs in your GitLab CI/CD pipeline, here's what you'll need to set it up:
 
 :::tip
 Check out the [**GitLab docs**](https://docs.gitlab.com/user/duo_agent_platform/agent_assistant/) for up to date instructions.
@@ -82,8 +82,8 @@ Check out the [**GitLab docs**](https://docs.gitlab.com/user/duo_agent_platform/
     ```yaml
     image: node:22-slim
     commands:
-      - echo "Installing whykido"
-      - npm install --global whykido
+      - echo "Installing cyberstrike"
+      - npm install --global cyberstrike
       - echo "Installing glab"
       - export GITLAB_TOKEN=$GITLAB_TOKEN_OPENCODE
       - apt-get update --quiet && apt-get install --yes curl wget gpg git && rm --recursive --force /var/lib/apt/lists/*
@@ -91,10 +91,10 @@ Check out the [**GitLab docs**](https://docs.gitlab.com/user/duo_agent_platform/
       - apt-get install --yes glab
       - echo "Configuring glab"
       - echo $GITLAB_HOST
-      - echo "Creating Whykido auth configuration"
-      - mkdir --parents ~/.local/share/whykido
+      - echo "Creating Cyberstrike auth configuration"
+      - mkdir --parents ~/.local/share/cyberstrike
       - |
-        cat > ~/.local/share/whykido/auth.json << EOF
+        cat > ~/.local/share/cyberstrike/auth.json << EOF
         {
           "anthropic": {
             "type": "api",
@@ -103,13 +103,13 @@ Check out the [**GitLab docs**](https://docs.gitlab.com/user/duo_agent_platform/
         }
         EOF
       - echo "Configuring git"
-      - git config --global user.email "whykido@gitlab.com"
-      - git config --global user.name "Whykido"
+      - git config --global user.email "cyberstrike@gitlab.com"
+      - git config --global user.name "Cyberstrike"
       - echo "Testing glab"
       - glab issue list
-      - echo "Running Whykido"
+      - echo "Running Cyberstrike"
       - |
-        whykido run "
+        cyberstrike run "
         You are an AI assistant helping with GitLab operations.
 
         Context: $AI_FLOW_CONTEXT
@@ -158,10 +158,10 @@ You can refer to the [GitLab CLI agents docs](https://docs.gitlab.com/user/duo_a
 
 ### Examples
 
-Here are some examples of how you can use Whykido in GitLab.
+Here are some examples of how you can use Cyberstrike in GitLab.
 
 :::tip
-You can configure to use a different trigger phrase than `@whykido`.
+You can configure to use a different trigger phrase than `@cyberstrike`.
 :::
 
 - **Explain an issue**
@@ -169,27 +169,27 @@ You can configure to use a different trigger phrase than `@whykido`.
   Add this comment in a GitLab issue.
 
   ```
-  @whykido explain this issue
+  @cyberstrike explain this issue
   ```
 
-  Whykido will read the issue and reply with a clear explanation.
+  Cyberstrike will read the issue and reply with a clear explanation.
 
 - **Fix an issue**
 
   In a GitLab issue, say:
 
   ```
-  @whykido fix this
+  @cyberstrike fix this
   ```
 
-  Whykido will create a new branch, implement the changes, and open a merge request with the changes.
+  Cyberstrike will create a new branch, implement the changes, and open a merge request with the changes.
 
 - **Review merge requests**
 
   Leave the following comment on a GitLab merge request.
 
   ```
-  @whykido review this merge request
+  @cyberstrike review this merge request
   ```
 
-  Whykido will review the merge request and provide feedback.
+  Cyberstrike will review the merge request and provide feedback.

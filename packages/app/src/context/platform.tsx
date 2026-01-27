@@ -1,4 +1,4 @@
-import { createSimpleContext } from "@whykido/ui/context"
+import { createSimpleContext } from "@cyberstrike/ui/context"
 import { AsyncStorage, SyncStorage } from "@solid-primitives/storage"
 
 export type Platform = {

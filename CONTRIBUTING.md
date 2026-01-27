@@ -36,7 +36,7 @@ Want to take on an issue? Leave a comment and a maintainer may assign it to you 
 
 ### Running against a different directory
 
-By default, `bun dev` runs OpenCode in the `packages/whykido` directory. To run it against a different directory or repository:
+By default, `bun dev` runs OpenCode in the `packages/cyberstrike` directory. To run it against a different directory or repository:
 
 ```bash
 bun dev <directory>
@@ -53,23 +53,23 @@ bun dev .
 To compile a standalone executable:
 
 ```bash
-./packages/whykido/script/build.ts --single
+./packages/cyberstrike/script/build.ts --single
 ```
 
 Then run it with:
 
 ```bash
-./packages/whykido/dist/opencode-<platform>/bin/opencode
+./packages/cyberstrike/dist/opencode-<platform>/bin/opencode
 ```
 
 Replace `<platform>` with your platform (e.g., `darwin-arm64`, `linux-x64`).
 
 - Core pieces:
-  - `packages/whykido`: OpenCode core business logic & server.
-  - `packages/whykido/src/cli/cmd/tui/`: The TUI code, written in SolidJS with [opentui](https://github.com/sst/opentui)
+  - `packages/cyberstrike`: OpenCode core business logic & server.
+  - `packages/cyberstrike/src/cli/cmd/tui/`: The TUI code, written in SolidJS with [opentui](https://github.com/sst/opentui)
   - `packages/app`: The shared web UI components, written in SolidJS
   - `packages/desktop`: The native desktop app, built with Tauri (wraps `packages/app`)
-  - `packages/plugin`: Source for `@whykido/plugin`
+  - `packages/plugin`: Source for `@cyberstrike/plugin`
 
 ### Understanding bun dev vs opencode
 
@@ -146,7 +146,7 @@ This runs `bun run --cwd packages/desktop build` automatically via Tauri’s `be
 > Running the desktop app requires additional Tauri dependencies (Rust toolchain, platform-specific libraries). See the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for setup instructions.
 
 > [!NOTE]
-> If you make changes to the API or SDK (e.g. `packages/whykido/src/server/server.ts`), run `./script/generate.ts` to regenerate the SDK and related files.
+> If you make changes to the API or SDK (e.g. `packages/cyberstrike/src/server/server.ts`), run `./script/generate.ts` to regenerate the SDK and related files.
 
 Please try to follow the [style guide](./AGENTS.md)
 
@@ -162,9 +162,9 @@ Caveats:
 - If you want to run the OpenCode TUI and have breakpoints triggered in the server code, you might need to run `bun dev spawn` instead of
   the usual `bun dev`. This is because `bun dev` runs the server in a worker thread and breakpoints might not work there.
 - If `spawn` does not work for you, you can debug the server separately:
-  - Debug server: `bun run --inspect=ws://localhost:6499/ --cwd packages/whykido ./src/index.ts serve --port 4096`,
+  - Debug server: `bun run --inspect=ws://localhost:6499/ --cwd packages/cyberstrike ./src/index.ts serve --port 4096`,
     then attach TUI with `opencode attach http://localhost:4096`
-  - Debug TUI: `bun run --inspect=ws://localhost:6499/ --cwd packages/whykido --conditions=browser ./src/index.ts`
+  - Debug TUI: `bun run --inspect=ws://localhost:6499/ --cwd packages/cyberstrike --conditions=browser ./src/index.ts`
 
 Other tips and tricks:
 

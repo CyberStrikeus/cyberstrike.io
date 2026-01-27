@@ -1,5 +1,5 @@
 import { defineConfig } from "vite"
-import appPlugin from "@whykido/app/vite"
+import appPlugin from "@cyberstrike/app/vite"
 
 const host = process.env.TAURI_DEV_HOST
 
