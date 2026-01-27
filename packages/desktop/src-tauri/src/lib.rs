@@ -139,9 +139,9 @@ async fn set_default_server_url(app: AppHandle, url: Option<String>) -> Result<(
 }
 
 fn get_sidecar_port() -> u32 {
-    option_env!("OPENCODE_PORT")
+    option_env!("WHYKIDO_PORT")
         .map(|s| s.to_string())
-        .or_else(|| std::env::var("OPENCODE_PORT").ok())
+        .or_else(|| std::env::var("WHYKIDO_PORT").ok())
         .and_then(|port_str| port_str.parse().ok())
         .unwrap_or_else(|| {
             TcpListener::bind("127.0.0.1:0")
@@ -162,8 +162,8 @@ fn spawn_sidecar(app: &AppHandle, hostname: &str, port: u32, password: &str) -> 
         app,
         format!("serve --hostname {hostname} --port {port}").as_str(),
     )
-    .env("OPENCODE_SERVER_USERNAME", "opencode")
-    .env("OPENCODE_SERVER_PASSWORD", password)
+    .env("WHYKIDO_SERVER_USERNAME", "opencode")
+    .env("WHYKIDO_SERVER_PASSWORD", password)
     .spawn()
     .expect("Failed to spawn opencode");
 
@@ -317,8 +317,8 @@ pub fn run() {
                 .inner_size(size.width as f64, size.height as f64)
                 .initialization_script(format!(
                     r#"
-                      window.__OPENCODE__ ??= {{}};
-                      window.__OPENCODE__.updaterEnabled = {updater_enabled};
+                      window.__WHYKIDO__ ??= {{}};
+                      window.__WHYKIDO__.updaterEnabled = {updater_enabled};
                     "#
                 ));
 

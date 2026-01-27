@@ -214,14 +214,14 @@ export default function Enterprise() {
             </div>
             <ul>
               <li>
-                <Faq question="What is OpenCode Enterprise?">
-                  OpenCode Enterprise is for organizations that want to ensure that their code and data never leaves
+                <Faq question="What is Whykido Enterprise?">
+                  Whykido Enterprise is for organizations that want to ensure that their code and data never leaves
                   their infrastructure. It can do this by using a centralized config that integrates with your SSO and
                   internal AI gateway.
                 </Faq>
               </li>
               <li>
-                <Faq question="How do I get started with OpenCode Enterprise?">
+                <Faq question="How do I get started with Whykido Enterprise?">
                   Simply start with an internal trial with your team. OpenCode by default does not store your code or
                   context data, making it easy to get started. Then contact us to discuss pricing and implementation
                   options.
@@ -234,7 +234,7 @@ export default function Enterprise() {
                 </Faq>
               </li>
               <li>
-                <Faq question="Is my data secure with OpenCode Enterprise?">
+                <Faq question="Is my data secure with Whykido Enterprise?">
                   Yes. OpenCode does not store your code or context data. All processing happens locally or through
                   direct API calls to your AI provider. With central config and SSO integration, your data remains
                   secure within your organization's infrastructure.

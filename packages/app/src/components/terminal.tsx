@@ -4,7 +4,7 @@ import { useSDK } from "@/context/sdk"
 import { monoFontFamily, useSettings } from "@/context/settings"
 import { SerializeAddon } from "@/addons/serialize"
 import { LocalPTY } from "@/context/terminal"
-import { resolveThemeVariant, useTheme, withAlpha, type HexColor } from "@opencode-ai/ui/theme"
+import { resolveThemeVariant, useTheme, withAlpha, type HexColor } from "@whykido/ui/theme"
 
 export interface TerminalProps extends ComponentProps<"div"> {
   pty: LocalPTY
@@ -114,9 +114,9 @@ export const Terminal = (props: TerminalProps) => {
     const once = { value: false }
 
     const url = new URL(sdk.url + `/pty/${local.pty.id}/connect?directory=${encodeURIComponent(sdk.directory)}`)
-    if (window.__OPENCODE__?.serverPassword) {
+    if (window.__WHYKIDO__?.serverPassword) {
       url.username = "opencode"
-      url.password = window.__OPENCODE__?.serverPassword
+      url.password = window.__WHYKIDO__?.serverPassword
     }
     const socket = new WebSocket(url)
     ws = socket

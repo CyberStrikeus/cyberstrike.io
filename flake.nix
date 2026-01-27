@@ -1,5 +1,5 @@
 {
-  description = "OpenCode development flake";
+  description = "Whykido development flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -36,11 +36,11 @@
           node_modules = pkgs.callPackage ./nix/node_modules.nix {
             inherit rev;
           };
-          opencode = pkgs.callPackage ./nix/opencode.nix {
+          whykido = pkgs.callPackage ./nix/whykido.nix {
             inherit node_modules;
           };
           desktop = pkgs.callPackage ./nix/desktop.nix {
-            inherit opencode;
+            inherit whykido;
           };
           # nixpkgs cpu naming to bun cpu naming
           cpuMap = { x86_64 = "x64"; aarch64 = "arm64"; };
@@ -61,8 +61,8 @@
           );
         in
         {
-          default = opencode;
-          inherit opencode desktop;
+          default = whykido;
+          inherit whykido desktop;
         } // moduleUpdaters
       );
     };

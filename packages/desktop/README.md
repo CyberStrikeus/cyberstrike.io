@@ -1,4 +1,4 @@
-# OpenCode Desktop
+# Whykido Desktop
 
 Native OpenCode desktop app, built with Tauri v2.
 

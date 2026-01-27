@@ -122,12 +122,12 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} API 키",
   "provider.connect.apiKey.placeholder": "API 키",
   "provider.connect.apiKey.required": "API 키가 필요합니다",
-  "provider.connect.opencodeZen.line1":
-    "OpenCode Zen은 코딩 에이전트를 위해 최적화된 신뢰할 수 있는 엄선된 모델에 대한 액세스를 제공합니다.",
-  "provider.connect.opencodeZen.line2": "단일 API 키로 Claude, GPT, Gemini, GLM 등 다양한 모델에 액세스할 수 있습니다.",
-  "provider.connect.opencodeZen.visit.prefix": "",
-  "provider.connect.opencodeZen.visit.link": "opencode.ai/zen",
-  "provider.connect.opencodeZen.visit.suffix": "를 방문하여 API 키를 받으세요.",
+  "provider.connect.whykidoZen.line1":
+    "Whykido Zen은 코딩 에이전트를 위해 최적화된 신뢰할 수 있는 엄선된 모델에 대한 액세스를 제공합니다.",
+  "provider.connect.whykidoZen.line2": "단일 API 키로 Claude, GPT, Gemini, GLM 등 다양한 모델에 액세스할 수 있습니다.",
+  "provider.connect.whykidoZen.visit.prefix": "",
+  "provider.connect.whykidoZen.visit.link": "whykido.dev/zen",
+  "provider.connect.whykidoZen.visit.suffix": "를 방문하여 API 키를 받으세요.",
   "provider.connect.oauth.code.visit.prefix": "",
   "provider.connect.oauth.code.visit.link": "이 링크",
   "provider.connect.oauth.code.visit.suffix":
@@ -396,7 +396,7 @@ export const dict = {
   "error.chain.responseBody": "응답 본문:\n{{body}}",
   "error.chain.didYouMean": "혹시 {{suggestions}}을(를) 의미하셨나요?",
   "error.chain.modelNotFound": "모델을 찾을 수 없음: {{provider}}/{{model}}",
-  "error.chain.checkConfig": "구성(opencode.json)의 공급자/모델 이름을 확인하세요",
+  "error.chain.checkConfig": "구성(whykido.jsonc)의 공급자/모델 이름을 확인하세요",
   "error.chain.mcpFailed": 'MCP 서버 "{{name}}" 실패. 참고: OpenCode는 아직 MCP 인증을 지원하지 않습니다.',
   "error.chain.providerAuthFailed": "공급자 인증 실패 ({{provider}}): {{message}}",
   "error.chain.providerInitFailed": '공급자 "{{provider}}" 초기화 실패. 자격 증명과 구성을 확인하세요.',
@@ -509,7 +509,7 @@ export const dict = {
   "sidebar.project.recentSessions": "최근 세션",
   "sidebar.project.viewAllSessions": "모든 세션 보기",
 
-  "app.name.desktop": "OpenCode Desktop",
+  "app.name.desktop": "Whykido Desktop",
   "settings.section.desktop": "데스크톱",
   "settings.section.server": "서버",
   "settings.tab.general": "일반",
