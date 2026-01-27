@@ -41,7 +41,7 @@ process.on("uncaughtException", (e) => {
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
-  .scriptName("opencode")
+  .scriptName("whykido")
   .wrap(100)
   .help("help", "show help")
   .alias("help", "h")
@@ -69,8 +69,9 @@ const cli = yargs(hideBin(process.argv))
 
     process.env.AGENT = "1"
     process.env.OPENCODE = "1"
+    process.env.WHYKIDO = "1"
 
-    Log.Default.info("opencode", {
+    Log.Default.info("whykido", {
       version: Installation.VERSION,
       args: process.argv.slice(2),
     })

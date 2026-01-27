@@ -13,6 +13,10 @@ import PROMPT_COMPACTION from "./prompt/compaction.txt"
 import PROMPT_EXPLORE from "./prompt/explore.txt"
 import PROMPT_SUMMARY from "./prompt/summary.txt"
 import PROMPT_TITLE from "./prompt/title.txt"
+import PROMPT_WEB_APPLICATION from "./prompt/web-application.txt"
+import PROMPT_CLOUD_SECURITY from "./prompt/cloud-security.txt"
+import PROMPT_INTERNAL_NETWORK from "./prompt/internal-network.txt"
+import PROMPT_BUG_HUNTER from "./prompt/bug-hunter.txt"
 import { PermissionNext } from "@/permission/next"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@/global"
@@ -196,6 +200,91 @@ export namespace Agent {
           user,
         ),
         prompt: PROMPT_SUMMARY,
+      },
+      // Pentest Agents
+      "web-application": {
+        name: "web-application",
+        description: "Web application security specialist. OWASP Top 10, WSTG methodology, API security testing. Use for web app pentesting, SQL injection, XSS, authentication bypass, and business logic testing.",
+        mode: "primary",
+        native: true,
+        color: "red",
+        prompt: PROMPT_WEB_APPLICATION,
+        permission: PermissionNext.merge(
+          defaults,
+          PermissionNext.fromConfig({
+            question: "allow",
+            bash: "allow",
+            read: "allow",
+            glob: "allow",
+            grep: "allow",
+            webfetch: "allow",
+            websearch: "allow",
+          }),
+          user,
+        ),
+        options: {},
+      },
+      "cloud-security": {
+        name: "cloud-security",
+        description: "Cloud security specialist. AWS, Azure, GCP security testing. IAM policy analysis, S3/Blob security, CIS benchmarks. Use for cloud infrastructure security assessments.",
+        mode: "primary",
+        native: true,
+        color: "cyan",
+        prompt: PROMPT_CLOUD_SECURITY,
+        permission: PermissionNext.merge(
+          defaults,
+          PermissionNext.fromConfig({
+            question: "allow",
+            bash: "allow",
+            read: "allow",
+            glob: "allow",
+            grep: "allow",
+          }),
+          user,
+        ),
+        options: {},
+      },
+      "internal-network": {
+        name: "internal-network",
+        description: "Internal network and Active Directory specialist. Network enumeration, AD attacks, Kerberos exploitation, lateral movement, privilege escalation. Use for internal penetration testing.",
+        mode: "primary",
+        native: true,
+        color: "yellow",
+        prompt: PROMPT_INTERNAL_NETWORK,
+        permission: PermissionNext.merge(
+          defaults,
+          PermissionNext.fromConfig({
+            question: "allow",
+            bash: "allow",
+            read: "allow",
+            glob: "allow",
+            grep: "allow",
+          }),
+          user,
+        ),
+        options: {},
+      },
+      "bug-hunter": {
+        name: "bug-hunter",
+        description: "Bug bounty hunting specialist. Asset discovery, subdomain enumeration, recon automation, vulnerability chaining. Use for bug bounty programs and external attack surface testing.",
+        mode: "primary",
+        native: true,
+        color: "green",
+        prompt: PROMPT_BUG_HUNTER,
+        permission: PermissionNext.merge(
+          defaults,
+          PermissionNext.fromConfig({
+            question: "allow",
+            bash: "allow",
+            read: "allow",
+            glob: "allow",
+            grep: "allow",
+            webfetch: "allow",
+            websearch: "allow",
+          }),
+          user,
+        ),
+        options: {},
       },
     }
 
