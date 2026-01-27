@@ -4,10 +4,10 @@ import { NamedError } from "@opencode-ai/util/error"
 
 export namespace UI {
   const LOGO = [
-    [`                    `, `             ▄     `],
-    [`█▀▀█ █▀▀█ █▀▀█ █▀▀▄ `, `█▀▀▀ █▀▀█ █▀▀█ █▀▀█`],
-    [`█░░█ █░░█ █▀▀▀ █░░█ `, `█░░░ █░░█ █░░█ █▀▀▀`],
-    [`▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀  ▀ `, `▀▀▀▀ ▀▀▀▀ ▀▀▀▀ ▀▀▀▀`],
+    [`                    `, `                   `],
+    [`█░░░█ █░░█ █░░█ █░█ `, `▀█▀ █▀▀▄ █▀▀█      `],
+    [`█▄█▄█ █▀▀█ █▄▄█ █▀▄ `, ` █  █░░█ █░░█      `],
+    [`▀░░░▀ ▀░░▀ ░░░█ ▀░▀ `, `▀▀▀ ▀▀▀░ ▀▀▀▀      `],
   ]
 
   export const CancelledError = NamedError.create("UICancelledError", z.void())
@@ -50,7 +50,7 @@ export namespace UI {
     const result = []
     for (const row of LOGO) {
       if (pad) result.push(pad)
-      result.push(Bun.color("gray", "ansi"))
+      result.push(Bun.color("red", "ansi"))
       result.push(row[0])
       result.push("\x1b[0m")
       result.push(row[1])
