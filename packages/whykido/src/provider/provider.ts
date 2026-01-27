@@ -97,13 +97,13 @@ export namespace Provider {
         },
       }
     },
-    async opencode(input) {
+    async whykido(input) {
       const hasKey = await (async () => {
         const env = Env.all()
         if (input.env.some((item) => env[item])) return true
         if (await Auth.get(input.id)) return true
         const config = await Config.get()
-        if (config.provider?.["opencode"]?.options?.apiKey) return true
+        if (config.provider?.["whykido"]?.options?.apiKey) return true
         return false
       })()
 
@@ -1146,7 +1146,7 @@ export namespace Provider {
         "gemini-2.5-flash",
         "gpt-5-nano",
       ]
-      if (providerID.startsWith("opencode")) {
+      if (providerID.startsWith("whykido")) {
         priority = ["gpt-5-nano"]
       }
       if (providerID.startsWith("github-copilot")) {
@@ -1161,9 +1161,9 @@ export namespace Provider {
     }
 
     // Check if opencode provider is available before using it
-    const opencodeProvider = await state().then((state) => state.providers["opencode"])
-    if (opencodeProvider && opencodeProvider.models["gpt-5-nano"]) {
-      return getModel("opencode", "gpt-5-nano")
+    const whykidoProvider = await state().then((state) => state.providers["whykido"])
+    if (whykidoProvider && whykidoProvider.models["gpt-5-nano"]) {
+      return getModel("whykido", "gpt-5-nano")
     }
 
     return undefined
