@@ -1,6 +1,6 @@
 # whykido
 
-AI-powered penetration testing agent framework, forked from [OpenCode](https://github.com/anomalyco/opencode).
+AI-powered penetration testing agent framework.
 
 ```
 █░░░█ █░░█ █░░█ █░█  ▀█▀ █▀▀▄ █▀▀█
@@ -14,7 +14,7 @@ AI-powered penetration testing agent framework, forked from [OpenCode](https://g
 
 ```bash
 # Install dependencies
-cd packages/opencode
+cd packages/whykido
 bun install
 
 # Run whykido
@@ -125,7 +125,7 @@ The agents can use various security tools via Bash:
 
 ```
 whykido.dev/
-├── packages/opencode/          # Main CLI package
+├── packages/whykido/          # Main CLI package
 │   ├── src/
 │   │   ├── agent/              # Agent definitions
 │   │   │   └── prompt/         # Agent prompts (pentest agents)

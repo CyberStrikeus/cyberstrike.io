@@ -1,18 +1,18 @@
 import { createResource, createEffect, createMemo, onCleanup, Show, createSignal } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
-import { useDialog } from "@opencode-ai/ui/context/dialog"
-import { Dialog } from "@opencode-ai/ui/dialog"
-import { List } from "@opencode-ai/ui/list"
-import { Button } from "@opencode-ai/ui/button"
-import { IconButton } from "@opencode-ai/ui/icon-button"
-import { TextField } from "@opencode-ai/ui/text-field"
+import { useDialog } from "@whykido/ui/context/dialog"
+import { Dialog } from "@whykido/ui/dialog"
+import { List } from "@whykido/ui/list"
+import { Button } from "@whykido/ui/button"
+import { IconButton } from "@whykido/ui/icon-button"
+import { TextField } from "@whykido/ui/text-field"
 import { normalizeServerUrl, serverDisplayName, useServer } from "@/context/server"
 import { usePlatform } from "@/context/platform"
-import { createOpencodeClient } from "@opencode-ai/sdk/v2/client"
+import { createWhykidoClient } from "@whykido/sdk/v2/client"
 import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
-import { DropdownMenu } from "@opencode-ai/ui/dropdown-menu"
-import { Tooltip } from "@opencode-ai/ui/tooltip"
+import { DropdownMenu } from "@whykido/ui/dropdown-menu"
+import { Tooltip } from "@whykido/ui/tooltip"
 import { useGlobalSDK } from "@/context/global-sdk"
 
 type ServerStatus = { healthy: boolean; version?: string }
@@ -40,7 +40,7 @@ interface EditRowProps {
 }
 
 async function checkHealth(url: string, platform: ReturnType<typeof usePlatform>): Promise<ServerStatus> {
-  const sdk = createOpencodeClient({
+  const sdk = createWhykidoClient({
     baseUrl: url,
     fetch: platform.fetch,
     signal: AbortSignal.timeout(3000),

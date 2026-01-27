@@ -58,28 +58,28 @@ const sandbox = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-e2e-"))
 
 const serverEnv = {
   ...process.env,
-  OPENCODE_DISABLE_SHARE: "true",
-  OPENCODE_DISABLE_LSP_DOWNLOAD: "true",
-  OPENCODE_DISABLE_DEFAULT_PLUGINS: "true",
-  OPENCODE_EXPERIMENTAL_DISABLE_FILEWATCHER: "true",
-  OPENCODE_TEST_HOME: path.join(sandbox, "home"),
+  WHYKIDO_DISABLE_SHARE: "true",
+  WHYKIDO_DISABLE_LSP_DOWNLOAD: "true",
+  WHYKIDO_DISABLE_DEFAULT_PLUGINS: "true",
+  WHYKIDO_EXPERIMENTAL_DISABLE_FILEWATCHER: "true",
+  WHYKIDO_TEST_HOME: path.join(sandbox, "home"),
   XDG_DATA_HOME: path.join(sandbox, "share"),
   XDG_CACHE_HOME: path.join(sandbox, "cache"),
   XDG_CONFIG_HOME: path.join(sandbox, "config"),
   XDG_STATE_HOME: path.join(sandbox, "state"),
-  OPENCODE_E2E_PROJECT_DIR: repoDir,
-  OPENCODE_E2E_SESSION_TITLE: "E2E Session",
-  OPENCODE_E2E_MESSAGE: "Seeded for UI e2e",
-  OPENCODE_E2E_MODEL: "opencode/gpt-5-nano",
-  OPENCODE_CLIENT: "app",
+  WHYKIDO_E2E_PROJECT_DIR: repoDir,
+  WHYKIDO_E2E_SESSION_TITLE: "E2E Session",
+  WHYKIDO_E2E_MESSAGE: "Seeded for UI e2e",
+  WHYKIDO_E2E_MODEL: "opencode/gpt-5-nano",
+  WHYKIDO_CLIENT: "app",
 } satisfies Record<string, string>
 
 const runnerEnv = {
   ...serverEnv,
   PLAYWRIGHT_SERVER_HOST: "127.0.0.1",
   PLAYWRIGHT_SERVER_PORT: String(serverPort),
-  VITE_OPENCODE_SERVER_HOST: "127.0.0.1",
-  VITE_OPENCODE_SERVER_PORT: String(serverPort),
+  VITE_WHYKIDO_SERVER_HOST: "127.0.0.1",
+  VITE_WHYKIDO_SERVER_PORT: String(serverPort),
   PLAYWRIGHT_PORT: String(webPort),
 } satisfies Record<string, string>
 

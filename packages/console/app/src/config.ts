@@ -3,27 +3,27 @@
  */
 export const config = {
   // Base URL
-  baseUrl: "https://opencode.ai",
+  baseUrl: "https://whykido.dev",
 
   // GitHub
   github: {
-    repoUrl: "https://github.com/anomalyco/opencode",
+    repoUrl: "https://github.com/whykido/whykido",
     starsFormatted: {
-      compact: "80K",
-      full: "80,000",
+      compact: "0",
+      full: "0",
     },
   },
 
   // Social links
   social: {
-    twitter: "https://x.com/opencode",
-    discord: "https://discord.gg/opencode",
+    twitter: "https://x.com/whykido",
+    discord: "https://whykido.dev/discord",
   },
 
   // Static stats (used on landing page)
   stats: {
-    contributors: "600",
-    commits: "7,500",
-    monthlyUsers: "1.5M",
+    contributors: "0",
+    commits: "0",
+    monthlyUsers: "0",
   },
 } as const

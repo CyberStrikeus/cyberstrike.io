@@ -1,25 +1,25 @@
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
-import { useDialog } from "@opencode-ai/ui/context/dialog"
-import { Popover } from "@opencode-ai/ui/popover"
-import { Tabs } from "@opencode-ai/ui/tabs"
-import { Button } from "@opencode-ai/ui/button"
-import { Switch } from "@opencode-ai/ui/switch"
-import { Icon } from "@opencode-ai/ui/icon"
-import { Tooltip } from "@opencode-ai/ui/tooltip"
+import { useDialog } from "@whykido/ui/context/dialog"
+import { Popover } from "@whykido/ui/popover"
+import { Tabs } from "@whykido/ui/tabs"
+import { Button } from "@whykido/ui/button"
+import { Switch } from "@whykido/ui/switch"
+import { Icon } from "@whykido/ui/icon"
+import { Tooltip } from "@whykido/ui/tooltip"
 import { useSync } from "@/context/sync"
 import { useSDK } from "@/context/sdk"
 import { normalizeServerUrl, serverDisplayName, useServer } from "@/context/server"
 import { usePlatform } from "@/context/platform"
 import { useLanguage } from "@/context/language"
-import { createOpencodeClient } from "@opencode-ai/sdk/v2/client"
+import { createWhykidoClient } from "@whykido/sdk/v2/client"
 import { DialogSelectServer } from "./dialog-select-server"
 
 type ServerStatus = { healthy: boolean; version?: string }
 
 async function checkHealth(url: string, platform: ReturnType<typeof usePlatform>): Promise<ServerStatus> {
-  const sdk = createOpencodeClient({
+  const sdk = createWhykidoClient({
     baseUrl: url,
     fetch: platform.fetch,
     signal: AbortSignal.timeout(3000),

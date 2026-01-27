@@ -1,5 +1,5 @@
-import { createOpencodeClient } from "@opencode-ai/sdk/v2/client"
-import { createSimpleContext } from "@opencode-ai/ui/context"
+import { createWhykidoClient } from "@whykido/sdk/v2/client"
+import { createSimpleContext } from "@whykido/ui/context"
 import { batch, createEffect, createMemo, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { usePlatform } from "@/context/platform"
@@ -95,7 +95,7 @@ export const { use: useServer, provider: ServerProvider } = createSimpleContext(
     const isReady = createMemo(() => ready() && !!state.active)
 
     const check = (url: string) => {
-      const sdk = createOpencodeClient({
+      const sdk = createWhykidoClient({
         baseUrl: url,
         fetch: platform.fetch,
         signal: AbortSignal.timeout(3000),

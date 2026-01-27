@@ -17,11 +17,11 @@ import {
   type VcsInfo,
   type PermissionRequest,
   type QuestionRequest,
-  createOpencodeClient,
-} from "@opencode-ai/sdk/v2/client"
+  createWhykidoClient,
+} from "@whykido/sdk/v2/client"
 import { createStore, produce, reconcile, type SetStoreFunction, type Store } from "solid-js/store"
-import { Binary } from "@opencode-ai/util/binary"
-import { retry } from "@opencode-ai/util/retry"
+import { Binary } from "@whykido/util/binary"
+import { retry } from "@whykido/util/retry"
 import { useGlobalSDK } from "./global-sdk"
 import { ErrorPage, type InitError } from "../pages/error"
 import {
@@ -39,8 +39,8 @@ import {
   Switch,
   Match,
 } from "solid-js"
-import { showToast } from "@opencode-ai/ui/toast"
-import { getFilename } from "@opencode-ai/util/path"
+import { showToast } from "@whykido/ui/toast"
+import { getFilename } from "@whykido/util/path"
 import { usePlatform } from "./platform"
 import { useLanguage } from "@/context/language"
 import { Persist, persisted } from "@/utils/persist"
@@ -139,12 +139,12 @@ function createGlobalSync() {
   const metaCache = new Map<string, MetaCache>()
   const iconCache = new Map<string, IconCache>()
 
-  const sdkCache = new Map<string, ReturnType<typeof createOpencodeClient>>()
+  const sdkCache = new Map<string, ReturnType<typeof createWhykidoClient>>()
   const sdkFor = (directory: string) => {
     const cached = sdkCache.get(directory)
     if (cached) return cached
 
-    const sdk = createOpencodeClient({
+    const sdk = createWhykidoClient({
       baseUrl: globalSDK.url,
       fetch: platform.fetch,
       directory,

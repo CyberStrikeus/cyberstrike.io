@@ -1,16 +1,16 @@
-import type { ProviderAuthAuthorization } from "@opencode-ai/sdk/v2/client"
-import { Button } from "@opencode-ai/ui/button"
-import { useDialog } from "@opencode-ai/ui/context/dialog"
-import { Dialog } from "@opencode-ai/ui/dialog"
-import { Icon } from "@opencode-ai/ui/icon"
-import { IconButton } from "@opencode-ai/ui/icon-button"
-import type { IconName } from "@opencode-ai/ui/icons/provider"
-import { List, type ListRef } from "@opencode-ai/ui/list"
-import { ProviderIcon } from "@opencode-ai/ui/provider-icon"
-import { Spinner } from "@opencode-ai/ui/spinner"
-import { TextField } from "@opencode-ai/ui/text-field"
-import { showToast } from "@opencode-ai/ui/toast"
-import { iife } from "@opencode-ai/util/iife"
+import type { ProviderAuthAuthorization } from "@whykido/sdk/v2/client"
+import { Button } from "@whykido/ui/button"
+import { useDialog } from "@whykido/ui/context/dialog"
+import { Dialog } from "@whykido/ui/dialog"
+import { Icon } from "@whykido/ui/icon"
+import { IconButton } from "@whykido/ui/icon-button"
+import type { IconName } from "@whykido/ui/icons/provider"
+import { List, type ListRef } from "@whykido/ui/list"
+import { ProviderIcon } from "@whykido/ui/provider-icon"
+import { Spinner } from "@whykido/ui/spinner"
+import { TextField } from "@whykido/ui/text-field"
+import { showToast } from "@whykido/ui/toast"
+import { iife } from "@whykido/util/iife"
 import { createMemo, Match, onCleanup, onMount, Switch } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { Link } from "@/components/link"
@@ -247,17 +247,17 @@ export function DialogConnectProvider(props: { provider: string }) {
                       <Match when={provider().id === "opencode"}>
                         <div class="flex flex-col gap-4">
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.opencodeZen.line1")}
+                            {language.t("provider.connect.whykidoZen.line1")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.opencodeZen.line2")}
+                            {language.t("provider.connect.whykidoZen.line2")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.opencodeZen.visit.prefix")}
-                            <Link href="https://opencode.ai/zen" tabIndex={-1}>
-                              {language.t("provider.connect.opencodeZen.visit.link")}
+                            {language.t("provider.connect.whykidoZen.visit.prefix")}
+                            <Link href="https://whykido.dev/zen" tabIndex={-1}>
+                              {language.t("provider.connect.whykidoZen.visit.link")}
                             </Link>
-                            {language.t("provider.connect.opencodeZen.visit.suffix")}
+                            {language.t("provider.connect.whykidoZen.visit.suffix")}
                           </div>
                         </div>
                       </Match>
