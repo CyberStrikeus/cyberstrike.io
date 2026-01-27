@@ -1,5 +1,5 @@
 {
-  description = "Whykido development flake";
+  description = "Cyberstrike development flake";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -36,11 +36,11 @@
           node_modules = pkgs.callPackage ./nix/node_modules.nix {
             inherit rev;
           };
-          whykido = pkgs.callPackage ./nix/whykido.nix {
+          cyberstrike = pkgs.callPackage ./nix/cyberstrike.nix {
             inherit node_modules;
           };
           desktop = pkgs.callPackage ./nix/desktop.nix {
-            inherit whykido;
+            inherit cyberstrike;
           };
           # nixpkgs cpu naming to bun cpu naming
           cpuMap = { x86_64 = "x64"; aarch64 = "arm64"; };
@@ -61,8 +61,8 @@
           );
         in
         {
-          default = whykido;
-          inherit whykido desktop;
+          default = cyberstrike;
+          inherit cyberstrike desktop;
         } // moduleUpdaters
       );
     };

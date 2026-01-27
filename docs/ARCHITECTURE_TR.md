@@ -1,8 +1,8 @@
-# Whykido Mimari Dokümantasyonu (Türkçe)
+# Cyberstrike Mimari Dokümantasyonu (Türkçe)
 
 ## Ne İşe Yarar?
 
-**Whykido**, bir AI kodlama asistanıdır. Terminalden çalışır ve:
+**Cyberstrike**, bir AI kodlama asistanıdır. Terminalden çalışır ve:
 
 1. **Kod yazar/düzenler** - Dosyaları okuyup değiştirebilir
 2. **Komut çalıştırır** - Bash/shell komutları çalıştırabilir
@@ -89,7 +89,7 @@ Güvenlik için izin sistemi:
 
 ## Yapılandırma
 
-`whykido.jsonc` dosyası:
+`cyberstrike.jsonc` dosyası:
 
 ```jsonc
 {
@@ -119,38 +119,38 @@ Güvenlik için izin sistemi:
 
 ```bash
 # TUI başlat (varsayılan)
-whykido
+cyberstrike
 
 # Tek komut çalıştır
-whykido run "README.md dosyasını güncelle"
+cyberstrike run "README.md dosyasını güncelle"
 
 # Web arayüzü
-whykido web
+cyberstrike web
 
 # Model listele
-whykido models
+cyberstrike models
 
 # MCP server yönetimi
-whykido mcp list
+cyberstrike mcp list
 ```
 
 ## Dizin Yapısı
 
 ```
-~/.config/whykido/        # Global yapılandırma
-~/.cache/whykido/         # Cache (modeller, vb.)
-~/.local/state/whykido/   # Log dosyaları
+~/.config/cyberstrike/        # Global yapılandırma
+~/.cache/cyberstrike/         # Cache (modeller, vb.)
+~/.local/state/cyberstrike/   # Log dosyaları
 
-./whykido.jsonc           # Proje yapılandırması
-./.whykido/               # Proje özel ayarlar
-  ├── whykido.jsonc
+./cyberstrike.jsonc           # Proje yapılandırması
+./.cyberstrike/               # Proje özel ayarlar
+  ├── cyberstrike.jsonc
   ├── tool/               # Özel araçlar
   └── agent/              # Özel ajanlar
 ```
 
 ## Özel Araç Oluşturma
 
-`.whykido/tool/my-tool.ts`:
+`.cyberstrike/tool/my-tool.ts`:
 
 ```typescript
 import { z } from "zod"
@@ -185,11 +185,11 @@ export default {
 bun install
 
 # Geliştirme modunda çalıştır
-bun run --cwd packages/whykido --conditions=browser ./src/index.ts
+bun run --cwd packages/cyberstrike --conditions=browser ./src/index.ts
 
 # Test çalıştır
-cd packages/whykido && bun test
+cd packages/cyberstrike && bun test
 
 # Build
-cd packages/whykido && bun run build
+cd packages/cyberstrike && bun run build
 ```

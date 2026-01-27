@@ -4,10 +4,10 @@ import { SDKProvider, useSDK } from "@/context/sdk"
 import { SyncProvider, useSync } from "@/context/sync"
 import { LocalProvider } from "@/context/local"
 
-import { base64Decode } from "@whykido/util/encode"
-import { DataProvider } from "@whykido/ui/context"
-import { iife } from "@whykido/util/iife"
-import type { QuestionAnswer } from "@whykido/sdk/v2"
+import { base64Decode } from "@cyberstrike/util/encode"
+import { DataProvider } from "@cyberstrike/ui/context"
+import { iife } from "@cyberstrike/util/iife"
+import type { QuestionAnswer } from "@cyberstrike/sdk/v2"
 
 export default function Layout(props: ParentProps) {
   const params = useParams()

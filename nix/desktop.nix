@@ -21,11 +21,11 @@
   openssl,
   webkitgtk_4_1,
   gst_all_1,
-  whykido,
+  cyberstrike,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
-  pname = "whykido-desktop";
-  inherit (whykido)
+  pname = "cyberstrike-desktop";
+  inherit (cyberstrike)
     version
     src
     node_modules
@@ -72,7 +72,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     patchShebangs packages/desktop/node_modules
 
     mkdir -p packages/desktop/src-tauri/sidecars
-    cp ${whykido}/bin/whykido packages/desktop/src-tauri/sidecars/whykido-cli-${stdenv.hostPlatform.rust.rustcTarget}
+    cp ${cyberstrike}/bin/cyberstrike packages/desktop/src-tauri/sidecars/cyberstrike-cli-${stdenv.hostPlatform.rust.rustcTarget}
   '';
 
   # see publish-tauri job in .github/workflows/publish.yml
@@ -86,15 +86,15 @@ rustPlatform.buildRustPackage (finalAttrs: {
   # should be removed once binary is renamed or decided otherwise
   # darwin output is a .app bundle so no conflict
   postFixup = lib.optionalString stdenv.hostPlatform.isLinux ''
-    mv $out/bin/Whykido $out/bin/whykido-desktop
-    sed -i 's|^Exec=Whykido$|Exec=whykido-desktop|' $out/share/applications/Whykido.desktop
+    mv $out/bin/Cyberstrike $out/bin/cyberstrike-desktop
+    sed -i 's|^Exec=Cyberstrike$|Exec=cyberstrike-desktop|' $out/share/applications/Cyberstrike.desktop
   '';
 
   meta = {
-    description = "Whykido Desktop App";
-    homepage = "https://whykido.dev";
+    description = "Cyberstrike Desktop App";
+    homepage = "https://cyberstrike.io";
     license = lib.licenses.mit;
-    mainProgram = "whykido-desktop";
-    inherit (whykido.meta) platforms;
+    mainProgram = "cyberstrike-desktop";
+    inherit (cyberstrike.meta) platforms;
   };
 })

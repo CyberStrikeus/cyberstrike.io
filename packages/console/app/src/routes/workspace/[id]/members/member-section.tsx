@@ -3,9 +3,9 @@ import { createEffect, For, Show } from "solid-js"
 import { withActor } from "~/context/auth.withActor"
 import { createStore } from "solid-js/store"
 import styles from "./member-section.module.css"
-import { UserRole } from "@whykido/console-core/schema/user.sql.js"
-import { Actor } from "@whykido/console-core/actor.js"
-import { User } from "@whykido/console-core/user.js"
+import { UserRole } from "@cyberstrike/console-core/schema/user.sql.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { User } from "@cyberstrike/console-core/user.js"
 import { RoleDropdown } from "./role-dropdown"
 
 const listMembers = query(async (workspaceID: string) => {

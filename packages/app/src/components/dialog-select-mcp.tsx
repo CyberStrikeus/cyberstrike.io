@@ -1,9 +1,9 @@
 import { Component, createMemo, createSignal, Show } from "solid-js"
 import { useSync } from "@/context/sync"
 import { useSDK } from "@/context/sdk"
-import { Dialog } from "@whykido/ui/dialog"
-import { List } from "@whykido/ui/list"
-import { Switch } from "@whykido/ui/switch"
+import { Dialog } from "@cyberstrike/ui/dialog"
+import { List } from "@cyberstrike/ui/list"
+import { Switch } from "@cyberstrike/ui/switch"
 import { useLanguage } from "@/context/language"
 
 export const DialogSelectMcp: Component = () => {

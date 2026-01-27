@@ -1329,7 +1329,7 @@ export type KeybindsConfig = {
 export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR"
 
 /**
- * Server configuration for whykido serve and web commands
+ * Server configuration for cyberstrike serve and web commands
  */
 export type ServerConfig = {
   /**
@@ -1635,7 +1635,7 @@ export type Config = {
   }
   server?: ServerConfig
   /**
-   * Command configuration, see https://whykido.dev/docs/commands
+   * Command configuration, see https://cyberstrike.io/docs/commands
    */
   command?: {
     [key: string]: {
@@ -1696,7 +1696,7 @@ export type Config = {
     [key: string]: AgentConfig | undefined
   }
   /**
-   * Agent configuration, see https://whykido.dev/docs/agents
+   * Agent configuration, see https://cyberstrike.io/docs/agents
    */
   agent?: {
     plan?: AgentConfig

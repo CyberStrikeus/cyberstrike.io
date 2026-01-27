@@ -205,7 +205,7 @@ class HeyApiRegistry<T> {
   get(key?: string): T {
     const instance = this.instances.get(key ?? this.defaultKey)
     if (!instance) {
-      throw new Error(`No SDK client found. Create one with "new WhykidoClient()" to fix this error.`)
+      throw new Error(`No SDK client found. Create one with "new CyberstrikeClient()" to fix this error.`)
     }
     return instance
   }
@@ -3145,12 +3145,12 @@ export class Event extends HeyApiClient {
   }
 }
 
-export class WhykidoClient extends HeyApiClient {
-  public static readonly __registry = new HeyApiRegistry<WhykidoClient>()
+export class CyberstrikeClient extends HeyApiClient {
+  public static readonly __registry = new HeyApiRegistry<CyberstrikeClient>()
 
   constructor(args?: { client?: Client; key?: string }) {
     super(args)
-    WhykidoClient.__registry.set(this, args?.key)
+    CyberstrikeClient.__registry.set(this, args?.key)
   }
 
   private _global?: Global

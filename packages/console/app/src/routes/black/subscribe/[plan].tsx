@@ -6,14 +6,14 @@ import { Elements, PaymentElement, useStripe, useElements, AddressElement } from
 import { PlanID, plans } from "../common"
 import { getActor, useAuthSession } from "~/context/auth"
 import { withActor } from "~/context/auth.withActor"
-import { Actor } from "@whykido/console-core/actor.js"
-import { and, Database, eq, isNull } from "@whykido/console-core/drizzle/index.js"
-import { WorkspaceTable } from "@whykido/console-core/schema/workspace.sql.js"
-import { UserTable } from "@whykido/console-core/schema/user.sql.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { and, Database, eq, isNull } from "@cyberstrike/console-core/drizzle/index.js"
+import { WorkspaceTable } from "@cyberstrike/console-core/schema/workspace.sql.js"
+import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
 import { createList } from "solid-list"
 import { Modal } from "~/component/modal"
-import { BillingTable } from "@whykido/console-core/schema/billing.sql.js"
-import { Billing } from "@whykido/console-core/billing.js"
+import { BillingTable } from "@cyberstrike/console-core/schema/billing.sql.js"
+import { Billing } from "@cyberstrike/console-core/billing.js"
 
 const plansMap = Object.fromEntries(plans.map((p) => [p.id, p])) as Record<PlanID, (typeof plans)[number]>
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!)
@@ -152,11 +152,11 @@ function Failure(props: { message: string }) {
 function Success(props: SuccessData) {
   return (
     <div data-slot="success">
-      <p data-slot="title">You're on the Whykido Black waitlist</p>
+      <p data-slot="title">You're on the Cyberstrike Black waitlist</p>
       <dl data-slot="details">
         <div>
           <dt>Subscription plan</dt>
-          <dd>Whykido Black {props.plan}</dd>
+          <dd>Cyberstrike Black {props.plan}</dd>
         </div>
         <div>
           <dt>Amount</dt>
@@ -338,7 +338,7 @@ export default function BlackSubscribe() {
 
   return (
     <>
-      <Title>Subscribe to Whykido Black</Title>
+      <Title>Subscribe to Cyberstrike Black</Title>
       <section data-slot="subscribe-form">
         <div data-slot="form-card">
           <Switch>
@@ -347,7 +347,7 @@ export default function BlackSubscribe() {
             <Match when={true}>
               <>
                 <div data-slot="plan-header">
-                  <p data-slot="title">Subscribe to Whykido Black</p>
+                  <p data-slot="title">Subscribe to Cyberstrike Black</p>
                   <p data-slot="price">
                     <span data-slot="amount">${planData.id}</span> <span data-slot="period">per month</span>
                     <Show when={planData.multiplier}>

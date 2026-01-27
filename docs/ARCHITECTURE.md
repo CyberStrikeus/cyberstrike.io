@@ -1,20 +1,20 @@
-# Whykido Mimari Dokümantasyonu
+# Cyberstrike Mimari Dokümantasyonu
 
 ## Genel Bakış
 
-Whykido, açık kaynaklı bir AI kodlama ajanıdır. Terminal tabanlı arayüzü (TUI), web arayüzü ve masaüstü uygulaması ile kullanılabilir. Birden fazla AI sağlayıcısını (Anthropic, OpenAI, Google, vb.) destekler ve dosya okuma/yazma, bash komutları çalıştırma gibi araçlar sunar.
+Cyberstrike, açık kaynaklı bir AI kodlama ajanıdır. Terminal tabanlı arayüzü (TUI), web arayüzü ve masaüstü uygulaması ile kullanılabilir. Birden fazla AI sağlayıcısını (Anthropic, OpenAI, Google, vb.) destekler ve dosya okuma/yazma, bash komutları çalıştırma gibi araçlar sunar.
 
 ## Dizin Yapısı
 
 ```
-packages/whykido/src/
+packages/cyberstrike/src/
 ├── index.ts              # Ana giriş noktası (CLI parser)
 ├── cli/                  # Komut satırı arayüzü
 │   ├── cmd/              # CLI komutları
 │   │   ├── tui/          # Terminal UI (SolidJS + OpenTUI)
-│   │   ├── run.ts        # `whykido run` komutu
-│   │   ├── serve.ts      # `whykido serve` komutu
-│   │   ├── web.ts        # `whykido web` komutu
+│   │   ├── run.ts        # `cyberstrike run` komutu
+│   │   ├── serve.ts      # `cyberstrike serve` komutu
+│   │   ├── web.ts        # `cyberstrike web` komutu
 │   │   └── ...
 │   └── ui.ts             # UI yardımcıları
 ├── session/              # Oturum yönetimi
@@ -67,12 +67,12 @@ packages/whykido/src/
 ```typescript
 // Yargs ile CLI komutları tanımlanır
 const cli = yargs(hideBin(process.argv))
-  .scriptName("whykido")
+  .scriptName("cyberstrike")
   .command(TuiCommand)      // Varsayılan: TUI başlat
-  .command(RunCommand)      // whykido run "mesaj"
-  .command(ServeCommand)    // whykido serve
-  .command(WebCommand)      // whykido web
-  .command(McpCommand)      // whykido mcp
+  .command(RunCommand)      // cyberstrike run "mesaj"
+  .command(ServeCommand)    // cyberstrike serve
+  .command(WebCommand)      // cyberstrike web
+  .command(McpCommand)      // cyberstrike mcp
   // ...
 ```
 
@@ -80,14 +80,14 @@ const cli = yargs(hideBin(process.argv))
 
 | Komut | Açıklama |
 |-------|----------|
-| `whykido` | TUI (Terminal UI) başlatır |
-| `whykido run [mesaj]` | Tek seferlik komut çalıştırır |
-| `whykido serve` | Headless sunucu başlatır |
-| `whykido web` | Web arayüzü açar |
-| `whykido models` | Mevcut modelleri listeler |
-| `whykido auth` | Kimlik doğrulama yönetimi |
-| `whykido mcp` | MCP server yönetimi |
-| `whykido agent` | Ajan yönetimi |
+| `cyberstrike` | TUI (Terminal UI) başlatır |
+| `cyberstrike run [mesaj]` | Tek seferlik komut çalıştırır |
+| `cyberstrike serve` | Headless sunucu başlatır |
+| `cyberstrike web` | Web arayüzü açar |
+| `cyberstrike models` | Mevcut modelleri listeler |
+| `cyberstrike auth` | Kimlik doğrulama yönetimi |
+| `cyberstrike mcp` | MCP server yönetimi |
+| `cyberstrike agent` | Ajan yönetimi |
 
 ### 1.3 TUI Yapısı
 
@@ -361,7 +361,7 @@ export const Info = z.object({
 
 ### 5.3 Özel Ajan Oluşturma
 
-`whykido.jsonc` veya `.whykido/agent/` dizininde:
+`cyberstrike.jsonc` veya `.cyberstrike/agent/` dizininde:
 
 ```jsonc
 {
@@ -397,7 +397,7 @@ export const Action = z.enum(["allow", "deny", "ask"])
 ### 6.2 İzin Kuralları
 
 ```typescript
-// whykido.jsonc
+// cyberstrike.jsonc
 {
   "permission": {
     "bash": "ask",                    // Tüm bash komutları için sor
@@ -431,9 +431,9 @@ await ctx.ask({
 ### 7.1 Yapılandırma Dosyaları
 
 Arama sırası:
-1. `./whykido.jsonc` (proje dizini)
-2. `./.whykido/whykido.jsonc`
-3. `~/.config/whykido/whykido.jsonc` (global)
+1. `./cyberstrike.jsonc` (proje dizini)
+2. `./.cyberstrike/cyberstrike.jsonc`
+3. `~/.config/cyberstrike/cyberstrike.jsonc` (global)
 
 ### 7.2 Config Schema
 
@@ -470,9 +470,9 @@ export const Config = z.object({
 ### 7.3 Örnek Yapılandırma
 
 ```jsonc
-// whykido.jsonc
+// cyberstrike.jsonc
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "model": "anthropic/claude-sonnet-4-20250514",
 
   "provider": {
@@ -564,10 +564,10 @@ Model Context Protocol, harici araç entegrasyonu sağlar.
 ### 9.2 MCP Komutları
 
 ```bash
-whykido mcp list              # Sunucuları listele
-whykido mcp add <name>        # Sunucu ekle
-whykido mcp remove <name>     # Sunucu kaldır
-whykido mcp auth <name>       # OAuth kimlik doğrulama
+cyberstrike mcp list              # Sunucuları listele
+cyberstrike mcp add <name>        # Sunucu ekle
+cyberstrike mcp remove <name>     # Sunucu kaldır
+cyberstrike mcp auth <name>       # OAuth kimlik doğrulama
 ```
 
 ---
@@ -691,20 +691,20 @@ bun install
 bun run dev
 
 # Veya doğrudan
-bun run --cwd packages/whykido --conditions=browser ./src/index.ts
+bun run --cwd packages/cyberstrike --conditions=browser ./src/index.ts
 ```
 
 ### 12.4 Test
 
 ```bash
-cd packages/whykido
+cd packages/cyberstrike
 bun test
 ```
 
 ### 12.5 Build
 
 ```bash
-cd packages/whykido
+cd packages/cyberstrike
 bun run build
 ```
 
@@ -712,8 +712,8 @@ bun run build
 
 ## 13. Katkıda Bulunma
 
-1. `.whykido/` dizininde özel araçlar oluşturabilirsiniz
-2. `whykido.jsonc` ile yapılandırma özelleştirebilirsiniz
+1. `.cyberstrike/` dizininde özel araçlar oluşturabilirsiniz
+2. `cyberstrike.jsonc` ile yapılandırma özelleştirebilirsiniz
 3. Plugin sistemi ile yeni özellikler ekleyebilirsiniz
 
-Detaylı bilgi için: https://whykido.dev/docs
+Detaylı bilgi için: https://cyberstrike.io/docs

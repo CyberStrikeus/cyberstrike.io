@@ -1,12 +1,12 @@
 const stage = process.env.SST_STAGE || "dev"
 
 export default {
-  url: stage === "production" ? "https://whykido.dev" : `https://${stage}.whykido.dev`,
-  console: stage === "production" ? "https://whykido.dev/auth" : `https://${stage}.whykido.dev/auth`,
-  email: "contact@whykido.dev",
+  url: stage === "production" ? "https://cyberstrike.io" : `https://${stage}.cyberstrike.io`,
+  console: stage === "production" ? "https://cyberstrike.io/auth" : `https://${stage}.cyberstrike.io/auth`,
+  email: "contact@cyberstrike.io",
   socialCard: "https://social-cards.sst.dev",
-  github: "https://github.com/whykido/whykido",
-  discord: "https://whykido.dev/discord",
+  github: "https://github.com/cyberstrike/cyberstrike",
+  discord: "https://cyberstrike.io/discord",
   headerLinks: [
     { name: "Home", url: "/" },
     { name: "Docs", url: "/docs/" },

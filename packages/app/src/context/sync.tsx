@@ -1,11 +1,11 @@
 import { batch, createMemo } from "solid-js"
 import { createStore, produce, reconcile } from "solid-js/store"
-import { Binary } from "@whykido/util/binary"
-import { retry } from "@whykido/util/retry"
-import { createSimpleContext } from "@whykido/ui/context"
+import { Binary } from "@cyberstrike/util/binary"
+import { retry } from "@cyberstrike/util/retry"
+import { createSimpleContext } from "@cyberstrike/ui/context"
 import { useGlobalSync } from "./global-sync"
 import { useSDK } from "./sdk"
-import type { Message, Part } from "@whykido/sdk/v2/client"
+import type { Message, Part } from "@cyberstrike/sdk/v2/client"
 
 const keyFor = (directory: string, id: string) => `${directory}\n${id}`
 

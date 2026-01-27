@@ -1,4 +1,4 @@
-# whykido - Master Penetration Testing Checklist
+# cyberstrike - Master Penetration Testing Checklist
 
 This is the master guide for all penetration testing activities. Each category links to detailed checklists.
 

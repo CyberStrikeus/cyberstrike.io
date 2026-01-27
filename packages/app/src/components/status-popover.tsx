@@ -1,25 +1,25 @@
 import { createEffect, createMemo, createSignal, For, onCleanup, onMount, Show } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
 import { useNavigate } from "@solidjs/router"
-import { useDialog } from "@whykido/ui/context/dialog"
-import { Popover } from "@whykido/ui/popover"
-import { Tabs } from "@whykido/ui/tabs"
-import { Button } from "@whykido/ui/button"
-import { Switch } from "@whykido/ui/switch"
-import { Icon } from "@whykido/ui/icon"
-import { Tooltip } from "@whykido/ui/tooltip"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
+import { Popover } from "@cyberstrike/ui/popover"
+import { Tabs } from "@cyberstrike/ui/tabs"
+import { Button } from "@cyberstrike/ui/button"
+import { Switch } from "@cyberstrike/ui/switch"
+import { Icon } from "@cyberstrike/ui/icon"
+import { Tooltip } from "@cyberstrike/ui/tooltip"
 import { useSync } from "@/context/sync"
 import { useSDK } from "@/context/sdk"
 import { normalizeServerUrl, serverDisplayName, useServer } from "@/context/server"
 import { usePlatform } from "@/context/platform"
 import { useLanguage } from "@/context/language"
-import { createWhykidoClient } from "@whykido/sdk/v2/client"
+import { createCyberstrikeClient } from "@cyberstrike/sdk/v2/client"
 import { DialogSelectServer } from "./dialog-select-server"
 
 type ServerStatus = { healthy: boolean; version?: string }
 
 async function checkHealth(url: string, platform: ReturnType<typeof usePlatform>): Promise<ServerStatus> {
-  const sdk = createWhykidoClient({
+  const sdk = createCyberstrikeClient({
     baseUrl: url,
     fetch: platform.fetch,
     signal: AbortSignal.timeout(3000),

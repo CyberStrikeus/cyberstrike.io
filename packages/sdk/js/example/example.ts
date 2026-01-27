@@ -1,7 +1,7 @@
-import { createWhykidoClient, createWhykidoServer } from "@whykido/sdk"
+import { createCyberstrikeClient, createCyberstrikeServer } from "@cyberstrike/sdk"
 
-const server = await createWhykidoServer()
-const client = createWhykidoClient({ baseUrl: server.url })
+const server = await createCyberstrikeServer()
+const client = createCyberstrikeClient({ baseUrl: server.url })
 
 const input = await Array.fromAsync(new Bun.Glob("packages/core/*.ts").scan())
 

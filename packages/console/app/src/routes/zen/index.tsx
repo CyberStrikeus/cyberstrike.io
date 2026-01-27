@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <main data-page="zen">
       {/*<HttpHeader name="Cache-Control" value="public, max-age=1, s-maxage=3600, stale-while-revalidate=86400" />*/}
-      <Title>Whykido Zen | A curated set of reliable optimized models for coding agents</Title>
+      <Title>Cyberstrike Zen | A curated set of reliable optimized models for coding agents</Title>
       <Link rel="canonical" href={`${config.baseUrl}/zen`} />
       <Meta property="og:image" content="/social-share-zen.png" />
       <Meta name="twitter:image" content="/social-share-zen.png" />
@@ -283,7 +283,7 @@ export default function Home() {
             </div>
             <ul>
               <li>
-                <Faq question="What is Whykido Zen?">
+                <Faq question="What is Cyberstrike Zen?">
                   Zen is a curated set of AI models tested and benchmarked for coding agents created by the team behind
                   OpenCode.
                 </Faq>

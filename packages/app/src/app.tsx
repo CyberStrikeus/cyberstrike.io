@@ -2,14 +2,14 @@ import "@/index.css"
 import { ErrorBoundary, Show, lazy, type ParentProps } from "solid-js"
 import { Router, Route, Navigate } from "@solidjs/router"
 import { MetaProvider } from "@solidjs/meta"
-import { Font } from "@whykido/ui/font"
-import { MarkedProvider } from "@whykido/ui/context/marked"
-import { DiffComponentProvider } from "@whykido/ui/context/diff"
-import { CodeComponentProvider } from "@whykido/ui/context/code"
-import { I18nProvider } from "@whykido/ui/context"
-import { Diff } from "@whykido/ui/diff"
-import { Code } from "@whykido/ui/code"
-import { ThemeProvider } from "@whykido/ui/theme"
+import { Font } from "@cyberstrike/ui/font"
+import { MarkedProvider } from "@cyberstrike/ui/context/marked"
+import { DiffComponentProvider } from "@cyberstrike/ui/context/diff"
+import { CodeComponentProvider } from "@cyberstrike/ui/context/code"
+import { I18nProvider } from "@cyberstrike/ui/context"
+import { Diff } from "@cyberstrike/ui/diff"
+import { Code } from "@cyberstrike/ui/code"
+import { ThemeProvider } from "@cyberstrike/ui/theme"
 import { GlobalSyncProvider } from "@/context/global-sync"
 import { PermissionProvider } from "@/context/permission"
 import { LayoutProvider } from "@/context/layout"
@@ -22,7 +22,7 @@ import { FileProvider } from "@/context/file"
 import { CommentsProvider } from "@/context/comments"
 import { NotificationProvider } from "@/context/notification"
 import { ModelsProvider } from "@/context/models"
-import { DialogProvider } from "@whykido/ui/context/dialog"
+import { DialogProvider } from "@cyberstrike/ui/context/dialog"
 import { CommandProvider } from "@/context/command"
 import { LanguageProvider, useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
@@ -43,7 +43,7 @@ function UiI18nBridge(props: ParentProps) {
 
 declare global {
   interface Window {
-    __WHYKIDO__?: { updaterEnabled?: boolean; serverPassword?: string }
+    __CYBERSTRIKE__?: { updaterEnabled?: boolean; serverPassword?: string }
   }
 }
 
@@ -98,9 +98,9 @@ export function AppInterface(props: { defaultUrl?: string }) {
   const defaultServerUrl = () => {
     if (props.defaultUrl) return props.defaultUrl
     if (stored) return stored
-    if (location.hostname.includes("whykido.dev")) return "http://localhost:4096"
+    if (location.hostname.includes("cyberstrike.io")) return "http://localhost:4096"
     if (import.meta.env.DEV)
-      return `http://${import.meta.env.VITE_WHYKIDO_SERVER_HOST ?? "localhost"}:${import.meta.env.VITE_WHYKIDO_SERVER_PORT ?? "4096"}`
+      return `http://${import.meta.env.VITE_CYBERSTRIKE_SERVER_HOST ?? "localhost"}:${import.meta.env.VITE_CYBERSTRIKE_SERVER_PORT ?? "4096"}`
 
     return window.location.origin
   }

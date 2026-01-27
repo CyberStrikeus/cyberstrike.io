@@ -1,4 +1,4 @@
-import { useFilteredList } from "@whykido/ui/hooks"
+import { useFilteredList } from "@cyberstrike/ui/hooks"
 import {
   createEffect,
   on,
@@ -31,17 +31,17 @@ import { useSDK } from "@/context/sdk"
 import { useNavigate, useParams } from "@solidjs/router"
 import { useSync } from "@/context/sync"
 import { useComments } from "@/context/comments"
-import { FileIcon } from "@whykido/ui/file-icon"
-import { Button } from "@whykido/ui/button"
-import { Icon } from "@whykido/ui/icon"
-import { ProviderIcon } from "@whykido/ui/provider-icon"
-import type { IconName } from "@whykido/ui/icons/provider"
-import { Tooltip, TooltipKeybind } from "@whykido/ui/tooltip"
-import { IconButton } from "@whykido/ui/icon-button"
-import { Select } from "@whykido/ui/select"
-import { getDirectory, getFilename, getFilenameTruncated } from "@whykido/util/path"
-import { useDialog } from "@whykido/ui/context/dialog"
-import { ImagePreview } from "@whykido/ui/image-preview"
+import { FileIcon } from "@cyberstrike/ui/file-icon"
+import { Button } from "@cyberstrike/ui/button"
+import { Icon } from "@cyberstrike/ui/icon"
+import { ProviderIcon } from "@cyberstrike/ui/provider-icon"
+import type { IconName } from "@cyberstrike/ui/icons/provider"
+import { Tooltip, TooltipKeybind } from "@cyberstrike/ui/tooltip"
+import { IconButton } from "@cyberstrike/ui/icon-button"
+import { Select } from "@cyberstrike/ui/select"
+import { getDirectory, getFilename, getFilenameTruncated } from "@cyberstrike/util/path"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
+import { ImagePreview } from "@cyberstrike/ui/image-preview"
 import { ModelSelectorPopover } from "@/components/dialog-select-model"
 import { DialogSelectModelUnpaid } from "@/components/dialog-select-model-unpaid"
 import { useProviders } from "@/hooks/use-providers"
@@ -54,10 +54,10 @@ import { usePermission } from "@/context/permission"
 import { useLanguage } from "@/context/language"
 import { useGlobalSync } from "@/context/global-sync"
 import { usePlatform } from "@/context/platform"
-import { createWhykidoClient, type Message, type Part } from "@whykido/sdk/v2/client"
-import { Binary } from "@whykido/util/binary"
-import { showToast } from "@whykido/ui/toast"
-import { base64Encode } from "@whykido/util/encode"
+import { createCyberstrikeClient, type Message, type Part } from "@cyberstrike/sdk/v2/client"
+import { Binary } from "@cyberstrike/util/binary"
+import { showToast } from "@cyberstrike/ui/toast"
+import { base64Encode } from "@cyberstrike/util/encode"
 
 const ACCEPTED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/gif", "image/webp"]
 const ACCEPTED_FILE_TYPES = [...ACCEPTED_IMAGE_TYPES, "application/pdf"]
@@ -1196,7 +1196,7 @@ export const PromptInput: Component<PromptInputProps> = (props) => {
       }
 
       if (sessionDirectory !== projectDirectory) {
-        client = createWhykidoClient({
+        client = createCyberstrikeClient({
           baseUrl: sdk.url,
           fetch: platform.fetch,
           directory: sessionDirectory,

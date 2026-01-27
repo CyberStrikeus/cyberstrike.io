@@ -1,7 +1,7 @@
 import { createSignal, createEffect, onMount, onCleanup } from "solid-js"
-import { Dialog } from "@whykido/ui/dialog"
-import { Button } from "@whykido/ui/button"
-import { useDialog } from "@whykido/ui/context/dialog"
+import { Dialog } from "@cyberstrike/ui/dialog"
+import { Button } from "@cyberstrike/ui/button"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
 import { useSettings } from "@/context/settings"
 
 export type Highlight = {

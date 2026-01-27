@@ -1,5 +1,5 @@
-import { Select } from "@whykido/ui/select"
-import { showToast } from "@whykido/ui/toast"
+import { Select } from "@cyberstrike/ui/select"
+import { showToast } from "@cyberstrike/ui/toast"
 import { Component, For, createMemo, type JSX } from "solid-js"
 import { useGlobalSync } from "@/context/global-sync"
 import { useLanguage } from "@/context/language"

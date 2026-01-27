@@ -1,18 +1,18 @@
 import { createResource, createEffect, createMemo, onCleanup, Show, createSignal } from "solid-js"
 import { createStore, reconcile } from "solid-js/store"
-import { useDialog } from "@whykido/ui/context/dialog"
-import { Dialog } from "@whykido/ui/dialog"
-import { List } from "@whykido/ui/list"
-import { Button } from "@whykido/ui/button"
-import { IconButton } from "@whykido/ui/icon-button"
-import { TextField } from "@whykido/ui/text-field"
+import { useDialog } from "@cyberstrike/ui/context/dialog"
+import { Dialog } from "@cyberstrike/ui/dialog"
+import { List } from "@cyberstrike/ui/list"
+import { Button } from "@cyberstrike/ui/button"
+import { IconButton } from "@cyberstrike/ui/icon-button"
+import { TextField } from "@cyberstrike/ui/text-field"
 import { normalizeServerUrl, serverDisplayName, useServer } from "@/context/server"
 import { usePlatform } from "@/context/platform"
-import { createWhykidoClient } from "@whykido/sdk/v2/client"
+import { createCyberstrikeClient } from "@cyberstrike/sdk/v2/client"
 import { useNavigate } from "@solidjs/router"
 import { useLanguage } from "@/context/language"
-import { DropdownMenu } from "@whykido/ui/dropdown-menu"
-import { Tooltip } from "@whykido/ui/tooltip"
+import { DropdownMenu } from "@cyberstrike/ui/dropdown-menu"
+import { Tooltip } from "@cyberstrike/ui/tooltip"
 import { useGlobalSDK } from "@/context/global-sdk"
 
 type ServerStatus = { healthy: boolean; version?: string }
@@ -40,7 +40,7 @@ interface EditRowProps {
 }
 
 async function checkHealth(url: string, platform: ReturnType<typeof usePlatform>): Promise<ServerStatus> {
-  const sdk = createWhykidoClient({
+  const sdk = createCyberstrikeClient({
     baseUrl: url,
     fetch: platform.fetch,
     signal: AbortSignal.timeout(3000),

@@ -1,4 +1,4 @@
-import { Resource } from "@whykido/console-resource"
+import { Resource } from "@cyberstrike/console-resource"
 
 export const logger = {
   metric: (values: Record<string, any>) => {

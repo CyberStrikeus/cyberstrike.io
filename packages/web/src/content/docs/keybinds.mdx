@@ -3,11 +3,11 @@ title: Keybinds
 description: Customize your keybinds.
 ---
 
-Whykido has a list of keybinds that you can customize through the Whykido config.
+Cyberstrike has a list of keybinds that you can customize through the Cyberstrike config.
 
-```json title="whykido.json"
+```json title="cyberstrike.json"
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "keybinds": {
     "leader": "ctrl+x",
     "app_exit": "ctrl+c,ctrl+d,<leader>q",
@@ -106,7 +106,7 @@ Whykido has a list of keybinds that you can customize through the Whykido config
 
 ## Leader key
 
-Whykido uses a `leader` key for most keybinds. This avoids conflicts in your terminal.
+Cyberstrike uses a `leader` key for most keybinds. This avoids conflicts in your terminal.
 
 By default, `ctrl+x` is the leader key and most actions require you to first press the leader key and then the shortcut. For example, to start a new session you first press `ctrl+x` and then press `n`.
 
@@ -118,9 +118,9 @@ You don't need to use a leader key for your keybinds but we recommend doing so.
 
 You can disable a keybind by adding the key to your config with a value of "none".
 
-```json title="whykido.json"
+```json title="cyberstrike.json"
 {
-  "$schema": "https://whykido.dev/config.json",
+  "$schema": "https://cyberstrike.io/config.json",
   "keybinds": {
     "session_compact": "none"
   }
@@ -131,7 +131,7 @@ You can disable a keybind by adding the key to your config with a value of "none
 
 ## Desktop prompt shortcuts
 
-The Whykido desktop app prompt input supports common Readline/Emacs-style shortcuts for editing text. These are built-in and currently not configurable via `whykido.json`.
+The Cyberstrike desktop app prompt input supports common Readline/Emacs-style shortcuts for editing text. These are built-in and currently not configurable via `cyberstrike.json`.
 
 | Shortcut | Action                                   |
 | -------- | ---------------------------------------- |

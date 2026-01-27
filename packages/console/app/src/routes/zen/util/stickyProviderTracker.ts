@@ -1,4 +1,4 @@
-import { Resource } from "@whykido/console-resource"
+import { Resource } from "@cyberstrike/console-resource"
 
 export function createStickyTracker(stickyProvider: "strict" | "prefer" | undefined, session: string) {
   if (!stickyProvider) return

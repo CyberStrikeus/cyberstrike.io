@@ -1,5 +1,5 @@
 import { useGlobalSync } from "@/context/global-sync"
-import { base64Decode } from "@whykido/util/encode"
+import { base64Decode } from "@cyberstrike/util/encode"
 import { useParams } from "@solidjs/router"
 import { createMemo } from "solid-js"
 

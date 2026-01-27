@@ -17,20 +17,20 @@ if (!semver.satisfies(process.versions.bun, expectedBunVersionRange)) {
 }
 
 const env = {
-  WHYKIDO_CHANNEL: process.env["WHYKIDO_CHANNEL"],
-  WHYKIDO_BUMP: process.env["WHYKIDO_BUMP"],
-  WHYKIDO_VERSION: process.env["WHYKIDO_VERSION"],
+  CYBERSTRIKE_CHANNEL: process.env["CYBERSTRIKE_CHANNEL"],
+  CYBERSTRIKE_BUMP: process.env["CYBERSTRIKE_BUMP"],
+  CYBERSTRIKE_VERSION: process.env["CYBERSTRIKE_VERSION"],
 }
 const CHANNEL = await (async () => {
-  if (env.WHYKIDO_CHANNEL) return env.WHYKIDO_CHANNEL
-  if (env.WHYKIDO_BUMP) return "latest"
-  if (env.WHYKIDO_VERSION && !env.WHYKIDO_VERSION.startsWith("0.0.0-")) return "latest"
+  if (env.CYBERSTRIKE_CHANNEL) return env.CYBERSTRIKE_CHANNEL
+  if (env.CYBERSTRIKE_BUMP) return "latest"
+  if (env.CYBERSTRIKE_VERSION && !env.CYBERSTRIKE_VERSION.startsWith("0.0.0-")) return "latest"
   return await $`git branch --show-current`.text().then((x) => x.trim())
 })()
 const IS_PREVIEW = CHANNEL !== "latest"
 
 const VERSION = await (async () => {
-  if (env.WHYKIDO_VERSION) return env.WHYKIDO_VERSION
+  if (env.CYBERSTRIKE_VERSION) return env.CYBERSTRIKE_VERSION
   if (IS_PREVIEW) return `0.0.0-${CHANNEL}-${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "")}`
   const version = await fetch("https://registry.npmjs.org/opencode-ai/latest")
     .then((res) => {
@@ -39,7 +39,7 @@ const VERSION = await (async () => {
     })
     .then((data: any) => data.version)
   const [major, minor, patch] = version.split(".").map((x: string) => Number(x) || 0)
-  const t = env.WHYKIDO_BUMP?.toLowerCase()
+  const t = env.CYBERSTRIKE_BUMP?.toLowerCase()
   if (t === "major") return `${major + 1}.0.0`
   if (t === "minor") return `${major}.${minor + 1}.0`
   return `${major}.${minor}.${patch + 1}`

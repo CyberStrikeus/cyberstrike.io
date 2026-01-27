@@ -1,18 +1,18 @@
 import type { APIEvent } from "@solidjs/start/server"
-import { and, Database, eq, isNull, lt, or, sql } from "@whykido/console-core/drizzle/index.js"
-import { KeyTable } from "@whykido/console-core/schema/key.sql.js"
-import { BillingTable, SubscriptionTable, UsageTable } from "@whykido/console-core/schema/billing.sql.js"
-import { centsToMicroCents } from "@whykido/console-core/util/price.js"
-import { getWeekBounds } from "@whykido/console-core/util/date.js"
-import { Identifier } from "@whykido/console-core/identifier.js"
-import { Billing } from "@whykido/console-core/billing.js"
-import { Actor } from "@whykido/console-core/actor.js"
-import { WorkspaceTable } from "@whykido/console-core/schema/workspace.sql.js"
-import { ZenData } from "@whykido/console-core/model.js"
-import { Black, BlackData } from "@whykido/console-core/black.js"
-import { UserTable } from "@whykido/console-core/schema/user.sql.js"
-import { ModelTable } from "@whykido/console-core/schema/model.sql.js"
-import { ProviderTable } from "@whykido/console-core/schema/provider.sql.js"
+import { and, Database, eq, isNull, lt, or, sql } from "@cyberstrike/console-core/drizzle/index.js"
+import { KeyTable } from "@cyberstrike/console-core/schema/key.sql.js"
+import { BillingTable, SubscriptionTable, UsageTable } from "@cyberstrike/console-core/schema/billing.sql.js"
+import { centsToMicroCents } from "@cyberstrike/console-core/util/price.js"
+import { getWeekBounds } from "@cyberstrike/console-core/util/date.js"
+import { Identifier } from "@cyberstrike/console-core/identifier.js"
+import { Billing } from "@cyberstrike/console-core/billing.js"
+import { Actor } from "@cyberstrike/console-core/actor.js"
+import { WorkspaceTable } from "@cyberstrike/console-core/schema/workspace.sql.js"
+import { ZenData } from "@cyberstrike/console-core/model.js"
+import { Black, BlackData } from "@cyberstrike/console-core/black.js"
+import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
+import { ModelTable } from "@cyberstrike/console-core/schema/model.sql.js"
+import { ProviderTable } from "@cyberstrike/console-core/schema/provider.sql.js"
 import { logger } from "./logger"
 import {
   AuthError,
@@ -64,10 +64,10 @@ export async function handler(
     const model = opts.parseModel(url, body)
     const isStream = opts.parseIsStream(url, body)
     const ip = input.request.headers.get("x-real-ip") ?? ""
-    const sessionId = input.request.headers.get("x-whykido-session") ?? ""
-    const requestId = input.request.headers.get("x-whykido-request") ?? ""
-    const projectId = input.request.headers.get("x-whykido-project") ?? ""
-    const ocClient = input.request.headers.get("x-whykido-client") ?? ""
+    const sessionId = input.request.headers.get("x-cyberstrike-session") ?? ""
+    const requestId = input.request.headers.get("x-cyberstrike-request") ?? ""
+    const projectId = input.request.headers.get("x-cyberstrike-project") ?? ""
+    const ocClient = input.request.headers.get("x-cyberstrike-client") ?? ""
     logger.metric({
       is_tream: isStream,
       session: sessionId,
@@ -121,10 +121,10 @@ export async function handler(
           })
           headers.delete("host")
           headers.delete("content-length")
-          headers.delete("x-whykido-request")
-          headers.delete("x-whykido-session")
-          headers.delete("x-whykido-project")
-          headers.delete("x-whykido-client")
+          headers.delete("x-cyberstrike-request")
+          headers.delete("x-cyberstrike-session")
+          headers.delete("x-cyberstrike-project")
+          headers.delete("x-cyberstrike-client")
           return headers
         })(),
         body: reqBody,
@@ -542,11 +542,11 @@ export async function handler(
     const billing = authInfo.billing
     if (!billing.paymentMethodID)
       throw new CreditsError(
-        `No payment method. Add a payment method here: https://whykido.dev/workspace/${authInfo.workspaceID}/billing`,
+        `No payment method. Add a payment method here: https://cyberstrike.io/workspace/${authInfo.workspaceID}/billing`,
       )
     if (billing.balance <= 0)
       throw new CreditsError(
-        `Insufficient balance. Manage your billing here: https://whykido.dev/workspace/${authInfo.workspaceID}/billing`,
+        `Insufficient balance. Manage your billing here: https://cyberstrike.io/workspace/${authInfo.workspaceID}/billing`,
       )
 
     const now = new Date()
@@ -561,7 +561,7 @@ export async function handler(
       currentMonth === billing.timeMonthlyUsageUpdated.getUTCMonth()
     )
       throw new MonthlyLimitError(
-        `Your workspace has reached its monthly spending limit of $${billing.monthlyLimit}. Manage your limits here: https://whykido.dev/workspace/${authInfo.workspaceID}/billing`,
+        `Your workspace has reached its monthly spending limit of $${billing.monthlyLimit}. Manage your limits here: https://cyberstrike.io/workspace/${authInfo.workspaceID}/billing`,
       )
 
     if (
@@ -573,7 +573,7 @@ export async function handler(
       currentMonth === authInfo.user.timeMonthlyUsageUpdated.getUTCMonth()
     )
       throw new UserLimitError(
-        `You have reached your monthly spending limit of $${authInfo.user.monthlyLimit}. Manage your limits here: https://whykido.dev/workspace/${authInfo.workspaceID}/members`,
+        `You have reached your monthly spending limit of $${authInfo.user.monthlyLimit}. Manage your limits here: https://cyberstrike.io/workspace/${authInfo.workspaceID}/members`,
       )
 
     return "balance"

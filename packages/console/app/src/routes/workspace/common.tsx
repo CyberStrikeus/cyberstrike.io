@@ -1,11 +1,11 @@
-import { Resource } from "@whykido/console-resource"
-import { Actor } from "@whykido/console-core/actor.js"
+import { Resource } from "@cyberstrike/console-resource"
+import { Actor } from "@cyberstrike/console-core/actor.js"
 import { action, json, query } from "@solidjs/router"
 import { withActor } from "~/context/auth.withActor"
-import { Billing } from "@whykido/console-core/billing.js"
-import { and, Database, desc, eq, isNull } from "@whykido/console-core/drizzle/index.js"
-import { WorkspaceTable } from "@whykido/console-core/schema/workspace.sql.js"
-import { UserTable } from "@whykido/console-core/schema/user.sql.js"
+import { Billing } from "@cyberstrike/console-core/billing.js"
+import { and, Database, desc, eq, isNull } from "@cyberstrike/console-core/drizzle/index.js"
+import { WorkspaceTable } from "@cyberstrike/console-core/schema/workspace.sql.js"
+import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
 
 export function formatDateForTable(date: Date) {
   const options: Intl.DateTimeFormatOptions = {

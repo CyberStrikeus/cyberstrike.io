@@ -1,7 +1,7 @@
 import { Component, createMemo, type JSX } from "solid-js"
-import { Select } from "@whykido/ui/select"
-import { Switch } from "@whykido/ui/switch"
-import { useTheme, type ColorScheme } from "@whykido/ui/theme"
+import { Select } from "@cyberstrike/ui/select"
+import { Switch } from "@cyberstrike/ui/switch"
+import { useTheme, type ColorScheme } from "@cyberstrike/ui/theme"
 import { useLanguage } from "@/context/language"
 import { useSettings, monoFontFamily } from "@/context/settings"
 import { playSound, SOUND_OPTIONS } from "@/utils/sound"
@@ -128,7 +128,7 @@ export const SettingsGeneral: Component = () => {
               description={
                 <>
                   {language.t("settings.general.row.theme.description")}{" "}
-                  <Link href="https://whykido.dev/docs/themes/">{language.t("common.learnMore")}</Link>
+                  <Link href="https://cyberstrike.io/docs/themes/">{language.t("common.learnMore")}</Link>
                 </>
               }
             >

@@ -1,7 +1,7 @@
 import type { APIEvent } from "@solidjs/start/server"
-import { Database } from "@whykido/console-core/drizzle/index.js"
-import { BenchmarkTable } from "@whykido/console-core/schema/benchmark.sql.js"
-import { Identifier } from "@whykido/console-core/identifier.js"
+import { Database } from "@cyberstrike/console-core/drizzle/index.js"
+import { BenchmarkTable } from "@cyberstrike/console-core/schema/benchmark.sql.js"
+import { Identifier } from "@cyberstrike/console-core/identifier.js"
 
 interface SubmissionBody {
   model: string

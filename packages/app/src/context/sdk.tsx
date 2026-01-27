@@ -1,5 +1,5 @@
-import { createWhykidoClient, type Event } from "@whykido/sdk/v2/client"
-import { createSimpleContext } from "@whykido/ui/context"
+import { createCyberstrikeClient, type Event } from "@cyberstrike/sdk/v2/client"
+import { createSimpleContext } from "@cyberstrike/ui/context"
 import { createGlobalEmitter } from "@solid-primitives/event-bus"
 import { createEffect, createMemo, onCleanup } from "solid-js"
 import { useGlobalSDK } from "./global-sdk"
@@ -13,7 +13,7 @@ export const { use: useSDK, provider: SDKProvider } = createSimpleContext({
 
     const directory = createMemo(() => props.directory)
     const client = createMemo(() =>
-      createWhykidoClient({
+      createCyberstrikeClient({
         baseUrl: globalSDK.url,
         fetch: platform.fetch,
         directory: directory(),

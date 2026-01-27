@@ -1,37 +1,37 @@
-import { FileDiff, Message, Model, Part, Session, SessionStatus, UserMessage } from "@whykido/sdk/v2"
-import { SessionTurn } from "@whykido/ui/session-turn"
-import { SessionReview } from "@whykido/ui/session-review"
-import { DataProvider } from "@whykido/ui/context"
-import { DiffComponentProvider } from "@whykido/ui/context/diff"
-import { CodeComponentProvider } from "@whykido/ui/context/code"
-import { WorkerPoolProvider } from "@whykido/ui/context/worker-pool"
+import { FileDiff, Message, Model, Part, Session, SessionStatus, UserMessage } from "@cyberstrike/sdk/v2"
+import { SessionTurn } from "@cyberstrike/ui/session-turn"
+import { SessionReview } from "@cyberstrike/ui/session-review"
+import { DataProvider } from "@cyberstrike/ui/context"
+import { DiffComponentProvider } from "@cyberstrike/ui/context/diff"
+import { CodeComponentProvider } from "@cyberstrike/ui/context/code"
+import { WorkerPoolProvider } from "@cyberstrike/ui/context/worker-pool"
 import { createAsync, query, useParams } from "@solidjs/router"
 import { createEffect, createMemo, ErrorBoundary, For, Match, Show, Switch } from "solid-js"
 import { Share } from "~/core/share"
-import { Logo, Mark } from "@whykido/ui/logo"
-import { IconButton } from "@whykido/ui/icon-button"
-import { ProviderIcon } from "@whykido/ui/provider-icon"
-import { createDefaultOptions } from "@whykido/ui/pierre"
-import { iife } from "@whykido/util/iife"
-import { Binary } from "@whykido/util/binary"
-import { NamedError } from "@whykido/util/error"
+import { Logo, Mark } from "@cyberstrike/ui/logo"
+import { IconButton } from "@cyberstrike/ui/icon-button"
+import { ProviderIcon } from "@cyberstrike/ui/provider-icon"
+import { createDefaultOptions } from "@cyberstrike/ui/pierre"
+import { iife } from "@cyberstrike/util/iife"
+import { Binary } from "@cyberstrike/util/binary"
+import { NamedError } from "@cyberstrike/util/error"
 import { DateTime } from "luxon"
 import { createStore } from "solid-js/store"
 import z from "zod"
 import NotFound from "../[...404]"
-import { Tabs } from "@whykido/ui/tabs"
-import { MessageNav } from "@whykido/ui/message-nav"
+import { Tabs } from "@cyberstrike/ui/tabs"
+import { MessageNav } from "@cyberstrike/ui/message-nav"
 import { preloadMultiFileDiff, PreloadMultiFileDiffResult } from "@pierre/diffs/ssr"
-import { Diff as SSRDiff } from "@whykido/ui/diff-ssr"
+import { Diff as SSRDiff } from "@cyberstrike/ui/diff-ssr"
 import { clientOnly } from "@solidjs/start"
-import { type IconName } from "@whykido/ui/icons/provider"
+import { type IconName } from "@cyberstrike/ui/icons/provider"
 import { Meta, Title } from "@solidjs/meta"
 import { Base64 } from "js-base64"
 
-const ClientOnlyDiff = clientOnly(() => import("@whykido/ui/diff").then((m) => ({ default: m.Diff })))
-const ClientOnlyCode = clientOnly(() => import("@whykido/ui/code").then((m) => ({ default: m.Code })))
+const ClientOnlyDiff = clientOnly(() => import("@cyberstrike/ui/diff").then((m) => ({ default: m.Diff })))
+const ClientOnlyCode = clientOnly(() => import("@cyberstrike/ui/code").then((m) => ({ default: m.Code })))
 const ClientOnlyWorkerPoolProvider = clientOnly(() =>
-  import("@whykido/ui/pierre/worker").then((m) => ({
+  import("@cyberstrike/ui/pierre/worker").then((m) => ({
     default: (props: { children: any }) => (
       <WorkerPoolProvider pools={m.getWorkerPools()}>{props.children}</WorkerPoolProvider>
     ),
@@ -321,7 +321,7 @@ export default function () {
                           <div class="relative bg-background-stronger w-screen h-screen overflow-hidden flex flex-col">
                             <header class="h-12 px-6 py-2 flex items-center justify-between self-stretch bg-background-base border-b border-border-weak-base">
                               <div class="">
-                                <a href="https://whykido.dev">
+                                <a href="https://cyberstrike.io">
                                   <Mark />
                                 </a>
                               </div>
@@ -335,7 +335,7 @@ export default function () {
                                 />
                                 <IconButton
                                   as={"a"}
-                                  href="https://whykido.dev/discord"
+                                  href="https://cyberstrike.io/discord"
                                   target="_blank"
                                   icon="discord"
                                   variant="ghost"

@@ -18,7 +18,7 @@ export type TuiOptions = {
   config?: Config
 }
 
-export async function createWhykidoServer(options?: ServerOptions) {
+export async function createCyberstrikeServer(options?: ServerOptions) {
   options = Object.assign(
     {
       hostname: "127.0.0.1",
@@ -35,7 +35,7 @@ export async function createWhykidoServer(options?: ServerOptions) {
     signal: options.signal,
     env: {
       ...process.env,
-      WHYKIDO_CONFIG_CONTENT: JSON.stringify(options.config ?? {}),
+      CYBERSTRIKE_CONFIG_CONTENT: JSON.stringify(options.config ?? {}),
     },
   })
 
@@ -90,7 +90,7 @@ export async function createWhykidoServer(options?: ServerOptions) {
   }
 }
 
-export function createWhykidoTui(options?: TuiOptions) {
+export function createCyberstrikeTui(options?: TuiOptions) {
   const args = []
 
   if (options?.project) {
@@ -111,7 +111,7 @@ export function createWhykidoTui(options?: TuiOptions) {
     stdio: "inherit",
     env: {
       ...process.env,
-      WHYKIDO_CONFIG_CONTENT: JSON.stringify(options?.config ?? {}),
+      CYBERSTRIKE_CONFIG_CONTENT: JSON.stringify(options?.config ?? {}),
     },
   })
 
