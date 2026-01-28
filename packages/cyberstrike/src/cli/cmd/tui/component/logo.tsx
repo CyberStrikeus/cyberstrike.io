@@ -78,8 +78,8 @@ export function Logo() {
       <For each={LOGO_LEFT}>
         {(line, index) => (
           <box flexDirection="row" gap={1}>
-            <box flexDirection="row">{renderLine(line, theme.textMuted, false)}</box>
-            <box flexDirection="row">{renderLine(LOGO_RIGHT[index()], theme.text, true)}</box>
+            <box flexDirection="row">{renderLine(line, theme.primary, true)}</box>
+            <box flexDirection="row">{renderLine(LOGO_RIGHT[index()], theme.secondary, true)}</box>
           </box>
         )}
       </For>
