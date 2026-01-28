@@ -54,8 +54,11 @@ export namespace UI {
   }
 
   // True color ANSI escape codes for neon cyberpunk effect
-  const NEON_CYAN = "\x1b[38;2;0;255;255m"     // #00ffff
-  const HOT_MAGENTA = "\x1b[38;2;255;0;255m"   // #ff00ff
+  const NEON_CYAN = "\x1b[38;2;0;255;255m"        // #00ffff
+  const TERMINAL_GREEN = "\x1b[38;2;0;255;136m"   // #00ff88
+  const ELECTRIC_BLUE = "\x1b[38;2;0;170;255m"    // #00aaff
+  const ACCENT_PURPLE = "\x1b[38;2;170;102;255m"  // #aa66ff
+  const DIM = "\x1b[2m"
   const RESET = "\x1b[0m"
 
   export function logo(pad?: string) {
@@ -64,12 +67,41 @@ export namespace UI {
       if (pad) result.push(pad)
       result.push(NEON_CYAN)
       result.push(LOGO_CYBER[i])
-      result.push(HOT_MAGENTA)
+      result.push(TERMINAL_GREEN)
       result.push(LOGO_STRIKE[i])
       result.push(RESET)
       result.push(EOL)
     }
     return result.join("").trimEnd()
+  }
+
+  // Color demo function to show all theme colors
+  export function colorDemo() {
+    const colors = [
+      { name: "NEON CYAN (Primary)", code: NEON_CYAN },
+      { name: "TERMINAL GREEN (Secondary)", code: TERMINAL_GREEN },
+      { name: "ELECTRIC BLUE (Info)", code: ELECTRIC_BLUE },
+      { name: "ACCENT PURPLE", code: ACCENT_PURPLE },
+      { name: "WARNING YELLOW", code: "\x1b[38;2;255;221;0m" },
+      { name: "DANGER RED", code: "\x1b[38;2;255;51;68m" },
+      { name: "ALERT ORANGE", code: "\x1b[38;2;255;153;0m" },
+      { name: "MATRIX GREEN", code: "\x1b[38;2;0;255;102m" },
+    ]
+
+    const result = []
+    result.push(EOL)
+    result.push(NEON_CYAN + "╔══════════════════════════════════════════════╗" + RESET + EOL)
+    result.push(NEON_CYAN + "║" + RESET + "       CYBERSTRIKE COLOR PALETTE DEMO         " + NEON_CYAN + "║" + RESET + EOL)
+    result.push(NEON_CYAN + "╠══════════════════════════════════════════════╣" + RESET + EOL)
+
+    for (const color of colors) {
+      result.push(NEON_CYAN + "║ " + RESET)
+      result.push(color.code + "████ " + color.name.padEnd(38) + RESET)
+      result.push(NEON_CYAN + "║" + RESET + EOL)
+    }
+
+    result.push(NEON_CYAN + "╚══════════════════════════════════════════════╝" + RESET + EOL)
+    return result.join("")
   }
 
   export async function input(prompt: string): Promise<string> {

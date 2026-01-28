@@ -9,6 +9,7 @@ import { ScrapCommand } from "./scrap"
 import { SkillCommand } from "./skill"
 import { SnapshotCommand } from "./snapshot"
 import { AgentCommand } from "./agent"
+import { demo } from "../demo"
 
 export const DebugCommand = cmd({
   command: "debug",
@@ -24,6 +25,7 @@ export const DebugCommand = cmd({
       .command(SnapshotCommand)
       .command(AgentCommand)
       .command(PathsCommand)
+      .command(DemoCommand)
       .command({
         command: "wait",
         describe: "wait indefinitely (for debugging)",
@@ -35,6 +37,14 @@ export const DebugCommand = cmd({
       })
       .demandCommand(),
   async handler() {},
+})
+
+const DemoCommand = cmd({
+  command: "demo",
+  describe: "show color palette and UI demo",
+  async handler() {
+    await demo()
+  },
 })
 
 const PathsCommand = cmd({
