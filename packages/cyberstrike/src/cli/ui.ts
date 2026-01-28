@@ -3,11 +3,18 @@ import { EOL } from "os"
 import { NamedError } from "@cyberstrike/util/error"
 
 export namespace UI {
-  const LOGO = [
-    [`                                              `],
-    [`█▀▀ █░░█ █▀▀▄ █▀▀ █▀▀▄ █▀▀ ▀▀█▀▀ █▀▀▄ ▀█▀ █░█ █▀▀`],
-    [`█░░ █▄▄█ █▀▀▄ █▀▀ █▄▄▀ ▀▀█ ░░█░░ █▄▄▀ ░█░ █▀▄ █▀▀`],
-    [`▀▀▀ ░░░█ ▀▀▀░ ▀▀▀ ▀░▀▀ ▀▀▀ ░░▀░░ ▀░▀▀ ▀▀▀ ▀░▀ ▀▀▀`],
+  // CYBER (left) + STRIKE (right) parts for gradient coloring
+  const LOGO_CYBER = [
+    `                        `,
+    `█▀▀ █░░█ █▀▀▄ █▀▀ █▀▀▄ `,
+    `█░░ █▄▄█ █▀▀▄ █▀▀ █▄▄▀ `,
+    `▀▀▀ ░░░█ ▀▀▀░ ▀▀▀ ▀░▀▀ `,
+  ]
+  const LOGO_STRIKE = [
+    `                      `,
+    `█▀▀ ▀▀█▀▀ █▀▀▄ ▀█▀ █░█ █▀▀`,
+    `▀▀█ ░░█░░ █▄▄▀ ░█░ █▀▄ █▀▀`,
+    `▀▀▀ ░░▀░░ ▀░▀▀ ▀▀▀ ▀░▀ ▀▀▀`,
   ]
 
   export const CancelledError = NamedError.create("UICancelledError", z.void())
@@ -46,14 +53,20 @@ export namespace UI {
     blank = true
   }
 
+  // True color ANSI escape codes for neon cyberpunk effect
+  const NEON_CYAN = "\x1b[38;2;0;255;255m"     // #00ffff
+  const HOT_MAGENTA = "\x1b[38;2;255;0;255m"   // #ff00ff
+  const RESET = "\x1b[0m"
+
   export function logo(pad?: string) {
     const result = []
-    for (const row of LOGO) {
+    for (let i = 0; i < LOGO_CYBER.length; i++) {
       if (pad) result.push(pad)
-      result.push(Bun.color("red", "ansi"))
-      result.push(row[0])
-      result.push("\x1b[0m")
-      result.push(row[1])
+      result.push(NEON_CYAN)
+      result.push(LOGO_CYBER[i])
+      result.push(HOT_MAGENTA)
+      result.push(LOGO_STRIKE[i])
+      result.push(RESET)
       result.push(EOL)
     }
     return result.join("").trimEnd()
