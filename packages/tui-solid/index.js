@@ -1,7 +1,7 @@
 // @bun
 // index.ts
-import { CliRenderer, createCliRenderer, engine as engine2 } from "@opentui/core";
-import { createTestRenderer } from "@opentui/core/testing";
+import { CliRenderer, createCliRenderer, engine as engine2 } from "@cyberstrike/tui-core";
+import { createTestRenderer } from "@cyberstrike/tui-core/testing";
 
 // src/elements/index.ts
 import {
@@ -19,13 +19,13 @@ import {
   TextAttributes,
   TextNodeRenderable as TextNodeRenderable3,
   TextRenderable as TextRenderable3
-} from "@opentui/core";
+} from "@cyberstrike/tui-core";
 
 // src/elements/hooks.ts
 import {
   engine,
   Timeline
-} from "@opentui/core";
+} from "@cyberstrike/tui-core";
 import { createContext, createSignal, onCleanup, onMount, useContext } from "solid-js";
 var RendererContext = createContext();
 var useRenderer = () => {
@@ -122,7 +122,7 @@ import {
   TabSelectRenderableEvents,
   TextNodeRenderable,
   TextRenderable
-} from "@opentui/core";
+} from "@cyberstrike/tui-core";
 import { useContext as useContext2 } from "solid-js";
 
 // src/renderer/universal.js
@@ -726,7 +726,7 @@ function Dynamic(props) {
   return createDynamic(() => props.component, others);
 }
 // src/elements/slot.ts
-import { BaseRenderable as BaseRenderable2, isTextNodeRenderable as isTextNodeRenderable2, TextNodeRenderable as TextNodeRenderable2, TextRenderable as TextRenderable2, Yoga } from "@opentui/core";
+import { BaseRenderable as BaseRenderable2, isTextNodeRenderable as isTextNodeRenderable2, TextNodeRenderable as TextNodeRenderable2, TextRenderable as TextRenderable2, Yoga } from "@cyberstrike/tui-core";
 
 class SlotBaseRenderable extends BaseRenderable2 {
   constructor(id) {

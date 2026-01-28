@@ -1,4 +1,4 @@
-import { Renderable } from "@opentui/core"
+import { Renderable } from "@cyberstrike/tui-core"
 import type {
   AsciiFontProps,
   BoxProps,
