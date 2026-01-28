@@ -1,51 +1,50 @@
 {
   "$schema": "https://cyberstrike.io/theme.json",
   "defs": {
-    "voidBlack": "#0a0a0f",
-    "darkSpace": "#0d0d14",
-    "deepSpace": "#12121a",
-    "cosmicDark": "#181820",
-    "nebulaDark": "#1e1e28",
-    "starDust": "#282832",
-    "cosmicGray": "#3a3a48",
-    "silverMist": "#5a5a6e",
-    "moonGlow": "#8888a0",
-    "starLight": "#c8c8e0",
-    "pureLight": "#f0f0ff",
+    "voidBlack": "#050508",
+    "darkSpace": "#0a0a10",
+    "deepSpace": "#0f0f18",
+    "cosmicDark": "#141420",
+    "nebulaDark": "#1a1a28",
+    "starDust": "#242432",
+    "cosmicGray": "#32324a",
+    "silverMist": "#4a4a68",
+    "moonGlow": "#7878a0",
+    "starLight": "#b8b8d8",
+    "pureLight": "#e8e8ff",
 
     "neonCyan": "#00ffff",
-    "electricBlue": "#00d4ff",
-    "cyberBlue": "#0099ff",
-    "deepCyan": "#00b8b8",
+    "electricCyan": "#00e5ff",
+    "cyberCyan": "#00ccdd",
+    "deepCyan": "#00a0b0",
 
-    "hotMagenta": "#ff00ff",
-    "neonPink": "#ff3399",
-    "cyberPink": "#ff66b2",
-    "softPink": "#ff99cc",
-
+    "terminalGreen": "#00ff88",
     "matrixGreen": "#00ff66",
     "neonGreen": "#39ff14",
-    "cyberGreen": "#66ff99",
-    "limeGlow": "#b3ff66",
+    "cyberGreen": "#00dd55",
 
-    "plasmaPurple": "#9933ff",
-    "electricPurple": "#cc66ff",
-    "cosmicPurple": "#b366ff",
+    "electricBlue": "#00aaff",
+    "cyberBlue": "#0088dd",
+    "deepBlue": "#0066aa",
 
-    "warningYellow": "#ffff00",
+    "accentPurple": "#aa66ff",
+    "electricPurple": "#8844ee",
+    "deepPurple": "#6633bb",
+
+    "warningYellow": "#ffdd00",
     "alertOrange": "#ff9900",
     "fireOrange": "#ff6600",
 
-    "dangerRed": "#ff3333",
-    "bloodRed": "#ff0033",
-    "alertRed": "#ff4444",
+    "dangerRed": "#ff3344",
+    "bloodRed": "#ee0033",
+    "alertRed": "#ff4455",
 
-    "lightBg": "#f5f5fa",
-    "lightPanel": "#eaeaf0",
-    "lightElement": "#e0e0e8",
-    "lightBorder": "#c8c8d4",
-    "lightText": "#1a1a24",
-    "lightMuted": "#6e6e80"
+    "lightBg": "#f0f2f8",
+    "lightPanel": "#e4e6f0",
+    "lightElement": "#d8dae8",
+    "lightBorder": "#c0c4d8",
+    "lightText": "#181828",
+    "lightMuted": "#606080"
   },
   "theme": {
     "primary": {
@@ -53,11 +52,11 @@
       "light": "cyberBlue"
     },
     "secondary": {
-      "dark": "hotMagenta",
-      "light": "neonPink"
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
     },
     "accent": {
-      "dark": "plasmaPurple",
+      "dark": "accentPurple",
       "light": "electricPurple"
     },
     "error": {
@@ -137,11 +136,11 @@
       "light": "#d63333"
     },
     "diffAddedBg": {
-      "dark": "#0a1f14",
+      "dark": "#061a10",
       "light": "#e0f5e8"
     },
     "diffRemovedBg": {
-      "dark": "#1f0a0f",
+      "dark": "#1a060a",
       "light": "#f5e0e4"
     },
     "diffContextBg": {
@@ -153,11 +152,11 @@
       "light": "lightBorder"
     },
     "diffAddedLineNumberBg": {
-      "dark": "#081810",
+      "dark": "#04140c",
       "light": "#d0e8d8"
     },
     "diffRemovedLineNumberBg": {
-      "dark": "#18080c",
+      "dark": "#140408",
       "light": "#e8d0d4"
     },
     "markdownText": {
@@ -169,12 +168,12 @@
       "light": "cyberBlue"
     },
     "markdownLink": {
-      "dark": "hotMagenta",
-      "light": "neonPink"
+      "dark": "electricBlue",
+      "light": "cyberBlue"
     },
     "markdownLinkText": {
-      "dark": "cyberPink",
-      "light": "neonPink"
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
     },
     "markdownCode": {
       "dark": "matrixGreen",
@@ -185,12 +184,12 @@
       "light": "lightMuted"
     },
     "markdownEmph": {
-      "dark": "alertOrange",
-      "light": "fireOrange"
-    },
-    "markdownStrong": {
       "dark": "warningYellow",
       "light": "alertOrange"
+    },
+    "markdownStrong": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
     },
     "markdownHorizontalRule": {
       "dark": "cosmicGray",
@@ -201,16 +200,16 @@
       "light": "cyberBlue"
     },
     "markdownListEnumeration": {
-      "dark": "electricPurple",
-      "light": "plasmaPurple"
+      "dark": "accentPurple",
+      "light": "electricPurple"
     },
     "markdownImage": {
-      "dark": "hotMagenta",
-      "light": "neonPink"
+      "dark": "electricBlue",
+      "light": "cyberBlue"
     },
     "markdownImageText": {
-      "dark": "cyberPink",
-      "light": "neonPink"
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
     },
     "markdownCodeBlock": {
       "dark": "pureLight",
@@ -221,11 +220,11 @@
       "light": "lightMuted"
     },
     "syntaxKeyword": {
-      "dark": "hotMagenta",
-      "light": "neonPink"
+      "dark": "neonCyan",
+      "light": "cyberBlue"
     },
     "syntaxFunction": {
-      "dark": "neonCyan",
+      "dark": "electricBlue",
       "light": "cyberBlue"
     },
     "syntaxVariable": {
@@ -233,7 +232,7 @@
       "light": "lightText"
     },
     "syntaxString": {
-      "dark": "matrixGreen",
+      "dark": "terminalGreen",
       "light": "cyberGreen"
     },
     "syntaxNumber": {
@@ -241,12 +240,12 @@
       "light": "fireOrange"
     },
     "syntaxType": {
-      "dark": "electricPurple",
-      "light": "plasmaPurple"
+      "dark": "accentPurple",
+      "light": "electricPurple"
     },
     "syntaxOperator": {
-      "dark": "electricBlue",
-      "light": "cyberBlue"
+      "dark": "electricCyan",
+      "light": "cyberCyan"
     },
     "syntaxPunctuation": {
       "dark": "starLight",
