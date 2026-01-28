@@ -121,8 +121,8 @@ export function SessionHeader() {
     platform.openLink(url)
   }
 
-  const centerMount = createMemo(() => document.getElementById("opencode-titlebar-center"))
-  const rightMount = createMemo(() => document.getElementById("opencode-titlebar-right"))
+  const centerMount = createMemo(() => document.getElementById("cyberstrike-titlebar-center"))
+  const rightMount = createMemo(() => document.getElementById("cyberstrike-titlebar-right"))
 
   return (
     <>

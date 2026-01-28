@@ -8,7 +8,7 @@ import type { AssistantMessage, Session } from "@cyberstrike/sdk/v2"
 import { useCommandDialog } from "@tui/component/dialog-command"
 import { useKeybind } from "../../context/keybind"
 import { Installation } from "@/installation"
-import { useTerminalDimensions } from "@opentui/solid"
+import { useTerminalDimensions } from "@cyberstrike/tui-solid"
 
 const Title = (props: { session: Accessor<Session> }) => {
   const { theme } = useTheme()

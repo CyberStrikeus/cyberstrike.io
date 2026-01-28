@@ -240,7 +240,7 @@ export namespace Provider {
           }
 
           // Region resolution precedence (highest to lowest):
-          // 1. options.region from opencode.json provider config
+          // 1. options.region from cyberstrike.json provider config
           // 2. defaultRegion from AWS_REGION environment variable
           // 3. Default "us-east-1" (baked into defaultRegion)
           const region = options?.region ?? defaultRegion
@@ -501,7 +501,7 @@ export namespace Provider {
         autoload: false,
         options: {
           headers: {
-            "X-Cerebras-3rd-Party-Integration": "opencode",
+            "X-Cerebras-3rd-Party-Integration": "cyberstrike",
           },
         },
       }
@@ -662,8 +662,8 @@ export namespace Provider {
   }
 
   export function fromModelsDevProvider(provider: ModelsDev.Provider): Info {
-    // Rebrand OpenCode Zen to Cyberstrike Zen
-    const name = provider.name === "OpenCode Zen" ? "Cyberstrike Zen" : provider.name
+    // Rebrand Cyberstrike Zen to Cyberstrike Zen
+    const name = provider.name === "Cyberstrike Zen" ? "Cyberstrike Zen" : provider.name
     return {
       id: provider.id,
       source: "custom",
@@ -1160,7 +1160,7 @@ export namespace Provider {
       }
     }
 
-    // Check if opencode provider is available before using it
+    // Check if cyberstrike provider is available before using it
     const cyberstrikeProvider = await state().then((state) => state.providers["cyberstrike"])
     if (cyberstrikeProvider && cyberstrikeProvider.models["gpt-5-nano"]) {
       return getModel("cyberstrike", "gpt-5-nano")

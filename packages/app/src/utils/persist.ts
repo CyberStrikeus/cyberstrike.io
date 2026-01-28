@@ -15,8 +15,8 @@ type PersistTarget = {
 }
 
 const LEGACY_STORAGE = "default.dat"
-const GLOBAL_STORAGE = "opencode.global.dat"
-const LOCAL_PREFIX = "opencode."
+const GLOBAL_STORAGE = "cyberstrike.global.dat"
+const LOCAL_PREFIX = "cyberstrike."
 const fallback = { disabled: false }
 const cache = new Map<string, string>()
 
@@ -139,7 +139,7 @@ function parse(value: string) {
 function workspaceStorage(dir: string) {
   const head = dir.slice(0, 12) || "workspace"
   const sum = checksum(dir) ?? "0"
-  return `opencode.workspace.${head}.${sum}.dat`
+  return `cyberstrike.workspace.${head}.${sum}.dat`
 }
 
 function localStorageWithPrefix(prefix: string): SyncStorage {

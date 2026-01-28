@@ -105,10 +105,10 @@ bun run dev --agent internal-network
 
 ## Architecture
 
-Based on OpenCode CLI:
+Based on Cyberstrike CLI:
 - **Bun** runtime for fast execution
 - **TypeScript** for type safety
-- **Solid.js + OpenTUI** for terminal UI
+- **Solid.js + CyberstrikeTUI** for terminal UI
 - **Vercel AI SDK** for multi-provider LLM support
 - **MCP integration** for tool extensions
 
@@ -147,4 +147,4 @@ MIT
 
 ---
 
-Based on [OpenCode](https://github.com/anomalyco/opencode) - The open source AI coding agent.
+Based on [Cyberstrike](https://github.com/cyberstrike/cyberstrike) - The open source AI coding agent.

@@ -57,7 +57,7 @@ const startEventStream = (directory: string) => {
   }) as typeof globalThis.fetch
 
   const sdk = createCyberstrikeClient({
-    baseUrl: "http://opencode.internal",
+    baseUrl: "http://cyberstrike.internal",
     directory,
     fetch: fetchFn,
     signal,
@@ -147,6 +147,6 @@ Rpc.listen(rpc)
 function getAuthorizationHeader(): string | undefined {
   const password = Flag.CYBERSTRIKE_SERVER_PASSWORD
   if (!password) return undefined
-  const username = Flag.CYBERSTRIKE_SERVER_USERNAME ?? "opencode"
+  const username = Flag.CYBERSTRIKE_SERVER_USERNAME ?? "cyberstrike"
   return `Basic ${btoa(`${username}:${password}`)}`
 }

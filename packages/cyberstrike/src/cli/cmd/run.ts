@@ -343,7 +343,7 @@ export const RunCommand = cmd({
         const request = new Request(input, init)
         return Server.App().fetch(request)
       }) as typeof globalThis.fetch
-      const sdk = createCyberstrikeClient({ baseUrl: "http://opencode.internal", fetch: fetchFn })
+      const sdk = createCyberstrikeClient({ baseUrl: "http://cyberstrike.internal", fetch: fetchFn })
 
       if (args.command) {
         const exists = await Command.get(args.command)

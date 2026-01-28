@@ -3,15 +3,15 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="شعار OpenCode">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="شعار Cyberstrike">
     </picture>
   </a>
 </p>
 <p align="center">وكيل برمجة بالذكاء الاصطناعي مفتوح المصدر.</p>
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
-  <a href="https://www.npmjs.com/package/opencode-ai"><img alt="npm" src="https://img.shields.io/npm/v/opencode-ai?style=flat-square" /></a>
-  <a href="https://github.com/anomalyco/opencode/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/anomalyco/opencode/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
+  <a href="https://github.com/cyberstrike/cyberstrike/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -32,7 +32,7 @@
   <a href="README.br.md">Português (Brasil)</a>
 </p>
 
-[![OpenCode Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
+[![Cyberstrike Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
 
 ---
 
@@ -43,14 +43,14 @@
 curl -fsSL https://cyberstrike.io/install | bash
 
 # مديري الحزم
-npm i -g opencode-ai@latest        # او bun/pnpm/yarn
-scoop install opencode             # Windows
-choco install opencode             # Windows
-brew install anomalyco/tap/opencode # macOS و Linux (موصى به، دائما محدث)
-brew install opencode              # macOS و Linux (صيغة brew الرسمية، تحديث اقل)
-paru -S opencode-bin               # Arch Linux
-mise use -g opencode               # اي نظام
-nix run nixpkgs#opencode           # او github:anomalyco/opencode لاحدث فرع dev
+npm i -g cyberstrike@latest        # او bun/pnpm/yarn
+scoop install cyberstrike             # Windows
+choco install cyberstrike             # Windows
+brew install cyberstrike/tap/cyberstrike # macOS و Linux (موصى به، دائما محدث)
+brew install cyberstrike              # macOS و Linux (صيغة brew الرسمية، تحديث اقل)
+paru -S cyberstrike-bin               # Arch Linux
+mise use -g cyberstrike               # اي نظام
+nix run nixpkgs#cyberstrike           # او github:cyberstrike/cyberstrike لاحدث فرع dev
 ```
 
 > [!TIP]
@@ -58,20 +58,20 @@ nix run nixpkgs#opencode           # او github:anomalyco/opencode لاحدث �
 
 ### تطبيق سطح المكتب (BETA)
 
-يتوفر OpenCode ايضا كتطبيق سطح مكتب. قم بالتنزيل مباشرة من [صفحة الاصدارات](https://github.com/anomalyco/opencode/releases) او من [cyberstrike.io/download](https://cyberstrike.io/download).
+يتوفر Cyberstrike ايضا كتطبيق سطح مكتب. قم بالتنزيل مباشرة من [صفحة الاصدارات](https://github.com/cyberstrike/cyberstrike/releases) او من [cyberstrike.io/download](https://cyberstrike.io/download).
 
 | المنصة                | التنزيل                               |
 | --------------------- | ------------------------------------- |
-| macOS (Apple Silicon) | `opencode-desktop-darwin-aarch64.dmg` |
-| macOS (Intel)         | `opencode-desktop-darwin-x64.dmg`     |
-| Windows               | `opencode-desktop-windows-x64.exe`    |
+| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg` |
+| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`     |
+| Windows               | `cyberstrike-desktop-windows-x64.exe`    |
 | Linux                 | `.deb` او `.rpm` او AppImage          |
 
 ```bash
 # macOS (Homebrew)
-brew install --cask opencode-desktop
+brew install --cask cyberstrike-desktop
 # Windows (Scoop)
-scoop bucket add extras; scoop install extras/opencode-desktop
+scoop bucket add extras; scoop install extras/cyberstrike-desktop
 ```
 
 #### مجلد التثبيت
@@ -91,7 +91,7 @@ XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
 
 ### Agents
 
-يتضمن OpenCode وكيليْن (Agents) مدمجين يمكنك التبديل بينهما باستخدام زر `Tab`.
+يتضمن Cyberstrike وكيليْن (Agents) مدمجين يمكنك التبديل بينهما باستخدام زر `Tab`.
 
 - **build** - الافتراضي، وكيل بصلاحيات كاملة لاعمال التطوير
 - **plan** - وكيل للقراءة فقط للتحليل واستكشاف الكود
@@ -106,15 +106,15 @@ XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
 
 ### التوثيق
 
-لمزيد من المعلومات حول كيفية ضبط OpenCode، [**راجع التوثيق**](https://cyberstrike.io/docs).
+لمزيد من المعلومات حول كيفية ضبط Cyberstrike، [**راجع التوثيق**](https://cyberstrike.io/docs).
 
 ### المساهمة
 
-اذا كنت مهتما بالمساهمة في OpenCode، يرجى قراءة [contributing docs](./CONTRIBUTING.md) قبل ارسال pull request.
+اذا كنت مهتما بالمساهمة في Cyberstrike، يرجى قراءة [contributing docs](./CONTRIBUTING.md) قبل ارسال pull request.
 
-### البناء فوق OpenCode
+### البناء فوق Cyberstrike
 
-اذا كنت تعمل على مشروع مرتبط بـ OpenCode ويستخدم "opencode" كجزء من اسمه (مثل "opencode-dashboard" او "opencode-mobile")، يرجى اضافة ملاحظة في README توضح انه ليس مبنيا بواسطة فريق OpenCode ولا يرتبط بنا بأي شكل.
+اذا كنت تعمل على مشروع مرتبط بـ Cyberstrike ويستخدم "cyberstrike" كجزء من اسمه (مثل "cyberstrike-dashboard" او "cyberstrike-mobile")، يرجى اضافة ملاحظة في README توضح انه ليس مبنيا بواسطة فريق Cyberstrike ولا يرتبط بنا بأي شكل.
 
 ### FAQ
 
@@ -123,11 +123,11 @@ XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
 هو مشابه جدا لـ Claude Code من حيث القدرات. هذه هي الفروقات الاساسية:
 
 - 100% مفتوح المصدر
-- غير مقترن بمزود معين. نوصي بالنماذج التي نوفرها عبر [Cyberstrike Zen](https://cyberstrike.io/zen)؛ لكن يمكن استخدام OpenCode مع Claude او OpenAI او Google او حتى نماذج محلية. مع تطور النماذج ستتقلص الفجوات وستنخفض الاسعار، لذا من المهم ان يكون مستقلا عن المزود.
+- غير مقترن بمزود معين. نوصي بالنماذج التي نوفرها عبر [Cyberstrike Zen](https://cyberstrike.io/zen)؛ لكن يمكن استخدام Cyberstrike مع Claude او OpenAI او Google او حتى نماذج محلية. مع تطور النماذج ستتقلص الفجوات وستنخفض الاسعار، لذا من المهم ان يكون مستقلا عن المزود.
 - دعم LSP جاهز للاستخدام
-- تركيز على TUI. تم بناء OpenCode بواسطة مستخدمي neovim ومنشئي [terminal.shop](https://terminal.shop)؛ وسندفع حدود ما هو ممكن داخل الطرفية.
-- معمارية عميل/خادم. على سبيل المثال، يمكن تشغيل OpenCode على جهازك بينما تقوده عن بعد من تطبيق جوال. هذا يعني ان واجهة TUI هي واحدة فقط من العملاء الممكنين.
+- تركيز على TUI. تم بناء Cyberstrike بواسطة مستخدمي neovim ومنشئي [terminal.shop](https://terminal.shop)؛ وسندفع حدود ما هو ممكن داخل الطرفية.
+- معمارية عميل/خادم. على سبيل المثال، يمكن تشغيل Cyberstrike على جهازك بينما تقوده عن بعد من تطبيق جوال. هذا يعني ان واجهة TUI هي واحدة فقط من العملاء الممكنين.
 
 ---
 
-**انضم الى مجتمعنا** [Discord](https://discord.gg/opencode) | [X.com](https://x.com/opencode)
+**انضم الى مجتمعنا** [Discord](https://discord.gg/cyberstrike) | [X.com](https://x.com/cyberstrike)

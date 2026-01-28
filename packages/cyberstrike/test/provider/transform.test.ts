@@ -806,11 +806,11 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
   })
 
   test("preserves metadata using providerID key when store is false", () => {
-    const opencodeModel = {
+    const cyberstrikeModel = {
       ...openaiModel,
-      providerID: "opencode",
+      providerID: "cyberstrike",
       api: {
-        id: "opencode-test",
+        id: "cyberstrike-test",
         url: "https://api.cyberstrike.io",
         npm: "@ai-sdk/openai-compatible",
       },
@@ -823,7 +823,7 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
             type: "text",
             text: "Hello",
             providerOptions: {
-              opencode: {
+              cyberstrike: {
                 itemId: "msg_123",
                 otherOption: "value",
               },
@@ -833,18 +833,18 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
       },
     ] as any[]
 
-    const result = ProviderTransform.message(msgs, opencodeModel, { store: false }) as any[]
+    const result = ProviderTransform.message(msgs, cyberstrikeModel, { store: false }) as any[]
 
-    expect(result[0].content[0].providerOptions?.opencode?.itemId).toBe("msg_123")
-    expect(result[0].content[0].providerOptions?.opencode?.otherOption).toBe("value")
+    expect(result[0].content[0].providerOptions?.cyberstrike?.itemId).toBe("msg_123")
+    expect(result[0].content[0].providerOptions?.cyberstrike?.otherOption).toBe("value")
   })
 
   test("preserves itemId across all providerOptions keys", () => {
-    const opencodeModel = {
+    const cyberstrikeModel = {
       ...openaiModel,
-      providerID: "opencode",
+      providerID: "cyberstrike",
       api: {
-        id: "opencode-test",
+        id: "cyberstrike-test",
         url: "https://api.cyberstrike.io",
         npm: "@ai-sdk/openai-compatible",
       },
@@ -854,7 +854,7 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
         role: "assistant",
         providerOptions: {
           openai: { itemId: "msg_root" },
-          opencode: { itemId: "msg_opencode" },
+          cyberstrike: { itemId: "msg_cyberstrike" },
           extra: { itemId: "msg_extra" },
         },
         content: [
@@ -863,7 +863,7 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
             text: "Hello",
             providerOptions: {
               openai: { itemId: "msg_openai_part" },
-              opencode: { itemId: "msg_opencode_part" },
+              cyberstrike: { itemId: "msg_cyberstrike_part" },
               extra: { itemId: "msg_extra_part" },
             },
           },
@@ -871,13 +871,13 @@ describe("ProviderTransform.message - strip openai metadata when store=false", (
       },
     ] as any[]
 
-    const result = ProviderTransform.message(msgs, opencodeModel, { store: false }) as any[]
+    const result = ProviderTransform.message(msgs, cyberstrikeModel, { store: false }) as any[]
 
     expect(result[0].providerOptions?.openai?.itemId).toBe("msg_root")
-    expect(result[0].providerOptions?.opencode?.itemId).toBe("msg_opencode")
+    expect(result[0].providerOptions?.cyberstrike?.itemId).toBe("msg_cyberstrike")
     expect(result[0].providerOptions?.extra?.itemId).toBe("msg_extra")
     expect(result[0].content[0].providerOptions?.openai?.itemId).toBe("msg_openai_part")
-    expect(result[0].content[0].providerOptions?.opencode?.itemId).toBe("msg_opencode_part")
+    expect(result[0].content[0].providerOptions?.cyberstrike?.itemId).toBe("msg_cyberstrike_part")
     expect(result[0].content[0].providerOptions?.extra?.itemId).toBe("msg_extra_part")
   })
 

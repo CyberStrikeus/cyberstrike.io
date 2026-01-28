@@ -1,9 +1,9 @@
 import { isDeepEqual } from "remeda"
-import type { ParsedKey } from "@opentui/core"
+import type { ParsedKey } from "@cyberstrike/tui-core"
 
 export namespace Keybind {
   /**
-   * Keybind info derived from OpenTUI's ParsedKey with our custom `leader` field.
+   * Keybind info derived from ParsedKey with our custom `leader` field.
    * This ensures type compatibility and catches missing fields at compile time.
    */
   export type Info = Pick<ParsedKey, "name" | "ctrl" | "meta" | "shift" | "super"> & {
@@ -18,7 +18,7 @@ export namespace Keybind {
   }
 
   /**
-   * Convert OpenTUI's ParsedKey to our Keybind.Info format.
+   * Convert ParsedKey to our Keybind.Info format.
    * This helper ensures all required fields are present and avoids manual object creation.
    */
   export function fromParsedKey(key: ParsedKey, leader = false): Info {

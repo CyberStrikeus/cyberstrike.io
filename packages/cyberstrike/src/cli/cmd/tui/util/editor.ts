@@ -2,7 +2,7 @@ import { defer } from "@/util/defer"
 import { rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { CliRenderer } from "@opentui/core"
+import { CliRenderer } from "@cyberstrike/tui-core"
 
 export namespace Editor {
   export async function open(opts: { value: string; renderer: CliRenderer }): Promise<string | undefined> {

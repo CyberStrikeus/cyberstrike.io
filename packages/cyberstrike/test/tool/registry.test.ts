@@ -9,10 +9,10 @@ describe("tool.registry", () => {
   test("loads tools from .cyberstrike/tool (singular)", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const opencodeDir = path.join(dir, ".opencode")
-        await fs.mkdir(opencodeDir, { recursive: true })
+        const cyberstrikeDir = path.join(dir, ".cyberstrike")
+        await fs.mkdir(cyberstrikeDir, { recursive: true })
 
-        const toolDir = path.join(opencodeDir, "tool")
+        const toolDir = path.join(cyberstrikeDir, "tool")
         await fs.mkdir(toolDir, { recursive: true })
 
         await Bun.write(
@@ -43,10 +43,10 @@ describe("tool.registry", () => {
   test("loads tools from .cyberstrike/tools (plural)", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
-        const opencodeDir = path.join(dir, ".opencode")
-        await fs.mkdir(opencodeDir, { recursive: true })
+        const cyberstrikeDir = path.join(dir, ".cyberstrike")
+        await fs.mkdir(cyberstrikeDir, { recursive: true })
 
-        const toolsDir = path.join(opencodeDir, "tools")
+        const toolsDir = path.join(cyberstrikeDir, "tools")
         await fs.mkdir(toolsDir, { recursive: true })
 
         await Bun.write(

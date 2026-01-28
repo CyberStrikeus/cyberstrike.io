@@ -1,6 +1,6 @@
-import type { ColorInput } from "@opentui/core"
-import { RGBA } from "@opentui/core"
-import type { ColorGenerator } from "opentui-spinner"
+import type { ColorInput } from "@cyberstrike/tui-core"
+import { RGBA } from "@cyberstrike/tui-core"
+import type { ColorGenerator } from "cyberstrike-spinner"
 
 interface AdvancedGradientOptions {
   colors: ColorInput[]

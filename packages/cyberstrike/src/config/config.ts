@@ -53,8 +53,8 @@ export namespace Config {
     for (const [key, value] of Object.entries(auth)) {
       if (value.type === "wellknown") {
         process.env[value.key] = value.token
-        log.debug("fetching remote config", { url: `${key}/.well-known/opencode` })
-        const response = await fetch(`${key}/.well-known/opencode`)
+        log.debug("fetching remote config", { url: `${key}/.well-known/cyberstrike` })
+        const response = await fetch(`${key}/.well-known/cyberstrike`)
         if (!response.ok) {
           throw new Error(`failed to fetch remote config from ${key}: ${response.status}`)
         }
@@ -64,7 +64,7 @@ export namespace Config {
         if (!remoteConfig.$schema) remoteConfig.$schema = "https://cyberstrike.io/config.json"
         result = mergeConfigConcatArrays(
           result,
-          await load(JSON.stringify(remoteConfig), `${key}/.well-known/opencode`),
+          await load(JSON.stringify(remoteConfig), `${key}/.well-known/cyberstrike`),
         )
         log.debug("loaded remote config from well-known", { url: key })
       }
@@ -81,7 +81,7 @@ export namespace Config {
 
     // Project config has highest precedence (overrides global and remote)
     if (!Flag.CYBERSTRIKE_DISABLE_PROJECT_CONFIG) {
-      for (const file of ["cyberstrike.jsonc", "opencode.json"]) {
+      for (const file of ["cyberstrike.jsonc", "cyberstrike.json"]) {
         const found = await Filesystem.findUp(file, Instance.directory, Instance.worktree)
         for (const resolved of found.toReversed()) {
           result = mergeConfigConcatArrays(result, await loadFile(resolved))
@@ -105,7 +105,7 @@ export namespace Config {
       ...(!Flag.CYBERSTRIKE_DISABLE_PROJECT_CONFIG
         ? await Array.fromAsync(
             Filesystem.up({
-              targets: [".opencode"],
+              targets: [".cyberstrike"],
               start: Instance.directory,
               stop: Instance.worktree,
             }),
@@ -114,7 +114,7 @@ export namespace Config {
       // Always scan ~/.cyberstrike/ (user home directory)
       ...(await Array.fromAsync(
         Filesystem.up({
-          targets: [".opencode"],
+          targets: [".cyberstrike"],
           start: Global.Path.home,
           stop: Global.Path.home,
         }),
@@ -127,8 +127,8 @@ export namespace Config {
     }
 
     for (const dir of unique(directories)) {
-      if (dir.endsWith(".opencode") || dir === Flag.CYBERSTRIKE_CONFIG_DIR) {
-        for (const file of ["cyberstrike.jsonc", "opencode.json"]) {
+      if (dir.endsWith(".cyberstrike") || dir === Flag.CYBERSTRIKE_CONFIG_DIR) {
+        for (const file of ["cyberstrike.jsonc", "cyberstrike.json"]) {
           log.debug(`loading config from ${path.join(dir, file)}`)
           result = mergeConfigConcatArrays(result, await loadFile(path.join(dir, file)))
           // to satisfy the type checker
@@ -375,7 +375,7 @@ export namespace Config {
    *
    * @example
    * getPluginName("file:///path/to/plugin/foo.js") // "foo"
-   * getPluginName("oh-my-opencode@2.4.3") // "oh-my-opencode"
+   * getPluginName("oh-my-cyberstrike@2.4.3") // "oh-my-cyberstrike"
    * getPluginName("@scope/pkg@1.0.0") // "@scope/pkg"
    */
   export function getPluginName(plugin: string): string {
@@ -393,20 +393,20 @@ export namespace Config {
    * Deduplicates plugins by name, with later entries (higher priority) winning.
    * Priority order (highest to lowest):
    * 1. Local plugin/ directory
-   * 2. Local opencode.json
+   * 2. Local cyberstrike.json
    * 3. Global plugin/ directory
-   * 4. Global opencode.json
+   * 4. Global cyberstrike.json
    *
    * Since plugins are added in low-to-high priority order,
    * we reverse, deduplicate (keeping first occurrence), then restore order.
    */
   export function deduplicatePlugins(plugins: string[]): string[] {
     // seenNames: canonical plugin names for duplicate detection
-    // e.g., "oh-my-opencode", "@scope/pkg"
+    // e.g., "oh-my-cyberstrike", "@scope/pkg"
     const seenNames = new Set<string>()
 
     // uniqueSpecifiers: full plugin specifiers to return
-    // e.g., "oh-my-opencode@2.4.3", "file:///path/to/plugin.js"
+    // e.g., "oh-my-cyberstrike@2.4.3", "file:///path/to/plugin.js"
     const uniqueSpecifiers: string[] = []
 
     for (const specifier of plugins.toReversed()) {
@@ -1100,7 +1100,7 @@ export namespace Config {
     let result: Info = pipe(
       {},
       mergeDeep(await loadFile(path.join(Global.Path.config, "config.json"))),
-      mergeDeep(await loadFile(path.join(Global.Path.config, "opencode.json"))),
+      mergeDeep(await loadFile(path.join(Global.Path.config, "cyberstrike.json"))),
       mergeDeep(await loadFile(path.join(Global.Path.config, "cyberstrike.jsonc"))),
     )
 
@@ -1268,7 +1268,7 @@ export namespace Config {
   }
 
   function globalConfigFile() {
-    const candidates = ["cyberstrike.jsonc", "opencode.json", "config.json"].map((file) =>
+    const candidates = ["cyberstrike.jsonc", "cyberstrike.json", "config.json"].map((file) =>
       path.join(Global.Path.config, file),
     )
     for (const file of candidates) {

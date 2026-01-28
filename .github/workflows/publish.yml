@@ -31,7 +31,7 @@ permissions:
 jobs:
   publish:
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    if: github.repository == 'anomalyco/opencode'
+    if: github.repository == 'cyberstrike/cyberstrike'
     steps:
       - uses: actions/checkout@v3
         with:
@@ -41,9 +41,9 @@ jobs:
 
       - uses: ./.github/actions/setup-bun
 
-      - name: Install OpenCode
+      - name: Install Cyberstrike
         if: inputs.bump || inputs.version
-        run: bun i -g opencode-ai@1.0.169
+        run: bun i -g cyberstrike@1.0.169
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -65,8 +65,8 @@ jobs:
 
       - name: Setup Git Identity
         run: |
-          git config --global user.email "opencode@sst.dev"
-          git config --global user.name "opencode"
+          git config --global user.email "cyberstrike@cyberstrike.io"
+          git config --global user.name "cyberstrike"
           git remote set-url origin https://x-access-token:${{ secrets.SST_GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
       - name: Publish
@@ -82,7 +82,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: opencode-cli
+          name: cyberstrike-cli
           path: packages/cyberstrike/dist
 
     outputs:
@@ -191,7 +191,7 @@ jobs:
             updaterJsonPreferNsis: true
             releaseId: ${{ needs.publish.outputs.release }}
             tagName: ${{ needs.publish.outputs.tag }}
-            releaseAssetNamePattern: opencode-desktop-[platform]-[arch][ext]
+            releaseAssetNamePattern: cyberstrike-desktop-[platform]-[arch][ext]
             releaseDraft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -226,8 +226,8 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AUR_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          git config --global user.email "opencode@sst.dev"
-          git config --global user.name "opencode"
+          git config --global user.email "cyberstrike@cyberstrike.io"
+          git config --global user.name "cyberstrike"
           ssh-keyscan -H aur.archlinux.org >> ~/.ssh/known_hosts || true
 
       - run: ./script/publish-complete.ts

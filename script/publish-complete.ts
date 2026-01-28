@@ -9,6 +9,6 @@ import { $ } from "bun"
 
 await $`bun install`
 
-await $`gh release download --pattern "opencode-linux-*64.tar.gz" --pattern "opencode-darwin-*64.zip" -D dist`
+await $`gh release download --pattern "cyberstrike-linux-*64.tar.gz" --pattern "cyberstrike-darwin-*64.zip" -D dist`
 
 await import(`../packages/cyberstrike/script/publish-registries.ts`)

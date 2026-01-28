@@ -1,4 +1,4 @@
-# opencode agent guidelines
+# cyberstrike agent guidelines
 
 ## Build/Test Commands
 
@@ -24,4 +24,4 @@
 - **Validation**: All inputs validated with Zod schemas
 - **Logging**: Use `Log.create({ service: "name" })` pattern
 - **Storage**: Use `Storage` namespace for persistence
-- **API Client**: The TypeScript TUI (built with SolidJS + OpenTUI) communicates with the OpenCode server using `@cyberstrike/sdk`. When adding/modifying server endpoints in `packages/cyberstrike/src/server/server.ts`, run `./script/generate.ts` to regenerate the SDK and related files.
+- **API Client**: The TypeScript TUI (built with SolidJS + CyberstrikeTUI) communicates with the Cyberstrike server using `@cyberstrike/sdk`. When adding/modifying server endpoints in `packages/cyberstrike/src/server/server.ts`, run `./script/generate.ts` to regenerate the SDK and related files.

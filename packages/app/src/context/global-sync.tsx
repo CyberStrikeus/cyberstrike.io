@@ -842,7 +842,7 @@ function createGlobalSync() {
         globalSDK.client.project.list().then(async (x) => {
           const projects = (x.data ?? [])
             .filter((p) => !!p?.id)
-            .filter((p) => !!p.worktree && !p.worktree.includes("opencode-test"))
+            .filter((p) => !!p.worktree && !p.worktree.includes("cyberstrike-test"))
             .slice()
             .sort((a, b) => a.id.localeCompare(b.id))
           setGlobalStore("project", projects)

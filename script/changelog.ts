@@ -6,7 +6,7 @@ import { parseArgs } from "util"
 
 export const team = [
   "actions-user",
-  "opencode",
+  "cyberstrike",
   "rekram1-node",
   "thdxr",
   "kommander",
@@ -14,7 +14,7 @@ export const team = [
   "fwang",
   "adamdotdevin",
   "iamdavidhill",
-  "opencode-agent[bot]",
+  "cyberstrike-agent[bot]",
 ]
 
 export async function getLatestRelease() {
@@ -132,14 +132,14 @@ function getSection(areas: Set<string>): string {
   return "Core"
 }
 
-async function summarizeCommit(opencode: Awaited<ReturnType<typeof createCyberstrike>>, message: string): Promise<string> {
+async function summarizeCommit(cyberstrike: Awaited<ReturnType<typeof createCyberstrike>>, message: string): Promise<string> {
   console.log("summarizing commit:", message)
-  const session = await opencode.client.session.create()
-  const result = await opencode.client.session
+  const session = await cyberstrike.client.session.create()
+  const result = await cyberstrike.client.session
     .prompt({
       path: { id: session.data!.id },
       body: {
-        model: { providerID: "opencode", modelID: "claude-sonnet-4-5" },
+        model: { providerID: "cyberstrike", modelID: "claude-sonnet-4-5" },
         tools: {
           "*": false,
         },
@@ -158,13 +158,13 @@ Commit: ${message}`,
   return result.trim()
 }
 
-export async function generateChangelog(commits: Commit[], opencode: Awaited<ReturnType<typeof createCyberstrike>>) {
+export async function generateChangelog(commits: Commit[], cyberstrike: Awaited<ReturnType<typeof createCyberstrike>>) {
   // Summarize commits in parallel with max 10 concurrent requests
   const BATCH_SIZE = 10
   const summaries: string[] = []
   for (let i = 0; i < commits.length; i += BATCH_SIZE) {
     const batch = commits.slice(i, i + BATCH_SIZE)
-    const results = await Promise.all(batch.map((c) => summarizeCommit(opencode, c.message)))
+    const results = await Promise.all(batch.map((c) => summarizeCommit(cyberstrike, c.message)))
     summaries.push(...results)
   }
 
@@ -221,11 +221,11 @@ export async function buildNotes(from: string, to: string) {
 
   console.log("generating changelog since " + from)
 
-  const opencode = await createCyberstrike({ port: 5044 })
+  const cyberstrike = await createCyberstrike({ port: 5044 })
   const notes: string[] = []
 
   try {
-    const lines = await generateChangelog(commits, opencode)
+    const lines = await generateChangelog(commits, cyberstrike)
     notes.push(...lines)
     console.log("---- Generated Changelog ----")
     console.log(notes.join("\n"))
@@ -241,7 +241,7 @@ export async function buildNotes(from: string, to: string) {
       throw error
     }
   } finally {
-    opencode.server.close()
+    cyberstrike.server.close()
   }
 
   const contributors = await getContributors(from, to)

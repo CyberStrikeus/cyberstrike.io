@@ -26,7 +26,7 @@ test("discovers skills from .cyberstrike/skill/ directory", async () => {
   await using tmp = await tmpdir({
     git: true,
     init: async (dir) => {
-      const skillDir = path.join(dir, ".opencode", "skill", "test-skill")
+      const skillDir = path.join(dir, ".cyberstrike", "skill", "test-skill")
       await Bun.write(
         path.join(skillDir, "SKILL.md"),
         `---
@@ -59,8 +59,8 @@ test("discovers multiple skills from .cyberstrike/skill/ directory", async () =>
   await using tmp = await tmpdir({
     git: true,
     init: async (dir) => {
-      const skillDir1 = path.join(dir, ".opencode", "skill", "skill-one")
-      const skillDir2 = path.join(dir, ".opencode", "skill", "skill-two")
+      const skillDir1 = path.join(dir, ".cyberstrike", "skill", "skill-one")
+      const skillDir2 = path.join(dir, ".cyberstrike", "skill", "skill-two")
       await Bun.write(
         path.join(skillDir1, "SKILL.md"),
         `---
@@ -99,7 +99,7 @@ test("skips skills with missing frontmatter", async () => {
   await using tmp = await tmpdir({
     git: true,
     init: async (dir) => {
-      const skillDir = path.join(dir, ".opencode", "skill", "no-frontmatter")
+      const skillDir = path.join(dir, ".cyberstrike", "skill", "no-frontmatter")
       await Bun.write(
         path.join(skillDir, "SKILL.md"),
         `# No Frontmatter

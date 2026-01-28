@@ -1561,14 +1561,14 @@ export default function Layout(props: ParentProps) {
     const hasError = createMemo(() => notifications().some((n) => n.type === "error"))
     const name = createMemo(() => props.project.name || getFilename(props.project.worktree))
     const mask = "radial-gradient(circle 5px at calc(100% - 4px) 4px, transparent 5px, black 5.5px)"
-    const opencode = "4b0ea68d7af9a6031a7ffda7ad66e0cb83315750"
+    const cyberstrike = "4b0ea68d7af9a6031a7ffda7ad66e0cb83315750"
 
     return (
       <div class={`relative size-8 shrink-0 rounded ${props.class ?? ""}`}>
         <div class="size-full rounded overflow-clip">
           <Avatar
             fallback={name()}
-            src={props.project.id === opencode ? "https://cyberstrike.io/favicon.svg" : props.project.icon?.override}
+            src={props.project.id === cyberstrike ? "https://cyberstrike.io/favicon.svg" : props.project.icon?.override}
             {...getAvatarColors(props.project.icon?.color)}
             class="size-full rounded"
             style={
@@ -1747,7 +1747,7 @@ export default function Layout(props: ParentProps) {
                   getLabel={messageLabel}
                   onMessageSelect={(message) => {
                     if (!isActive()) {
-                      sessionStorage.setItem("opencode.pendingMessage", `${props.session.id}|${message.id}`)
+                      sessionStorage.setItem("cyberstrike.pendingMessage", `${props.session.id}|${message.id}`)
                       navigate(`${props.slug}/session/${props.session.id}`)
                       return
                     }

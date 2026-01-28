@@ -54,9 +54,9 @@ export default function Enterprise() {
 
   return (
     <main data-page="enterprise">
-      <Title>OpenCode | Enterprise solutions for your organisation</Title>
+      <Title>Cyberstrike | Enterprise solutions for your organisation</Title>
       <Link rel="canonical" href={`${config.baseUrl}/enterprise`} />
-      <Meta name="description" content="Contact OpenCode for enterprise solutions" />
+      <Meta name="description" content="Contact Cyberstrike for enterprise solutions" />
       <div data-component="container">
         <Header />
 
@@ -66,7 +66,7 @@ export default function Enterprise() {
               <div data-component="enterprise-column-1">
                 <h1>Your code is yours</h1>
                 <p>
-                  OpenCode operates securely inside your organization with no data or context stored and no licensing
+                  Cyberstrike operates securely inside your organization with no data or context stored and no licensing
                   restrictions or ownership claims. Start a trial with your team, then deploy it across your
                   organization by integrating it with your SSO and internal AI gateway.
                 </p>
@@ -82,7 +82,7 @@ export default function Enterprise() {
                         />
                       </svg>
                     </div>
-                    Thanks to OpenCode, we found a way to create software to track all our assets — even the imaginary
+                    Thanks to Cyberstrike, we found a way to create software to track all our assets — even the imaginary
                     ones.
                     <div data-component="testimonial-logo">
                       <svg width="80" height="79" viewBox="0 0 80 79" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -222,7 +222,7 @@ export default function Enterprise() {
               </li>
               <li>
                 <Faq question="How do I get started with Cyberstrike Enterprise?">
-                  Simply start with an internal trial with your team. OpenCode by default does not store your code or
+                  Simply start with an internal trial with your team. Cyberstrike by default does not store your code or
                   context data, making it easy to get started. Then contact us to discuss pricing and implementation
                   options.
                 </Faq>
@@ -235,7 +235,7 @@ export default function Enterprise() {
               </li>
               <li>
                 <Faq question="Is my data secure with Cyberstrike Enterprise?">
-                  Yes. OpenCode does not store your code or context data. All processing happens locally or through
+                  Yes. Cyberstrike does not store your code or context data. All processing happens locally or through
                   direct API calls to your AI provider. With central config and SSO integration, your data remains
                   secure within your organization's infrastructure.
                 </Faq>

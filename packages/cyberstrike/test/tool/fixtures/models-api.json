@@ -16565,9 +16565,9 @@
       }
     }
   },
-  "opencode": {
-    "id": "opencode",
-    "env": ["OPENCODE_API_KEY"],
+  "cyberstrike": {
+    "id": "cyberstrike",
+    "env": ["CYBERSTRIKE_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
     "api": "https://cyberstrike.io/zen/v1",
     "name": "Cyberstrike Zen",

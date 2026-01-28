@@ -1,7 +1,7 @@
 ---
 mode: primary
 hidden: true
-model: opencode/claude-haiku-4-5
+model: cyberstrike/claude-haiku-4-5
 color: "#44BA81"
 tools:
   "*": false
@@ -34,10 +34,10 @@ Performance-related issues:
 
 Desktop app issues:
 
-- `opencode web` command
+- `cyberstrike web` command
 - The desktop app itself
 
-**Only** add if it's specifically about the Desktop application or `opencode web` view. **Do not** add for terminal, TUI, or general opencode issues.
+**Only** add if it's specifically about the Desktop application or `cyberstrike web` view. **Do not** add for terminal, TUI, or general cyberstrike issues.
 
 #### nix
 
@@ -45,22 +45,22 @@ Desktop app issues:
 
 #### zen
 
-**Only** add if the issue mentions "zen" or "opencode zen" or "opencode black".
+**Only** add if the issue mentions "zen" or "cyberstrike zen" or "cyberstrike black".
 
-If the issue doesn't have "zen" or "opencode black" in it then don't add zen label
+If the issue doesn't have "zen" or "cyberstrike black" in it then don't add zen label
 
 #### docs
 
 Add if the issue requests better documentation or docs updates.
 
-#### opentui
+#### cyberstrike-tui
 
 TUI issues potentially caused by our underlying TUI library:
 
 - Keybindings not working
 - Scroll speed issues (too fast/slow/laggy)
 - Screen flickering
-- Crashes with opentui in the log
+- Crashes with cyberstrike-tui in the log
 
 **Do not** add for general TUI bugs.
 

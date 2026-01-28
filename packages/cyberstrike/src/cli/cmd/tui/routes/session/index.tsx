@@ -25,7 +25,7 @@ import {
   type ScrollAcceleration,
   TextAttributes,
   RGBA,
-} from "@opentui/core"
+} from "@cyberstrike/tui-core"
 import { Prompt, type PromptRef } from "@tui/component/prompt"
 import type { AssistantMessage, Part, ToolPart, UserMessage, TextPart, ReasoningPart } from "@cyberstrike/sdk/v2"
 import { useLocal } from "@tui/context/local"
@@ -43,7 +43,7 @@ import type { ApplyPatchTool } from "@/tool/apply_patch"
 import type { WebFetchTool } from "@/tool/webfetch"
 import type { TaskTool } from "@/tool/task"
 import type { QuestionTool } from "@/tool/question"
-import { useKeyboard, useRenderer, useTerminalDimensions, type JSX } from "@opentui/solid"
+import { useKeyboard, useRenderer, useTerminalDimensions, type JSX } from "@cyberstrike/tui-solid"
 import { useSDK } from "@tui/context/sdk"
 import { useCommandDialog } from "@tui/component/dialog-command"
 import { useKeybind } from "@tui/context/keybind"

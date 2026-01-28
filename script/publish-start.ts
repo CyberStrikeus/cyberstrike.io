@@ -65,7 +65,7 @@ await Bun.file(extensionToml).write(toml)
 
 await $`bun install`
 
-console.log("\n=== opencode ===\n")
+console.log("\n=== cyberstrike ===\n")
 await import(`../packages/cyberstrike/script/publish.ts`)
 
 console.log("\n=== sdk ===\n")

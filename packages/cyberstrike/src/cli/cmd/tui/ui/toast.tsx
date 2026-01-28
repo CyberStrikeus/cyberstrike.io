@@ -1,9 +1,9 @@
 import { createContext, useContext, type ParentProps, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useTheme } from "@tui/context/theme"
-import { useTerminalDimensions } from "@opentui/solid"
+import { useTerminalDimensions } from "@cyberstrike/tui-solid"
 import { SplitBorder } from "../component/border"
-import { TextAttributes } from "@opentui/core"
+import { TextAttributes } from "@cyberstrike/tui-core"
 import z from "zod"
 import { TuiEvent } from "../event"
 

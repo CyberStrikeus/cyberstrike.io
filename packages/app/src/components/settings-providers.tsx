@@ -23,7 +23,7 @@ export const SettingsProviders: Component = () => {
   const connected = createMemo(() => {
     return providers
       .connected()
-      .filter((p) => p.id !== "opencode" || Object.values(p.models).find((m) => m.cost?.input))
+      .filter((p) => p.id !== "cyberstrike" || Object.values(p.models).find((m) => m.cost?.input))
   })
 
   const popular = createMemo(() => {
@@ -124,13 +124,13 @@ export const SettingsProviders: Component = () => {
                     <div class="flex items-center gap-x-3">
                       <ProviderIcon id={item.id as IconName} class="size-5 shrink-0 icon-strong-base" />
                       <span class="text-14-medium text-text-strong">{item.name}</span>
-                      <Show when={item.id === "opencode"}>
+                      <Show when={item.id === "cyberstrike"}>
                         <Tag>{language.t("dialog.provider.tag.recommended")}</Tag>
                       </Show>
                     </div>
-                    <Show when={item.id === "opencode"}>
+                    <Show when={item.id === "cyberstrike"}>
                       <span class="text-12-regular text-text-weak pl-8">
-                        {language.t("dialog.provider.opencode.note")}
+                        {language.t("dialog.provider.cyberstrike.note")}
                       </span>
                     </Show>
                     <Show when={item.id === "anthropic"}>

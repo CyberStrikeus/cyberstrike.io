@@ -1,4 +1,4 @@
-import { TextAttributes, RGBA } from "@opentui/core"
+import { TextAttributes, RGBA } from "@cyberstrike/tui-core"
 import { For, type JSX } from "solid-js"
 import { useTheme, tint } from "@tui/context/theme"
 

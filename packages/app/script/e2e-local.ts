@@ -44,7 +44,7 @@ async function waitForHealth(url: string) {
 
 const appDir = process.cwd()
 const repoDir = path.resolve(appDir, "../..")
-const opencodeDir = path.join(repoDir, "packages", "opencode")
+const cyberstrikeDir = path.join(repoDir, "packages", "cyberstrike")
 
 const extraArgs = (() => {
   const args = process.argv.slice(2)
@@ -54,7 +54,7 @@ const extraArgs = (() => {
 
 const [serverPort, webPort] = await Promise.all([freePort(), freePort()])
 
-const sandbox = await fs.mkdtemp(path.join(os.tmpdir(), "opencode-e2e-"))
+const sandbox = await fs.mkdtemp(path.join(os.tmpdir(), "cyberstrike-e2e-"))
 
 const serverEnv = {
   ...process.env,
@@ -70,7 +70,7 @@ const serverEnv = {
   CYBERSTRIKE_E2E_PROJECT_DIR: repoDir,
   CYBERSTRIKE_E2E_SESSION_TITLE: "E2E Session",
   CYBERSTRIKE_E2E_MESSAGE: "Seeded for UI e2e",
-  CYBERSTRIKE_E2E_MODEL: "opencode/gpt-5-nano",
+  CYBERSTRIKE_E2E_MODEL: "cyberstrike/gpt-5-nano",
   CYBERSTRIKE_CLIENT: "app",
 } satisfies Record<string, string>
 
@@ -84,7 +84,7 @@ const runnerEnv = {
 } satisfies Record<string, string>
 
 const seed = Bun.spawn(["bun", "script/seed-e2e.ts"], {
-  cwd: opencodeDir,
+  cwd: cyberstrikeDir,
   env: serverEnv,
   stdout: "inherit",
   stderr: "inherit",
@@ -97,20 +97,20 @@ if (seedExit !== 0) {
 
 Object.assign(process.env, serverEnv)
 process.env.AGENT = "1"
-process.env.OPENCODE = "1"
+process.env.CYBERSTRIKE = "1"
 
-const log = await import("../../opencode/src/util/log")
-const install = await import("../../opencode/src/installation")
+const log = await import("../../cyberstrike/src/util/log")
+const install = await import("../../cyberstrike/src/installation")
 await log.Log.init({
   print: true,
   dev: install.Installation.isLocal(),
   level: "WARN",
 })
 
-const servermod = await import("../../opencode/src/server/server")
-const inst = await import("../../opencode/src/project/instance")
+const servermod = await import("../../cyberstrike/src/server/server")
+const inst = await import("../../cyberstrike/src/project/instance")
 const server = servermod.Server.listen({ port: serverPort, hostname: "127.0.0.1" })
-console.log(`opencode server listening on http://127.0.0.1:${serverPort}`)
+console.log(`cyberstrike server listening on http://127.0.0.1:${serverPort}`)
 
 const result = await (async () => {
   try {

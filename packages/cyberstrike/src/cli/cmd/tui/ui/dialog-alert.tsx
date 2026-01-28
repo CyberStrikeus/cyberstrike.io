@@ -1,7 +1,7 @@
-import { TextAttributes } from "@opentui/core"
+import { TextAttributes } from "@cyberstrike/tui-core"
 import { useTheme } from "../context/theme"
 import { useDialog, type DialogContext } from "./dialog"
-import { useKeyboard } from "@opentui/solid"
+import { useKeyboard } from "@cyberstrike/tui-solid"
 
 export type DialogAlertProps = {
   title: string

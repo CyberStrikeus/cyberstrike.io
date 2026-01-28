@@ -409,18 +409,18 @@ export namespace ACP {
       log.info("initialize", { protocolVersion: params.protocolVersion })
 
       const authMethod: AuthMethod = {
-        description: "Run `opencode auth login` in the terminal",
-        name: "Login with opencode",
-        id: "opencode-login",
+        description: "Run `cyberstrike auth login` in the terminal",
+        name: "Login with cyberstrike",
+        id: "cyberstrike-login",
       }
 
       // If client supports terminal-auth capability, use that instead.
       if (params.clientCapabilities?._meta?.["terminal-auth"] === true) {
         authMethod._meta = {
           "terminal-auth": {
-            command: "opencode",
+            command: "cyberstrike",
             args: ["auth", "login"],
-            label: "OpenCode Login",
+            label: "Cyberstrike Login",
           },
         }
       }
@@ -445,7 +445,7 @@ export namespace ACP {
         },
         authMethods: [authMethod],
         agentInfo: {
-          name: "OpenCode",
+          name: "Cyberstrike",
           version: Installation.VERSION,
         },
       }
@@ -860,7 +860,7 @@ export namespace ACP {
           }
         } else if (part.type === "file") {
           // Replay file attachments as appropriate ACP content blocks.
-          // OpenCode stores files internally as { type: "file", url, filename, mime }.
+          // Cyberstrike stores files internally as { type: "file", url, filename, mime }.
           // We convert these back to ACP blocks based on the URL scheme and MIME type:
           // - file:// URLs → resource_link
           // - data: URLs with image/* → image block
@@ -1359,12 +1359,12 @@ export namespace ACP {
 
     if (specified && !providers.length) return specified
 
-    const opencodeProvider = providers.find((p) => p.id === "opencode")
-    if (opencodeProvider) {
-      if (opencodeProvider.models["big-pickle"]) {
-        return { providerID: "opencode", modelID: "big-pickle" }
+    const cyberstrikeProvider = providers.find((p) => p.id === "cyberstrike")
+    if (cyberstrikeProvider) {
+      if (cyberstrikeProvider.models["big-pickle"]) {
+        return { providerID: "cyberstrike", modelID: "big-pickle" }
       }
-      const [best] = Provider.sort(Object.values(opencodeProvider.models))
+      const [best] = Provider.sort(Object.values(cyberstrikeProvider.models))
       if (best) {
         return {
           providerID: best.providerID,
@@ -1384,7 +1384,7 @@ export namespace ACP {
 
     if (specified) return specified
 
-    return { providerID: "opencode", modelID: "big-pickle" }
+    return { providerID: "cyberstrike", modelID: "big-pickle" }
   }
 
   function parseUri(

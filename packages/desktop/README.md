@@ -1,6 +1,6 @@
 # Cyberstrike Desktop
 
-Native OpenCode desktop app, built with Tauri v2.
+Native Cyberstrike desktop app, built with Tauri v2.
 
 ## Development
 
