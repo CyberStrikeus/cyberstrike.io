@@ -5740,7 +5740,7 @@ function visualizeRenderableTree(renderable, maxDepth = 10) {
 }
 
 // src/lib/styled-text.ts
-var BrandedStyledText = Symbol.for("@opentui/core/StyledText");
+var BrandedStyledText = Symbol.for("@cyberstrike/tui-core/StyledText");
 function isStyledText(obj) {
   return obj && obj[BrandedStyledText];
 }
@@ -6744,7 +6744,7 @@ class ASCIIFontSelectionHelper {
 }
 
 // src/lib/singleton.ts
-var singletonCacheSymbol = Symbol.for("@opentui/core/singleton");
+var singletonCacheSymbol = Symbol.for("@cyberstrike/tui-core/singleton");
 function singleton(key, factory) {
   const bag = globalThis[singletonCacheSymbol] ??= {};
   if (!(key in bag)) {
@@ -12836,7 +12836,7 @@ function isSizeType(value) {
 }
 
 // src/Renderable.ts
-var BrandedRenderable = Symbol.for("@opentui/core/Renderable");
+var BrandedRenderable = Symbol.for("@cyberstrike/tui-core/Renderable");
 var LayoutEvents;
 ((LayoutEvents2) => {
   LayoutEvents2["LAYOUT_CHANGED"] = "layout-changed";
@@ -14045,7 +14045,7 @@ class RootRenderable extends Renderable {
 
 // src/renderables/composition/vnode.ts
 import util from "util";
-var BrandedVNode = Symbol.for("@opentui/core/VNode");
+var BrandedVNode = Symbol.for("@cyberstrike/tui-core/VNode");
 function isRenderableConstructor(value) {
   return typeof value === "function" && value.prototype && Renderable.prototype.isPrototypeOf(value.prototype);
 }

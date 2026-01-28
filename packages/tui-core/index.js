@@ -3063,7 +3063,7 @@ class CodeRenderable extends TextBufferRenderable {
   }
 }
 // src/renderables/TextNode.ts
-var BrandedTextNodeRenderable = Symbol.for("@opentui/core/TextNodeRenderable");
+var BrandedTextNodeRenderable = Symbol.for("@cyberstrike/tui-core/TextNodeRenderable");
 function isTextNodeRenderable(obj) {
   return !!obj?.[BrandedTextNodeRenderable];
 }
