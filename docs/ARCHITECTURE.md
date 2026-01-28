@@ -11,7 +11,7 @@ packages/cyberstrike/src/
 ├── index.ts              # Ana giriş noktası (CLI parser)
 ├── cli/                  # Komut satırı arayüzü
 │   ├── cmd/              # CLI komutları
-│   │   ├── tui/          # Terminal UI (SolidJS + OpenTUI)
+│   │   ├── tui/          # Terminal UI (SolidJS + CyberstrikeTUI)
 │   │   ├── run.ts        # `cyberstrike run` komutu
 │   │   ├── serve.ts      # `cyberstrike serve` komutu
 │   │   ├── web.ts        # `cyberstrike web` komutu
@@ -91,7 +91,7 @@ const cli = yargs(hideBin(process.argv))
 
 ### 1.3 TUI Yapısı
 
-TUI, **SolidJS** ve **OpenTUI** kullanılarak oluşturulmuştur:
+TUI, **SolidJS** ve **CyberstrikeTUI** kullanılarak oluşturulmuştur:
 
 ```
 cli/cmd/tui/

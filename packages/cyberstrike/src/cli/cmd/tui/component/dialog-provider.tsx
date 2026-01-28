@@ -7,15 +7,15 @@ import { useSDK } from "../context/sdk"
 import { DialogPrompt } from "../ui/dialog-prompt"
 import { Link } from "../ui/link"
 import { useTheme } from "../context/theme"
-import { TextAttributes } from "@opentui/core"
+import { TextAttributes } from "@cyberstrike/tui-core"
 import type { ProviderAuthAuthorization } from "@cyberstrike/sdk/v2"
 import { DialogModel } from "./dialog-model"
-import { useKeyboard } from "@opentui/solid"
+import { useKeyboard } from "@cyberstrike/tui-solid"
 import { Clipboard } from "@tui/util/clipboard"
 import { useToast } from "../ui/toast"
 
 const PROVIDER_PRIORITY: Record<string, number> = {
-  opencode: 0,
+  cyberstrike: 0,
   anthropic: 1,
   "github-copilot": 2,
   openai: 3,
@@ -37,7 +37,7 @@ export function createDialogProviderOptions() {
           title: provider.name,
           value: provider.id,
           description: {
-            opencode: "(Recommended)",
+            cyberstrike: "(Recommended)",
             anthropic: "(Claude Max or API key)",
             openai: "(ChatGPT Plus/Pro or API key)",
           }[provider.id],
@@ -227,7 +227,7 @@ function ApiMethod(props: ApiMethodProps) {
       title={props.title}
       placeholder="API key"
       description={
-        props.providerID === "opencode" ? (
+        props.providerID === "cyberstrike" ? (
           <box gap={1}>
             <text fg={theme.textMuted}>
               cyberstrike gives you access to all the best AI models for penetration testing with a single API key.

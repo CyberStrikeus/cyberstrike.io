@@ -1,9 +1,9 @@
-import { TextareaRenderable, TextAttributes } from "@opentui/core"
+import { TextareaRenderable, TextAttributes } from "@cyberstrike/tui-core"
 import { useTheme } from "../context/theme"
 import { useDialog, type DialogContext } from "./dialog"
 import { createStore } from "solid-js/store"
 import { onMount, Show, type JSX } from "solid-js"
-import { useKeyboard } from "@opentui/solid"
+import { useKeyboard } from "@cyberstrike/tui-solid"
 
 export type DialogExportOptionsProps = {
   defaultFilename: string

@@ -1,7 +1,7 @@
-import { TextAttributes } from "@opentui/core"
+import { TextAttributes } from "@cyberstrike/tui-core"
 import { useTheme } from "@tui/context/theme"
 import { useDialog } from "./dialog"
-import { useKeyboard } from "@opentui/solid"
+import { useKeyboard } from "@cyberstrike/tui-solid"
 import { useKeybind } from "@tui/context/keybind"
 
 export function DialogHelp() {

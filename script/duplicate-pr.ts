@@ -34,7 +34,7 @@ Examples:
     process.exit(1)
   }
 
-  const opencode = await createCyberstrike({ port: 0 })
+  const cyberstrike = await createCyberstrike({ port: 0 })
 
   try {
     const parts: Array<{ type: "text"; text: string } | { type: "file"; url: string; filename: string; mime: string }> =
@@ -57,8 +57,8 @@ Examples:
 
     parts.push({ type: "text", text: message })
 
-    const session = await opencode.client.session.create()
-    const result = await opencode.client.session
+    const session = await cyberstrike.client.session.create()
+    const result = await cyberstrike.client.session
       .prompt({
         path: { id: session.data!.id },
         body: {
@@ -71,7 +71,7 @@ Examples:
 
     console.log(result.trim())
   } finally {
-    opencode.server.close()
+    cyberstrike.server.close()
   }
 }
 

@@ -22,7 +22,7 @@ test("loads JSON config file", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           model: "test/model",
@@ -77,7 +77,7 @@ test("merges multiple config files with correct precedence", async () => {
         }),
       )
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           model: "override",
@@ -103,7 +103,7 @@ test("handles environment variable substitution", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         await Bun.write(
-          path.join(dir, "opencode.json"),
+          path.join(dir, "cyberstrike.json"),
           JSON.stringify({
             $schema: "https://cyberstrike.io/config.json",
             theme: "{env:TEST_VAR}",
@@ -136,7 +136,7 @@ test("preserves env variables when adding $schema to config", async () => {
       init: async (dir) => {
         // Config without $schema - should trigger auto-add
         await Bun.write(
-          path.join(dir, "opencode.json"),
+          path.join(dir, "cyberstrike.json"),
           JSON.stringify({
             theme: "{env:PRESERVE_VAR}",
           }),
@@ -150,7 +150,7 @@ test("preserves env variables when adding $schema to config", async () => {
         expect(config.theme).toBe("secret_value")
 
         // Read the file to verify the env variable was preserved
-        const content = await Bun.file(path.join(tmp.path, "opencode.json")).text()
+        const content = await Bun.file(path.join(tmp.path, "cyberstrike.json")).text()
         expect(content).toContain("{env:PRESERVE_VAR}")
         expect(content).not.toContain("secret_value")
         expect(content).toContain("$schema")
@@ -170,7 +170,7 @@ test("handles file inclusion substitution", async () => {
     init: async (dir) => {
       await Bun.write(path.join(dir, "included.txt"), "test_theme")
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           theme: "{file:included.txt}",
@@ -191,7 +191,7 @@ test("validates config schema and throws on invalid fields", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           invalid_field: "should cause error",
@@ -211,7 +211,7 @@ test("validates config schema and throws on invalid fields", async () => {
 test("throws error for invalid JSON", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      await Bun.write(path.join(dir, "opencode.json"), "{ invalid json }")
+      await Bun.write(path.join(dir, "cyberstrike.json"), "{ invalid json }")
     },
   })
   await Instance.provide({
@@ -226,7 +226,7 @@ test("handles agent configuration", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -259,7 +259,7 @@ test("handles command configuration", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           command: {
@@ -290,7 +290,7 @@ test("migrates autoshare to share field", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           autoshare: true,
@@ -312,7 +312,7 @@ test("migrates mode field to agent field", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           mode: {
@@ -340,12 +340,12 @@ test("migrates mode field to agent field", async () => {
   })
 })
 
-test("loads config from .opencode directory", async () => {
+test("loads config from .cyberstrike directory", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
-      const agentDir = path.join(opencodeDir, "agent")
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
+      const agentDir = path.join(cyberstrikeDir, "agent")
       await fs.mkdir(agentDir, { recursive: true })
 
       await Bun.write(
@@ -375,10 +375,10 @@ Test agent prompt`,
 test("loads agents from .cyberstrike/agents (plural)", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
-      const agentsDir = path.join(opencodeDir, "agents")
+      const agentsDir = path.join(cyberstrikeDir, "agents")
       await fs.mkdir(path.join(agentsDir, "nested"), { recursive: true })
 
       await Bun.write(
@@ -426,10 +426,10 @@ Nested agent prompt`,
 test("loads commands from .cyberstrike/command (singular)", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
-      const commandDir = path.join(opencodeDir, "command")
+      const commandDir = path.join(cyberstrikeDir, "command")
       await fs.mkdir(path.join(commandDir, "nested"), { recursive: true })
 
       await Bun.write(
@@ -471,10 +471,10 @@ Nested command template`,
 test("loads commands from .cyberstrike/commands (plural)", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
-      const commandsDir = path.join(opencodeDir, "commands")
+      const commandsDir = path.join(cyberstrikeDir, "commands")
       await fs.mkdir(path.join(commandsDir, "nested"), { recursive: true })
 
       await Bun.write(
@@ -566,7 +566,7 @@ test("resolves scoped npm plugins in config", async () => {
       await Bun.write(path.join(pluginDir, "index.js"), "export default {}\n")
 
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({ $schema: "https://cyberstrike.io/config.json", plugin: ["@scope/plugin"] }, null, 2),
       )
     },
@@ -578,7 +578,7 @@ test("resolves scoped npm plugins in config", async () => {
       const config = await Config.get()
       const pluginEntries = config.plugin ?? []
 
-      const baseUrl = pathToFileURL(path.join(tmp.path, "opencode.json")).href
+      const baseUrl = pathToFileURL(path.join(tmp.path, "cyberstrike.json")).href
       const expected = import.meta.resolve("@scope/plugin", baseUrl)
 
       expect(pluginEntries.includes(expected)).toBe(true)
@@ -595,12 +595,12 @@ test("merges plugin arrays from global and local configs", async () => {
     init: async (dir) => {
       // Create a nested project structure with local .cyberstrike config
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(projectDir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
       // Global config with plugins
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           plugin: ["global-plugin-1", "global-plugin-2"],
@@ -609,7 +609,7 @@ test("merges plugin arrays from global and local configs", async () => {
 
       // Local .cyberstrike config with different plugins
       await Bun.write(
-        path.join(opencodeDir, "opencode.json"),
+        path.join(cyberstrikeDir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           plugin: ["local-plugin-1"],
@@ -639,9 +639,9 @@ test("merges plugin arrays from global and local configs", async () => {
 test("does not error when only custom agent is a subagent", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
-      const agentDir = path.join(opencodeDir, "agent")
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
+      const agentDir = path.join(cyberstrikeDir, "agent")
       await fs.mkdir(agentDir, { recursive: true })
 
       await Bun.write(
@@ -672,11 +672,11 @@ test("merges instructions arrays from global and local configs", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(projectDir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           instructions: ["global-instructions.md", "shared-rules.md"],
@@ -684,7 +684,7 @@ test("merges instructions arrays from global and local configs", async () => {
       )
 
       await Bun.write(
-        path.join(opencodeDir, "opencode.json"),
+        path.join(cyberstrikeDir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           instructions: ["local-instructions.md"],
@@ -711,11 +711,11 @@ test("deduplicates duplicate instructions from global and local configs", async 
   await using tmp = await tmpdir({
     init: async (dir) => {
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(projectDir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           instructions: ["duplicate.md", "global-only.md"],
@@ -723,7 +723,7 @@ test("deduplicates duplicate instructions from global and local configs", async 
       )
 
       await Bun.write(
-        path.join(opencodeDir, "opencode.json"),
+        path.join(cyberstrikeDir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           instructions: ["duplicate.md", "local-only.md"],
@@ -754,12 +754,12 @@ test("deduplicates duplicate plugins from global and local configs", async () =>
     init: async (dir) => {
       // Create a nested project structure with local .cyberstrike config
       const projectDir = path.join(dir, "project")
-      const opencodeDir = path.join(projectDir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      const cyberstrikeDir = path.join(projectDir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
 
       // Global config with plugins
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           plugin: ["duplicate-plugin", "global-plugin-1"],
@@ -768,7 +768,7 @@ test("deduplicates duplicate plugins from global and local configs", async () =>
 
       // Local .cyberstrike config with some overlapping plugins
       await Bun.write(
-        path.join(opencodeDir, "opencode.json"),
+        path.join(cyberstrikeDir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           plugin: ["duplicate-plugin", "local-plugin-1"],
@@ -807,7 +807,7 @@ test("migrates legacy tools config to permissions - allow", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -838,7 +838,7 @@ test("migrates legacy tools config to permissions - deny", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -869,7 +869,7 @@ test("migrates legacy write tool to edit permission", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -898,7 +898,7 @@ test("migrates legacy edit tool to edit permission", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -927,7 +927,7 @@ test("migrates legacy patch tool to edit permission", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -956,7 +956,7 @@ test("migrates legacy multiedit tool to edit permission", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -985,7 +985,7 @@ test("migrates mixed legacy tools config", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -1020,7 +1020,7 @@ test("merges legacy tools with existing permission config", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           agent: {
@@ -1053,7 +1053,7 @@ test("permission config preserves key order", async () => {
   await using tmp = await tmpdir({
     init: async (dir) => {
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           permission: {
@@ -1120,7 +1120,7 @@ test("project config can override MCP server enabled status", async () => {
       )
       // Project config enables just jira
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           mcp: {
@@ -1176,7 +1176,7 @@ test("MCP config deep merges preserving base config properties", async () => {
       )
       // Override just enables it, should preserve other properties
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           mcp: {
@@ -1211,7 +1211,7 @@ test("local .cyberstrike config can override MCP from project config", async () 
     init: async (dir) => {
       // Project config with disabled MCP
       await Bun.write(
-        path.join(dir, "opencode.json"),
+        path.join(dir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           mcp: {
@@ -1223,11 +1223,11 @@ test("local .cyberstrike config can override MCP from project config", async () 
           },
         }),
       )
-      // Local .opencode directory config enables it
-      const opencodeDir = path.join(dir, ".opencode")
-      await fs.mkdir(opencodeDir, { recursive: true })
+      // Local .cyberstrike directory config enables it
+      const cyberstrikeDir = path.join(dir, ".cyberstrike")
+      await fs.mkdir(cyberstrikeDir, { recursive: true })
       await Bun.write(
-        path.join(opencodeDir, "opencode.json"),
+        path.join(cyberstrikeDir, "cyberstrike.json"),
         JSON.stringify({
           $schema: "https://cyberstrike.io/config.json",
           mcp: {
@@ -1255,7 +1255,7 @@ test("project config overrides remote well-known config", async () => {
   let fetchedUrl: string | undefined
   const mockFetch = mock((url: string | URL | Request) => {
     const urlStr = url.toString()
-    if (urlStr.includes(".well-known/opencode")) {
+    if (urlStr.includes(".well-known/cyberstrike")) {
       fetchedUrl = urlStr
       return Promise.resolve(
         new Response(
@@ -1295,7 +1295,7 @@ test("project config overrides remote well-known config", async () => {
       init: async (dir) => {
         // Project config enables jira (overriding remote default)
         await Bun.write(
-          path.join(dir, "opencode.json"),
+          path.join(dir, "cyberstrike.json"),
           JSON.stringify({
             $schema: "https://cyberstrike.io/config.json",
             mcp: {
@@ -1314,7 +1314,7 @@ test("project config overrides remote well-known config", async () => {
       fn: async () => {
         const config = await Config.get()
         // Verify fetch was called for wellknown config
-        expect(fetchedUrl).toBe("https://example.com/.well-known/opencode")
+        expect(fetchedUrl).toBe("https://example.com/.well-known/cyberstrike")
         // Project config (enabled: true) should override remote (enabled: false)
         expect(config.mcp?.jira?.enabled).toBe(true)
       },
@@ -1333,14 +1333,14 @@ describe("getPluginName", () => {
   })
 
   test("extracts name from npm package with version", () => {
-    expect(Config.getPluginName("oh-my-opencode@2.4.3")).toBe("oh-my-opencode")
+    expect(Config.getPluginName("oh-my-cyberstrike@2.4.3")).toBe("oh-my-cyberstrike")
     expect(Config.getPluginName("some-plugin@1.0.0")).toBe("some-plugin")
     expect(Config.getPluginName("plugin@latest")).toBe("plugin")
   })
 
   test("extracts name from scoped npm package", () => {
     expect(Config.getPluginName("@scope/pkg@1.0.0")).toBe("@scope/pkg")
-    expect(Config.getPluginName("@opencode/plugin@2.0.0")).toBe("@opencode/plugin")
+    expect(Config.getPluginName("@cyberstrike/plugin@2.0.0")).toBe("@cyberstrike/plugin")
   })
 
   test("returns full string for package without version", () => {
@@ -1363,12 +1363,12 @@ describe("deduplicatePlugins", () => {
   })
 
   test("prefers local file over npm package with same name", () => {
-    const plugins = ["oh-my-opencode@2.4.3", "file:///project/.cyberstrike/plugin/oh-my-opencode.js"]
+    const plugins = ["oh-my-cyberstrike@2.4.3", "file:///project/.cyberstrike/plugin/oh-my-cyberstrike.js"]
 
     const result = Config.deduplicatePlugins(plugins)
 
     expect(result.length).toBe(1)
-    expect(result[0]).toBe("file:///project/.cyberstrike/plugin/oh-my-opencode.js")
+    expect(result[0]).toBe("file:///project/.cyberstrike/plugin/oh-my-cyberstrike.js")
   })
 
   test("preserves order of remaining plugins", () => {
@@ -1379,16 +1379,16 @@ describe("deduplicatePlugins", () => {
     expect(result).toEqual(["a-plugin@1.0.0", "b-plugin@1.0.0", "c-plugin@1.0.0"])
   })
 
-  test("local plugin directory overrides global opencode.json plugin", async () => {
+  test("local plugin directory overrides global cyberstrike.json plugin", async () => {
     await using tmp = await tmpdir({
       init: async (dir) => {
         const projectDir = path.join(dir, "project")
-        const opencodeDir = path.join(projectDir, ".opencode")
-        const pluginDir = path.join(opencodeDir, "plugin")
+        const cyberstrikeDir = path.join(projectDir, ".cyberstrike")
+        const pluginDir = path.join(cyberstrikeDir, "plugin")
         await fs.mkdir(pluginDir, { recursive: true })
 
         await Bun.write(
-          path.join(dir, "opencode.json"),
+          path.join(dir, "cyberstrike.json"),
           JSON.stringify({
             $schema: "https://cyberstrike.io/config.json",
             plugin: ["my-plugin@1.0.0"],
@@ -1423,7 +1423,7 @@ describe("CYBERSTRIKE_DISABLE_PROJECT_CONFIG", () => {
         init: async (dir) => {
           // Create a project config that would normally be loaded
           await Bun.write(
-            path.join(dir, "opencode.json"),
+            path.join(dir, "cyberstrike.json"),
             JSON.stringify({
               $schema: "https://cyberstrike.io/config.json",
               model: "project/model",
@@ -1457,19 +1457,19 @@ describe("CYBERSTRIKE_DISABLE_PROJECT_CONFIG", () => {
     try {
       await using tmp = await tmpdir({
         init: async (dir) => {
-          // Create a .opencode directory with a command
-          const opencodeDir = path.join(dir, ".opencode", "command")
-          await fs.mkdir(opencodeDir, { recursive: true })
-          await Bun.write(path.join(opencodeDir, "test-cmd.md"), "# Test Command\nThis is a test command.")
+          // Create a .cyberstrike directory with a command
+          const cyberstrikeDir = path.join(dir, ".cyberstrike", "command")
+          await fs.mkdir(cyberstrikeDir, { recursive: true })
+          await Bun.write(path.join(cyberstrikeDir, "test-cmd.md"), "# Test Command\nThis is a test command.")
         },
       })
       await Instance.provide({
         directory: tmp.path,
         fn: async () => {
           const directories = await Config.directories()
-          // Project .opencode should NOT be in directories list
-          const hasProjectOpencode = directories.some((d) => d.startsWith(tmp.path))
-          expect(hasProjectOpencode).toBe(false)
+          // Project .cyberstrike should NOT be in directories list
+          const hasProjectCyberstrike = directories.some((d) => d.startsWith(tmp.path))
+          expect(hasProjectCyberstrike).toBe(false)
         },
       })
     } finally {
@@ -1518,7 +1518,7 @@ describe("CYBERSTRIKE_DISABLE_PROJECT_CONFIG", () => {
         init: async (dir) => {
           // Create a config with relative instruction path
           await Bun.write(
-            path.join(dir, "opencode.json"),
+            path.join(dir, "cyberstrike.json"),
             JSON.stringify({
               $schema: "https://cyberstrike.io/config.json",
               instructions: ["./CUSTOM.md"],
@@ -1564,7 +1564,7 @@ describe("CYBERSTRIKE_DISABLE_PROJECT_CONFIG", () => {
         init: async (dir) => {
           // Create config in the custom config dir
           await Bun.write(
-            path.join(dir, "opencode.json"),
+            path.join(dir, "cyberstrike.json"),
             JSON.stringify({
               $schema: "https://cyberstrike.io/config.json",
               model: "configdir/model",
@@ -1577,7 +1577,7 @@ describe("CYBERSTRIKE_DISABLE_PROJECT_CONFIG", () => {
         init: async (dir) => {
           // Create config in project (should be ignored)
           await Bun.write(
-            path.join(dir, "opencode.json"),
+            path.join(dir, "cyberstrike.json"),
             JSON.stringify({
               $schema: "https://cyberstrike.io/config.json",
               model: "project/model",

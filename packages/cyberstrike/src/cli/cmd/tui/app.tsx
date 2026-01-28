@@ -1,6 +1,6 @@
-import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@opentui/solid"
+import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@cyberstrike/tui-solid"
 import { Clipboard } from "@tui/util/clipboard"
-import { TextAttributes } from "@opentui/core"
+import { TextAttributes } from "@cyberstrike/tui-core"
 import { RouteProvider, useRoute } from "@tui/context/route"
 import { Switch, Match, createEffect, untrack, ErrorBoundary, createSignal, onMount, batch, Show, on } from "solid-js"
 import { Installation } from "@/installation"
@@ -196,7 +196,7 @@ function App() {
   const exit = useExit()
   const promptRef = usePromptRef()
 
-  // Wire up console copy-to-clipboard via opentui's onCopySelection callback
+  // Wire up console copy-to-clipboard via cyberstrike-tui's onCopySelection callback
   renderer.console.onCopySelection = async (text: string) => {
     if (!text || text.length === 0) return
 
@@ -722,7 +722,7 @@ function ErrorComponent(props: {
   }
 
   if (props.error.message) {
-    issueURL.searchParams.set("title", `opentui: fatal: ${props.error.message}`)
+    issueURL.searchParams.set("title", `cyberstrike-tui: fatal: ${props.error.message}`)
   }
 
   if (props.error.stack) {

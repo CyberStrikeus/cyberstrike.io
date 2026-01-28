@@ -223,7 +223,7 @@ export namespace LLM {
       maxOutputTokens,
       abortSignal: input.abort,
       headers: {
-        ...(input.model.providerID.startsWith("opencode")
+        ...(input.model.providerID.startsWith("cyberstrike")
           ? {
               "x-cyberstrike-project": Instance.project.id,
               "x-cyberstrike-session": input.sessionID,

@@ -1,9 +1,9 @@
 const dir = process.env.CYBERSTRIKE_E2E_PROJECT_DIR ?? process.cwd()
 const title = process.env.CYBERSTRIKE_E2E_SESSION_TITLE ?? "E2E Session"
 const text = process.env.CYBERSTRIKE_E2E_MESSAGE ?? "Seeded for UI e2e"
-const model = process.env.CYBERSTRIKE_E2E_MODEL ?? "opencode/gpt-5-nano"
+const model = process.env.CYBERSTRIKE_E2E_MODEL ?? "cyberstrike/gpt-5-nano"
 const parts = model.split("/")
-const providerID = parts[0] ?? "opencode"
+const providerID = parts[0] ?? "cyberstrike"
 const modelID = parts[1] ?? "gpt-5-nano"
 const now = Date.now()
 

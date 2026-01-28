@@ -292,7 +292,7 @@ const createPlatform = (password: Accessor<string | null>): Platform => ({
     const pw = password()
 
     const addHeader = (headers: Headers, password: string) => {
-      headers.append("Authorization", `Basic ${btoa(`opencode:${password}`)}`)
+      headers.append("Authorization", `Basic ${btoa(`cyberstrike:${password}`)}`)
     }
 
     if (input instanceof Request) {
@@ -402,9 +402,9 @@ function ServerGate(props: { children: (data: Accessor<ServerReadyData>) => JSX.
       }
     >
       <div class="h-screen w-screen flex flex-col items-center justify-center bg-background-base gap-4 px-6">
-        <div class="text-16-semibold">OpenCode failed to start</div>
+        <div class="text-16-semibold">Cyberstrike failed to start</div>
         <div class="text-12-regular opacity-70 text-center max-w-xl">
-          The local OpenCode server could not be started. Restart the app, or check your network settings (VPN/proxy)
+          The local Cyberstrike server could not be started. Restart the app, or check your network settings (VPN/proxy)
           and try again.
         </div>
         <div class="w-full max-w-3xl rounded border border-border bg-background-base overflow-auto max-h-64">

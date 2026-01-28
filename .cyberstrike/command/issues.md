@@ -1,6 +1,6 @@
 ---
 description: "find issue(s) on github"
-model: opencode/claude-haiku-4-5
+model: cyberstrike/claude-haiku-4-5
 ---
 
 Search through existing issues in cyberstrike/cyberstrike using the gh cli to find issues matching this query:

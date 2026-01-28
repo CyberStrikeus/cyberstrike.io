@@ -26,9 +26,9 @@ jobs:
       - uses: ./.github/actions/setup-bun
 
       - name: Run cyberstrike
-        uses: anomalyco/opencode/github@latest
+        uses: cyberstrike/cyberstrike/github@latest
         env:
           CYBERSTRIKE_API_KEY: ${{ secrets.CYBERSTRIKE_API_KEY }}
           CYBERSTRIKE_PERMISSION: '{"bash": "deny"}'
         with:
-          model: opencode/claude-opus-4-5
+          model: cyberstrike/claude-opus-4-5

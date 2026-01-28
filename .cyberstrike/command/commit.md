@@ -1,6 +1,6 @@
 ---
 description: git commit and push
-model: opencode/glm-4.7
+model: cyberstrike/glm-4.7
 subtask: true
 ---
 

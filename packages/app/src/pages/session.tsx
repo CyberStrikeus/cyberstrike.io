@@ -1317,7 +1317,7 @@ export default function Page() {
   createEffect(() => {
     const sessionID = params.id
     if (!sessionID) return
-    const raw = sessionStorage.getItem("opencode.pendingMessage")
+    const raw = sessionStorage.getItem("cyberstrike.pendingMessage")
     if (!raw) return
     const parts = raw.split("|")
     const pendingSessionID = parts[0]
@@ -1325,7 +1325,7 @@ export default function Page() {
     if (!pendingSessionID || !messageID) return
     if (pendingSessionID !== sessionID) return
 
-    sessionStorage.removeItem("opencode.pendingMessage")
+    sessionStorage.removeItem("cyberstrike.pendingMessage")
     setUi("pendingMessage", messageID)
   })
 

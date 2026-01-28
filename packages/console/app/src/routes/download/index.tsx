@@ -5,7 +5,7 @@ import { Header } from "~/component/header"
 import { Footer } from "~/component/footer"
 import { IconCopy, IconCheck } from "~/component/icon"
 import { Faq } from "~/component/faq"
-import desktopAppIcon from "../../asset/lander/opencode-desktop-icon.png"
+import desktopAppIcon from "../../asset/lander/cyberstrike-desktop-icon.png"
 import { Legal } from "~/component/legal"
 import { config } from "~/config"
 import { createSignal, onMount, Show, JSX } from "solid-js"
@@ -80,9 +80,9 @@ export default function Download() {
   }
   return (
     <main data-page="download">
-      <Title>OpenCode | Download</Title>
+      <Title>Cyberstrike | Download</Title>
       <Link rel="canonical" href={`${config.baseUrl}/download`} />
-      <Meta name="description" content="Download OpenCode for macOS, Windows, and Linux" />
+      <Meta name="description" content="Download Cyberstrike for macOS, Windows, and Linux" />
       <div data-component="container">
         <Header hideGetStarted />
 
@@ -92,7 +92,7 @@ export default function Download() {
               <img src={desktopAppIcon} alt="Cyberstrike Desktop" />
             </div>
             <div data-component="hero-text">
-              <h1>Download OpenCode</h1>
+              <h1>Download Cyberstrike</h1>
               <p>Available in Beta for macOS, Windows, and Linux</p>
               <Show when={detectedOS()}>
                 <a href={getDownloadHref(getDownloadPlatform(detectedOS()))} data-component="download-button">
@@ -105,7 +105,7 @@ export default function Download() {
 
           <section data-component="download-section">
             <div data-component="section-label">
-              <span>[1]</span> OpenCode Terminal
+              <span>[1]</span> Cyberstrike Terminal
             </div>
             <div data-component="section-content">
               <button
@@ -117,27 +117,27 @@ export default function Download() {
                 </code>
                 <CopyStatus />
               </button>
-              <button data-component="cli-row" onClick={handleCopyClick("npm i -g opencode-ai")}>
+              <button data-component="cli-row" onClick={handleCopyClick("npm i -g cyberstrike")}>
                 <code>
-                  npm i -g <strong>opencode-ai</strong>
+                  npm i -g <strong>cyberstrike</strong>
                 </code>
                 <CopyStatus />
               </button>
-              <button data-component="cli-row" onClick={handleCopyClick("bun add -g opencode-ai")}>
+              <button data-component="cli-row" onClick={handleCopyClick("bun add -g cyberstrike")}>
                 <code>
-                  bun add -g <strong>opencode-ai</strong>
+                  bun add -g <strong>cyberstrike</strong>
                 </code>
                 <CopyStatus />
               </button>
-              <button data-component="cli-row" onClick={handleCopyClick("brew install anomalyco/tap/opencode")}>
+              <button data-component="cli-row" onClick={handleCopyClick("brew install cyberstrike/tap/cyberstrike")}>
                 <code>
-                  brew install <strong>anomalyco/tap/opencode</strong>
+                  brew install <strong>cyberstrike/tap/cyberstrike</strong>
                 </code>
                 <CopyStatus />
               </button>
-              <button data-component="cli-row" onClick={handleCopyClick("paru -S opencode")}>
+              <button data-component="cli-row" onClick={handleCopyClick("paru -S cyberstrike")}>
                 <code>
-                  paru -S <strong>opencode</strong>
+                  paru -S <strong>cyberstrike</strong>
                 </code>
                 <CopyStatus />
               </button>
@@ -149,9 +149,9 @@ export default function Download() {
               <span>[2]</span> Cyberstrike Desktop (Beta)
             </div>
             <div data-component="section-content">
-              <button data-component="cli-row" onClick={handleCopyClick("brew install --cask opencode-desktop")}>
+              <button data-component="cli-row" onClick={handleCopyClick("brew install --cask cyberstrike-desktop")}>
                 <code>
-                  brew install --cask <strong>opencode-desktop</strong>
+                  brew install --cask <strong>cyberstrike-desktop</strong>
                 </code>
                 <CopyStatus />
               </button>
@@ -266,7 +266,7 @@ export default function Download() {
 
           <section data-component="download-section">
             <div data-component="section-label">
-              <span>[3]</span> OpenCode Extensions
+              <span>[3]</span> Cyberstrike Extensions
             </div>
             <div data-component="section-content">
               <div data-component="download-row">
@@ -372,7 +372,7 @@ export default function Download() {
 
           <section data-component="download-section">
             <div data-component="section-label">
-              <span>[4]</span> OpenCode Integrations
+              <span>[4]</span> Cyberstrike Integrations
             </div>
             <div data-component="section-content">
               <div data-component="download-row">
@@ -418,48 +418,48 @@ export default function Download() {
           </div>
           <ul>
             <li>
-              <Faq question="What is OpenCode?">
-                OpenCode is an open source agent that helps you write and run code with any AI model. It's available as
+              <Faq question="What is Cyberstrike?">
+                Cyberstrike is an open source agent that helps you write and run code with any AI model. It's available as
                 a terminal-based interface, desktop app, or IDE extension.
               </Faq>
             </li>
             <li>
-              <Faq question="How do I use OpenCode?">
+              <Faq question="How do I use Cyberstrike?">
                 The easiest way to get started is to read the <a href="/docs">intro</a>.
               </Faq>
             </li>
             <li>
-              <Faq question="Do I need extra AI subscriptions to use OpenCode?">
-                Not necessarily, but probably. You'll need an AI subscription if you want to connect OpenCode to a paid
+              <Faq question="Do I need extra AI subscriptions to use Cyberstrike?">
+                Not necessarily, but probably. You'll need an AI subscription if you want to connect Cyberstrike to a paid
                 provider, although you can work with{" "}
                 <a href="/docs/providers/#lm-studio" target="_blank">
                   local models
                 </a>{" "}
-                for free. While we encourage users to use <A href="/zen">Zen</A>, OpenCode works with all popular
+                for free. While we encourage users to use <A href="/zen">Zen</A>, Cyberstrike works with all popular
                 providers such as OpenAI, Anthropic, xAI etc.
               </Faq>
             </li>
             <li>
-              <Faq question="Can I only use OpenCode in the terminal?">
-                Not anymore! OpenCode is now available as an app for your <a href="/download">desktop</a> and{" "}
+              <Faq question="Can I only use Cyberstrike in the terminal?">
+                Not anymore! Cyberstrike is now available as an app for your <a href="/download">desktop</a> and{" "}
                 <a href="/docs/cli/#web">web</a>!
               </Faq>
             </li>
             <li>
-              <Faq question="How much does OpenCode cost?">
-                OpenCode is 100% free to use. Any additional costs will come from your subscription to a model provider.
-                While OpenCode works with any model provider, we recommend using <A href="/zen">Zen</A>.
+              <Faq question="How much does Cyberstrike cost?">
+                Cyberstrike is 100% free to use. Any additional costs will come from your subscription to a model provider.
+                While Cyberstrike works with any model provider, we recommend using <A href="/zen">Zen</A>.
               </Faq>
             </li>
             <li>
               <Faq question="What about data and privacy?">
-                Your data and information is only stored when you create sharable links in OpenCode. Learn more about{" "}
+                Your data and information is only stored when you create sharable links in Cyberstrike. Learn more about{" "}
                 <a href="/docs/share/#privacy">share pages</a>.
               </Faq>
             </li>
             <li>
-              <Faq question="Is OpenCode open source?">
-                Yes, OpenCode is fully open source. The source code is public on{" "}
+              <Faq question="Is Cyberstrike open source?">
+                Yes, Cyberstrike is fully open source. The source code is public on{" "}
                 <a href={config.github.repoUrl} target="_blank">
                   GitHub
                 </a>{" "}

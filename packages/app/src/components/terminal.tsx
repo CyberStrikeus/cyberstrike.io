@@ -115,7 +115,7 @@ export const Terminal = (props: TerminalProps) => {
 
     const url = new URL(sdk.url + `/pty/${local.pty.id}/connect?directory=${encodeURIComponent(sdk.directory)}`)
     if (window.__CYBERSTRIKE__?.serverPassword) {
-      url.username = "opencode"
+      url.username = "cyberstrike"
       url.password = window.__CYBERSTRIKE__?.serverPassword
     }
     const socket = new WebSocket(url)

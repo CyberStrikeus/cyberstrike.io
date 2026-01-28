@@ -58,7 +58,7 @@ const ModelList: Component<{
             <ModelTooltip
               model={item}
               latest={item.latest}
-              free={item.provider.id === "opencode" && (!item.cost || item.cost.input === 0)}
+              free={item.provider.id === "cyberstrike" && (!item.cost || item.cost.input === 0)}
             />
           }
         >
@@ -75,7 +75,7 @@ const ModelList: Component<{
       {(i) => (
         <div class="w-full flex items-center gap-x-2 text-13-regular">
           <span class="truncate">{i.name}</span>
-          <Show when={i.provider.id === "opencode" && (!i.cost || i.cost?.input === 0)}>
+          <Show when={i.provider.id === "cyberstrike" && (!i.cost || i.cost?.input === 0)}>
             <Tag>{language.t("model.tag.free")}</Tag>
           </Show>
           <Show when={i.latest}>
