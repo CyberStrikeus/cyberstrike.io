@@ -110,10 +110,10 @@ export default function Download() {
             <div data-component="section-content">
               <button
                 data-component="cli-row"
-                onClick={handleCopyClick("curl -fsSL https://cyberstrike.io/install | bash")}
+                onClick={handleCopyClick("curl -fsSL https://cyberstrike.io/install.sh | bash")}
               >
                 <code>
-                  curl -fsSL https://<strong>cyberstrike.io/install</strong> | bash
+                  curl -fsSL https://<strong>cyberstrike.io/install.sh</strong> | bash
                 </code>
                 <CopyStatus />
               </button>
@@ -129,9 +129,9 @@ export default function Download() {
                 </code>
                 <CopyStatus />
               </button>
-              <button data-component="cli-row" onClick={handleCopyClick("brew install cyberstrike/tap/cyberstrike")}>
+              <button data-component="cli-row" onClick={handleCopyClick("brew tap CyberStrikeus/tap && brew install cyberstrike")}>
                 <code>
-                  brew install <strong>cyberstrike/tap/cyberstrike</strong>
+                  brew tap CyberStrikeus/tap && brew install <strong>cyberstrike</strong>
                 </code>
                 <CopyStatus />
               </button>
@@ -435,7 +435,7 @@ export default function Download() {
                 <a href="/docs/providers/#lm-studio" target="_blank">
                   local models
                 </a>{" "}
-                for free. While we encourage users to use <A href="/zen">Zen</A>, Cyberstrike works with all popular
+                for free. While we encourage users to use <A href="/arsenal">Arsenal</A>, Cyberstrike works with all popular
                 providers such as OpenAI, Anthropic, xAI etc.
               </Faq>
             </li>
@@ -448,7 +448,7 @@ export default function Download() {
             <li>
               <Faq question="How much does Cyberstrike cost?">
                 Cyberstrike is 100% free to use. Any additional costs will come from your subscription to a model provider.
-                While Cyberstrike works with any model provider, we recommend using <A href="/zen">Zen</A>.
+                While Cyberstrike works with any model provider, we recommend using <A href="/arsenal">Arsenal</A>.
               </Faq>
             </li>
             <li>

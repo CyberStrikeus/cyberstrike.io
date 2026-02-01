@@ -34,7 +34,7 @@ To use Cyberstrike in your terminal, you'll need:
 The easiest way to install Cyberstrike is through the install script.
 
 ```bash
-curl -fsSL https://cyberstrike.io/install | bash
+curl -fsSL https://cyberstrike.io/install.sh | bash
 ```
 
 You can also install it with the following commands:
@@ -76,10 +76,8 @@ You can also install it with the following commands:
 - **Using Homebrew on macOS and Linux**
 
   ```bash
-  brew install cyberstrike/tap/cyberstrike
+  brew tap CyberStrikeus/tap && brew install cyberstrike
   ```
-
-  > We recommend using the Cyberstrike tap for the most up to date releases. The official `brew install cyberstrike` formula is maintained by the Homebrew team and is updated less frequently.
 
 - **Using Paru on Arch Linux**
 
@@ -110,18 +108,18 @@ You can also install it with the following commands:
 - **Using Mise**
 
   ```bash
-  mise use -g github:cyberstrike/cyberstrike
+  mise use -g github:CyberStrikeus/cyberstrike.io
   ```
 
 - **Using Docker**
 
   ```bash
-  docker run -it --rm ghcr.io/cyberstrike/cyberstrike
+  docker run -it --rm ghcr.io/cyberstrikeus/cyberstrike
   ```
 
 Support for installing Cyberstrike on Windows using Bun is currently in progress.
 
-You can also grab the binary from the [Releases](https://github.com/cyberstrike/cyberstrike/releases).
+You can also grab the binary from the [Releases](https://github.com/CyberStrikeus/cyberstrike.io/releases).
 
 ---
 
@@ -129,7 +127,7 @@ You can also grab the binary from the [Releases](https://github.com/cyberstrike/
 
 With Cyberstrike you can use any LLM provider by configuring their API keys.
 
-If you are new to using LLM providers, we recommend using [Cyberstrike Zen](/docs/zen).
+If you are new to using LLM providers, we recommend using [Cyberstrike Arsenal](/docs/arsenal).
 It's a curated list of models that have been tested and verified by the Cyberstrike
 team.
 
