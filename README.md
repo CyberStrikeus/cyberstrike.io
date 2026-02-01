@@ -1,6 +1,7 @@
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io)](https://github.com/CyberStrikeus/cyberstrike.io/stargazers)
 [![Release](https://img.shields.io/github/v/release/CyberStrikeus/cyberstrike.io)](https://github.com/CyberStrikeus/cyberstrike.io/releases)
+[![npm](https://img.shields.io/npm/v/cyberstrike)](https://www.npmjs.com/package/cyberstrike)
 
 # Cyberstrike
 
@@ -18,12 +19,32 @@ Cyberstrike combines multiple AI models (Claude, GPT, Gemini) with specialized s
 
 ## Installation
 
-```bash
-# Using npm
-npm install -g cyberstrike
+### npm (Recommended)
 
-# Using bun
-bun install -g cyberstrike
+```bash
+npm install -g cyberstrike
+```
+
+### Homebrew (macOS/Linux)
+
+```bash
+brew tap CyberStrikeus/tap
+brew install cyberstrike
+```
+
+### curl
+
+```bash
+curl -fsSL https://cyberstrike.io/install.sh | bash
+```
+
+### From source
+
+```bash
+git clone https://github.com/CyberStrikeus/cyberstrike.io.git
+cd cyberstrike.io
+bun install
+bun run build
 ```
 
 ## Quick Start
@@ -41,10 +62,33 @@ cyberstrike --agent web-application
 
 ## Available Agents
 
-- `web-application` - OWASP Web Security Testing Guide
-- `internal-network` - Internal network penetration testing
-- `cloud-security` - AWS/Azure/GCP security assessment
-- `bug-hunter` - Bug bounty hunting automation
+| Agent | Description |
+|-------|-------------|
+| `web-application` | OWASP Web Security Testing Guide |
+| `internal-network` | Internal network penetration testing |
+| `cloud-security` | AWS/Azure/GCP security assessment |
+| `bug-hunter` | Bug bounty hunting automation |
+
+## Configuration
+
+Create a `.cyberstrike/config.json` in your project directory:
+
+```json
+{
+  "model": "claude-3-opus",
+  "agent": "web-application",
+  "output": "./reports"
+}
+```
+
+## Environment Variables
+
+| Variable | Description |
+|----------|-------------|
+| `ANTHROPIC_API_KEY` | Anthropic API key (Claude) |
+| `OPENAI_API_KEY` | OpenAI API key (GPT-4) |
+| `GOOGLE_API_KEY` | Google API key (Gemini) |
+| `OPENROUTER_API_KEY` | OpenRouter API key |
 
 ## Documentation
 
@@ -65,3 +109,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 - [GitHub Discussions](https://github.com/CyberStrikeus/cyberstrike.io/discussions)
 - [Discord](https://discord.gg/cyberstrike)
 - [Twitter](https://twitter.com/cyberstrike_io)
+
+## Security
+
+If you discover a security vulnerability, please email security@cyberstrike.io instead of opening a public issue.
