@@ -1,5 +1,9 @@
-![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
-![GitHub stars](https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io)](<https://github.com/Cyb>
+erStrikeus/cyberstrike.io/stargazers)
+[![GitHub release](https://img.shields.io/github/v/release/CyberStrikeus/cyberstrike.io)](<https://github.c>
+om/CyberStrikeus/cyberstrike.io/releases)
+
   
 # Cyberstrike
 
