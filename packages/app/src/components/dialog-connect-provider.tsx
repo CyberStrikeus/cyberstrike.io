@@ -247,17 +247,17 @@ export function DialogConnectProvider(props: { provider: string }) {
                       <Match when={provider().id === "cyberstrike"}>
                         <div class="flex flex-col gap-4">
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.cyberstrikeZen.line1")}
+                            {language.t("provider.connect.cyberstrikeArsenal.line1")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.cyberstrikeZen.line2")}
+                            {language.t("provider.connect.cyberstrikeArsenal.line2")}
                           </div>
                           <div class="text-14-regular text-text-base">
-                            {language.t("provider.connect.cyberstrikeZen.visit.prefix")}
-                            <Link href="https://cyberstrike.io/zen" tabIndex={-1}>
-                              {language.t("provider.connect.cyberstrikeZen.visit.link")}
+                            {language.t("provider.connect.cyberstrikeArsenal.visit.prefix")}
+                            <Link href="https://cyberstrike.io/arsenal" tabIndex={-1}>
+                              {language.t("provider.connect.cyberstrikeArsenal.visit.link")}
                             </Link>
-                            {language.t("provider.connect.cyberstrikeZen.visit.suffix")}
+                            {language.t("provider.connect.cyberstrikeArsenal.visit.suffix")}
                           </div>
                         </div>
                       </Match>

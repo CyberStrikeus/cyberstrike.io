@@ -54,12 +54,12 @@
     "tsdown": "^0.16.0"
   },
   "peerDependencies": {
-    "@cyberstrike/tui-core": "^0.1.49",
-    "@cyberstrike/tui-solid": "^0.1.49",
+    "@cyberstrike-io/tui-core": "^0.1.49",
+    "@cyberstrike-io/tui-solid": "^0.1.49",
     "typescript": "^5"
   },
   "peerDependenciesMeta": {
-    "@cyberstrike/tui-solid": {
+    "@cyberstrike-io/tui-solid": {
       "optional": true
     }
   },

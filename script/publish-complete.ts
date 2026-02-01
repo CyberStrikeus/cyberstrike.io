@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-// import { Script } from "@cyberstrike/script"
+// import { Script } from "@cyberstrike-io/script"
 import { $ } from "bun"
 
 // if (!Script.preview) {

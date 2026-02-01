@@ -1,8 +1,8 @@
-import { and, Database, eq, gte, inArray, isNull, lte, or, sql, sum } from "@cyberstrike/console-core/drizzle/index.js"
-import { UsageTable } from "@cyberstrike/console-core/schema/billing.sql.js"
-import { KeyTable } from "@cyberstrike/console-core/schema/key.sql.js"
-import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
-import { AuthTable } from "@cyberstrike/console-core/schema/auth.sql.js"
+import { and, Database, eq, gte, inArray, isNull, lte, or, sql, sum } from "@cyberstrike-io/console-core/drizzle/index.js"
+import { UsageTable } from "@cyberstrike-io/console-core/schema/billing.sql.js"
+import { KeyTable } from "@cyberstrike-io/console-core/schema/key.sql.js"
+import { UserTable } from "@cyberstrike-io/console-core/schema/user.sql.js"
+import { AuthTable } from "@cyberstrike-io/console-core/schema/auth.sql.js"
 import { useParams } from "@solidjs/router"
 import { createEffect, createMemo, onCleanup, Show, For } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -111,7 +111,7 @@ const MODEL_COLORS: Record<string, string> = {
   "gpt-5-codex": "#9FCAFF",
   "gpt-5-nano": "#B8D8FF",
   "grok-code": "#8B5CF6",
-  "big-pickle": "#10B981",
+  "hydra": "#10B981",
   "kimi-k2": "#F59E0B",
   "qwen3-coder": "#EC4899",
   "glm-4.6": "#14B8A6",

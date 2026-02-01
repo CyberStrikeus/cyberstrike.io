@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test"
 import { ACP } from "../../src/acp/agent"
 import type { AgentSideConnection } from "@agentclientprotocol/sdk"
-import type { Event } from "@cyberstrike/sdk/v2"
+import type { Event } from "@cyberstrike-io/sdk/v2"
 import { Instance } from "../../src/project/instance"
 import { tmpdir } from "../fixture/fixture"
 
@@ -146,7 +146,7 @@ function createFakeAgent() {
                 id: "cyberstrike",
                 name: "cyberstrike",
                 models: {
-                  "big-pickle": { id: "big-pickle", name: "big-pickle" },
+                  "hydra": { id: "hydra", name: "hydra" },
                 },
               },
             ],
@@ -181,7 +181,7 @@ function createFakeAgent() {
 
   const agent = new ACP.Agent(connection, {
     sdk,
-    defaultModel: { providerID: "cyberstrike", modelID: "big-pickle" },
+    defaultModel: { providerID: "cyberstrike", modelID: "hydra" },
   } as any)
 
   const stop = () => {

@@ -34,7 +34,7 @@ const fetchSvgContent = async (svgPath: string): Promise<string> => {
   }
 }
 
-export function Header(props: { zen?: boolean; hideGetStarted?: boolean }) {
+export function Header(props: { arsenal?: boolean; hideGetStarted?: boolean }) {
   const navigate = useNavigate()
   const githubData = createAsync(() => github())
   const starCount = createMemo(() =>
@@ -161,11 +161,11 @@ export function Header(props: { zen?: boolean; hideGetStarted?: boolean }) {
           </li>
           <li>
             <Switch>
-              <Match when={props.zen}>
+              <Match when={props.arsenal}>
                 <a href="/auth">Login</a>
               </Match>
-              <Match when={!props.zen}>
-                <A href="/zen">Zen</A>
+              <Match when={!props.arsenal}>
+                <A href="/arsenal">Arsenal</A>
               </Match>
             </Switch>
           </li>
@@ -250,11 +250,11 @@ export function Header(props: { zen?: boolean; hideGetStarted?: boolean }) {
                 </li>
                 <li>
                   <Switch>
-                    <Match when={props.zen}>
+                    <Match when={props.arsenal}>
                       <a href="/auth">Login</a>
                     </Match>
-                    <Match when={!props.zen}>
-                      <A href="/zen">Zen</A>
+                    <Match when={!props.arsenal}>
+                      <A href="/arsenal">Arsenal</A>
                     </Match>
                   </Switch>
                 </li>

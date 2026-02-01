@@ -1,7 +1,6 @@
 ---
 name: report-generator
 description: Generates professional penetration testing reports from findings
-model: anthropic/claude-sonnet-4-5
 ---
 
 # Penetration Test Report Generator

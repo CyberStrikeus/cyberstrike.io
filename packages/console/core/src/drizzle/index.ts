@@ -1,29 +1,30 @@
-import { drizzle } from "drizzle-orm/planetscale-serverless"
-import { Resource } from "@cyberstrike/console-resource"
+import { drizzle } from "drizzle-orm/tidb-serverless"
+import { Resource } from "@cyberstrike-io/console-resource"
 export * from "drizzle-orm"
-import { Client } from "@planetscale/database"
+import { connect } from "@tidbcloud/serverless"
 
 import { MySqlTransaction, type MySqlTransactionConfig } from "drizzle-orm/mysql-core"
 import type { ExtractTablesWithRelations } from "drizzle-orm"
-import type { PlanetScalePreparedQueryHKT, PlanetscaleQueryResultHKT } from "drizzle-orm/planetscale-serverless"
+import type { TiDBServerlessPreparedQueryHKT, TiDBServerlessQueryResultHKT } from "drizzle-orm/tidb-serverless"
 import { Context } from "../context"
 import { memo } from "../util/memo"
 
 export namespace Database {
   export type Transaction = MySqlTransaction<
-    PlanetscaleQueryResultHKT,
-    PlanetScalePreparedQueryHKT,
+    TiDBServerlessQueryResultHKT,
+    TiDBServerlessPreparedQueryHKT,
     Record<string, never>,
     ExtractTablesWithRelations<Record<string, never>>
   >
 
   const client = memo(() => {
-    const result = new Client({
+    const connection = connect({
       host: Resource.Database.host,
       username: Resource.Database.username,
       password: Resource.Database.password,
+      database: Resource.Database.database,
     })
-    const db = drizzle(result, {})
+    const db = drizzle(connection, {})
     return db
   })
 

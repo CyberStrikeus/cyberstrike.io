@@ -8,16 +8,11 @@ export default $config({
       protect: ["production"].includes(input?.stage),
       home: "cloudflare",
       providers: {
-        stripe: {
-          apiKey: process.env.STRIPE_SECRET_KEY!,
-        },
-        planetscale: "0.4.1",
+        // TiDB Serverless - MySQL compatible, no provider needed
       },
     }
   },
   async run() {
     await import("./infra/app.js")
-    await import("./infra/console.js")
-    await import("./infra/enterprise.js")
   },
 })

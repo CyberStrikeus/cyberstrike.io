@@ -1,0 +1,79 @@
+---
+import Button from "@components/Button/Button.astro";
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { Icon } from "astro-icon/components";
+
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+---
+
+<div class="w-full">
+  <div class="mb-8">
+    <h1 class="h2 text-base-900 dark:text-base-200 mb-2 text-xl">Create your account</h1>
+    <p class="text-base-600 dark:text-base-400 tracking-tight">
+      <span class="description">Already have an account?</span>
+      <a
+        class="text-primary-500 hover:text-primary-600 whitespace-nowrap transition duration-200"
+        href={getLocalizedRoute(currLocale, "/login")}>Log in</a
+      >
+    </p>
+  </div>
+  <div class="mb-6">
+    <form class="-m-2 flex flex-wrap" id="signup__form" name="signup__form">
+      <div class="w-full p-2">
+        <label for="signup__name" aria-label="Your Name" class="block">
+          <input
+            class="form__input w-full"
+            id="signup__name"
+            type="text"
+            placeholder="Your name"
+            required
+          />
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <label for="signup__email" aria-label="Email Address" class="block">
+          <input
+            class="form__input w-full"
+            id="signup__email"
+            type="email"
+            placeholder="Email address"
+            required
+          />
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <label for="signup__password" aria-label="Password" class="relative block">
+          <input
+            class="form__input w-full"
+            id="signup__password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <label for="signup__password_confirm" aria-label="Confirm Password" class="relative block">
+          <input
+            class="form__input w-full"
+            id="signup__password_confirm"
+            type="password"
+            placeholder="Confirm password"
+            required
+          />
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <label class="flex items-start gap-2 text-sm text-base-600 dark:text-base-400 cursor-pointer mb-4">
+          <input type="checkbox" name="terms" class="mt-0.5 rounded border-base-300 dark:border-base-600" required />
+          <span>I agree to the <a href="/terms" class="text-primary-500 hover:text-primary-600">Terms of Service</a> and <a href="/privacy" class="text-primary-500 hover:text-primary-600">Privacy Policy</a></span>
+        </label>
+        <Button variant="primary" type="submit" class="w-full rounded-md before:rounded-md"
+          >Create Account</Button
+        >
+      </div>
+    </form>
+  </div>
+</div>

@@ -7,7 +7,7 @@ export const config = {
 
   // GitHub
   github: {
-    repoUrl: "https://github.com/cyberstrike/cyberstrike",
+    repoUrl: "https://github.com/CyberStrikeus/cyberstrike.io",
     starsFormatted: {
       compact: "0",
       full: "0",

@@ -3,21 +3,21 @@
 import { $ } from "bun"
 import path from "path"
 import os from "os"
-import { ZenData } from "../src/model"
+import { ArsenalData } from "../src/model"
 
 const root = path.resolve(process.cwd(), "..", "..", "..")
 const models = await $`bun sst secret list`.cwd(root).text()
 const PARTS = 8
 
-// read the line starting with "ZEN_MODELS"
+// read the line starting with "ARSENAL_MODELS"
 const lines = models.split("\n")
 const oldValues = Array.from({ length: PARTS }, (_, i) => {
   const value = lines
-    .find((line) => line.startsWith(`ZEN_MODELS${i + 1}`))
+    .find((line) => line.startsWith(`ARSENAL_MODELS${i + 1}`))
     ?.split("=")
     .slice(1)
     .join("=")
-  if (!value) throw new Error(`ZEN_MODELS${i + 1} not found`)
+  if (!value) throw new Error(`ARSENAL_MODELS${i + 1} not found`)
   return value
 })
 
@@ -30,7 +30,7 @@ console.log("tempFile", tempFile.name)
 // open temp file in vim and read the file on close
 await $`vim ${tempFile.name}`
 const newValue = JSON.stringify(JSON.parse(await tempFile.text()))
-ZenData.validate(JSON.parse(newValue))
+ArsenalData.validate(JSON.parse(newValue))
 
 // update the secret
 const chunk = Math.ceil(newValue.length / PARTS)
@@ -39,5 +39,5 @@ const newValues = Array.from({ length: PARTS }, (_, i) =>
 )
 
 for (let i = 0; i < PARTS; i++) {
-  await $`bun sst secret set ZEN_MODELS${i + 1} -- ${newValues[i]}`
+  await $`bun sst secret set ARSENAL_MODELS${i + 1} -- ${newValues[i]}`
 }

@@ -3,7 +3,7 @@
 export const iconNames = [
   "zhipuai",
   "zhipuai-coding-plan",
-  "zenmux",
+  "arsenalmux",
   "zai",
   "zai-coding-plan",
   "xiaomi",

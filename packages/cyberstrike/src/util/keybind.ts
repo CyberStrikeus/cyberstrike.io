@@ -1,5 +1,5 @@
 import { isDeepEqual } from "remeda"
-import type { ParsedKey } from "@cyberstrike/tui-core"
+import type { ParsedKey } from "@cyberstrike-io/tui-core"
 
 export namespace Keybind {
   /**

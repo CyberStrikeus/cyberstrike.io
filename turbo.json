@@ -10,7 +10,7 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "@cyberstrike/app#test": {
+    "@cyberstrike-io/app#test": {
       "dependsOn": ["^build"],
       "outputs": []
     }

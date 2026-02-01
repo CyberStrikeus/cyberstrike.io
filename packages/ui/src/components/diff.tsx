@@ -1,4 +1,4 @@
-import { checksum } from "@cyberstrike/util/encode"
+import { checksum } from "@cyberstrike-io/util/encode"
 import { FileDiff, type SelectedLineRange } from "@pierre/diffs"
 import { createMediaQuery } from "@solid-primitives/media"
 import { createEffect, createMemo, createSignal, onCleanup, splitProps } from "solid-js"

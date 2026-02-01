@@ -27,36 +27,36 @@ export const api = new sst.cloudflare.Worker("Api", {
     FEISHU_APP_ID,
     FEISHU_APP_SECRET,
   ],
-  transform: {
-    worker: (args) => {
-      args.logpush = true
-      args.bindings = $resolve(args.bindings).apply((bindings) => [
-        ...bindings,
-        {
-          name: "SYNC_SERVER",
-          type: "durable_object_namespace",
-          className: "SyncServer",
-        },
-      ])
-      args.migrations = {
-        // Note: when releasing the next tag, make sure all stages use tag v2
-        oldTag: $app.stage === "production" || $app.stage === "thdxr" ? "" : "v1",
-        newTag: $app.stage === "production" || $app.stage === "thdxr" ? "" : "v1",
-        //newSqliteClasses: ["SyncServer"],
-      }
-    },
-  },
+  // Durable Objects temporarily disabled for initial deploy
+  // transform: {
+  //   worker: (args) => {
+  //     args.bindings = $resolve(args.bindings).apply((bindings) => [
+  //       ...bindings,
+  //       {
+  //         name: "SYNC_SERVER",
+  //         type: "durable_object_namespace",
+  //         className: "SyncServer",
+  //       },
+  //     ])
+  //     args.migrations = [
+  //       {
+  //         tag: "v1",
+  //         newClasses: ["SyncServer"],
+  //       },
+  //     ]
+  //   },
+  // },
 })
 
-new sst.cloudflare.x.Astro("Web", {
-  domain: "docs." + domain,
-  path: "packages/web",
-  environment: {
-    // For astro config
-    SST_STAGE: $app.stage,
-    VITE_API_URL: api.url.apply((url) => url!),
-  },
-})
+// Docs moved to Coolify (self-hosted)
+// new sst.cloudflare.x.Astro("Web", {
+//   domain: "docs." + domain,
+//   path: "packages/web",
+//   environment: {
+//     SST_STAGE: $app.stage,
+//     VITE_API_URL: api.url.apply((url) => url!),
+//   },
+// })
 
 new sst.cloudflare.StaticSite("WebApp", {
   domain: "app." + domain,

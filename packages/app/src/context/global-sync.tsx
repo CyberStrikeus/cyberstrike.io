@@ -18,10 +18,10 @@ import {
   type PermissionRequest,
   type QuestionRequest,
   createCyberstrikeClient,
-} from "@cyberstrike/sdk/v2/client"
+} from "@cyberstrike-io/sdk/v2/client"
 import { createStore, produce, reconcile, type SetStoreFunction, type Store } from "solid-js/store"
-import { Binary } from "@cyberstrike/util/binary"
-import { retry } from "@cyberstrike/util/retry"
+import { Binary } from "@cyberstrike-io/util/binary"
+import { retry } from "@cyberstrike-io/util/retry"
 import { useGlobalSDK } from "./global-sdk"
 import { ErrorPage, type InitError } from "../pages/error"
 import {
@@ -39,8 +39,8 @@ import {
   Switch,
   Match,
 } from "solid-js"
-import { showToast } from "@cyberstrike/ui/toast"
-import { getFilename } from "@cyberstrike/util/path"
+import { showToast } from "@cyberstrike-io/ui/toast"
+import { getFilename } from "@cyberstrike-io/util/path"
 import { usePlatform } from "./platform"
 import { useLanguage } from "@/context/language"
 import { Persist, persisted } from "@/utils/persist"

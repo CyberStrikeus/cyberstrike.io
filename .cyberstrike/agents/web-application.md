@@ -1,7 +1,6 @@
 ---
 name: web-application
 description: Web application security testing agent for identifying OWASP Top 10 vulnerabilities
-model: anthropic/claude-sonnet-4-5
 ---
 
 # Web Application Security Agent

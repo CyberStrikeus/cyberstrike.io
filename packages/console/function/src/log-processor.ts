@@ -1,4 +1,4 @@
-import { Resource } from "@cyberstrike/console-resource"
+import { Resource } from "@cyberstrike-io/console-resource"
 import type { TraceItem } from "@cloudflare/workers-types"
 
 export default {
@@ -10,10 +10,10 @@ export default {
 
       const url = new URL(event.event.request.url)
       if (
-        url.pathname !== "/zen/v1/chat/completions" &&
-        url.pathname !== "/zen/v1/messages" &&
-        url.pathname !== "/zen/v1/responses" &&
-        !url.pathname.startsWith("/zen/v1/models/")
+        url.pathname !== "/arsenal/v1/chat/completions" &&
+        url.pathname !== "/arsenal/v1/messages" &&
+        url.pathname !== "/arsenal/v1/responses" &&
+        !url.pathname.startsWith("/arsenal/v1/models/")
       )
         return
 
@@ -39,7 +39,7 @@ export default {
       }
       console.log(JSON.stringify(metrics, null, 2))
 
-      const ret = await fetch("https://api.honeycomb.io/1/events/zen", {
+      const ret = await fetch("https://api.honeycomb.io/1/events/arsenal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -2,41 +2,21 @@ import { domain } from "./stage"
 import { EMAILOCTOPUS_API_KEY } from "./app"
 
 ////////////////
-// DATABASE
+// DATABASE (TiDB Serverless)
 ////////////////
 
-const cluster = planetscale.getDatabaseOutput({
-  name: "cyberstrike",
-  organization: "anomalyco",
-})
-
-const branch =
-  $app.stage === "production"
-    ? planetscale.getBranchOutput({
-        name: "production",
-        organization: cluster.organization,
-        database: cluster.name,
-      })
-    : new planetscale.Branch("DatabaseBranch", {
-        database: cluster.name,
-        organization: cluster.organization,
-        name: $app.stage,
-        parentBranch: "production",
-      })
-const password = new planetscale.Password("DatabasePassword", {
-  name: $app.stage,
-  database: cluster.name,
-  organization: cluster.organization,
-  branch: branch.name,
-})
+const TIDB_HOST = new sst.Secret("TIDB_HOST")
+const TIDB_USER = new sst.Secret("TIDB_USER")
+const TIDB_PASSWORD = new sst.Secret("TIDB_PASSWORD")
+const TIDB_DATABASE = new sst.Secret("TIDB_DATABASE")
 
 export const database = new sst.Linkable("Database", {
   properties: {
-    host: password.accessHostUrl,
-    database: cluster.name,
-    username: password.username,
-    password: password.plaintext,
-    port: 3306,
+    host: TIDB_HOST.value,
+    database: TIDB_DATABASE.value,
+    username: TIDB_USER.value,
+    password: TIDB_PASSWORD.value,
+    port: 4000,
   },
 })
 
@@ -68,79 +48,18 @@ export const auth = new sst.cloudflare.Worker("AuthApi", {
 // GATEWAY
 ////////////////
 
-export const stripeWebhook = new stripe.WebhookEndpoint("StripeWebhookEndpoint", {
-  url: $interpolate`https://${domain}/stripe/webhook`,
-  enabledEvents: [
-    "checkout.session.async_payment_failed",
-    "checkout.session.async_payment_succeeded",
-    "checkout.session.completed",
-    "checkout.session.expired",
-    "charge.refunded",
-    "invoice.payment_succeeded",
-    "invoice.payment_failed",
-    "invoice.payment_action_required",
-    "customer.created",
-    "customer.deleted",
-    "customer.updated",
-    "customer.discount.created",
-    "customer.discount.deleted",
-    "customer.discount.updated",
-    "customer.source.created",
-    "customer.source.deleted",
-    "customer.source.expiring",
-    "customer.source.updated",
-    "customer.subscription.created",
-    "customer.subscription.deleted",
-    "customer.subscription.paused",
-    "customer.subscription.pending_update_applied",
-    "customer.subscription.pending_update_expired",
-    "customer.subscription.resumed",
-    "customer.subscription.trial_will_end",
-    "customer.subscription.updated",
-  ],
-})
-
-const zenProduct = new stripe.Product("ZenBlack", {
-  name: "Cyberstrike Black",
-})
-const zenPriceProps = {
-  product: zenProduct.id,
-  currency: "usd",
-  recurring: {
-    interval: "month",
-    intervalCount: 1,
-  },
-}
-const zenPrice200 = new stripe.Price("ZenBlackPrice", { ...zenPriceProps, unitAmount: 20000 })
-const zenPrice100 = new stripe.Price("ZenBlack100Price", { ...zenPriceProps, unitAmount: 10000 })
-const zenPrice20 = new stripe.Price("ZenBlack20Price", { ...zenPriceProps, unitAmount: 2000 })
-const ZEN_BLACK_PRICE = new sst.Linkable("ZEN_BLACK_PRICE", {
-  properties: {
-    product: zenProduct.id,
-    plan200: zenPrice200.id,
-    plan100: zenPrice100.id,
-    plan20: zenPrice20.id,
-  },
-})
-const ZEN_BLACK_LIMITS = new sst.Secret("ZEN_BLACK_LIMITS")
-
-const ZEN_MODELS = [
-  new sst.Secret("ZEN_MODELS1"),
-  new sst.Secret("ZEN_MODELS2"),
-  new sst.Secret("ZEN_MODELS3"),
-  new sst.Secret("ZEN_MODELS4"),
-  new sst.Secret("ZEN_MODELS5"),
-  new sst.Secret("ZEN_MODELS6"),
-  new sst.Secret("ZEN_MODELS7"),
-  new sst.Secret("ZEN_MODELS8"),
+const ARSENAL_MODELS = [
+  new sst.Secret("ARSENAL_MODELS1"),
+  new sst.Secret("ARSENAL_MODELS2"),
+  new sst.Secret("ARSENAL_MODELS3"),
+  new sst.Secret("ARSENAL_MODELS4"),
+  new sst.Secret("ARSENAL_MODELS5"),
+  new sst.Secret("ARSENAL_MODELS6"),
+  new sst.Secret("ARSENAL_MODELS7"),
+  new sst.Secret("ARSENAL_MODELS8"),
 ]
-const STRIPE_SECRET_KEY = new sst.Secret("STRIPE_SECRET_KEY")
-const STRIPE_PUBLISHABLE_KEY = new sst.Secret("STRIPE_PUBLISHABLE_KEY")
 const AUTH_API_URL = new sst.Linkable("AUTH_API_URL", {
   properties: { value: auth.url.apply((url) => url!) },
-})
-const STRIPE_WEBHOOK_SECRET = new sst.Linkable("STRIPE_WEBHOOK_SECRET", {
-  properties: { value: stripeWebhook.secret },
 })
 const gatewayKv = new sst.cloudflare.Kv("GatewayKv")
 
@@ -148,8 +67,8 @@ const gatewayKv = new sst.cloudflare.Kv("GatewayKv")
 // CONSOLE
 ////////////////
 
-const bucket = new sst.cloudflare.Bucket("ZenData")
-const bucketNew = new sst.cloudflare.Bucket("ZenDataNew")
+const bucket = new sst.cloudflare.Bucket("ArsenalData")
+const bucketNew = new sst.cloudflare.Bucket("ArsenalDataNew")
 
 const AWS_SES_ACCESS_KEY_ID = new sst.Secret("AWS_SES_ACCESS_KEY_ID")
 const AWS_SES_SECRET_ACCESS_KEY = new sst.Secret("AWS_SES_SECRET_ACCESS_KEY")
@@ -171,15 +90,11 @@ new sst.cloudflare.x.SolidStart("Console", {
     bucketNew,
     database,
     AUTH_API_URL,
-    STRIPE_WEBHOOK_SECRET,
-    STRIPE_SECRET_KEY,
     EMAILOCTOPUS_API_KEY,
     AWS_SES_ACCESS_KEY_ID,
     AWS_SES_SECRET_ACCESS_KEY,
-    ZEN_BLACK_PRICE,
-    ZEN_BLACK_LIMITS,
-    new sst.Secret("ZEN_SESSION_SECRET"),
-    ...ZEN_MODELS,
+    new sst.Secret("ARSENAL_SESSION_SECRET"),
+    ...ARSENAL_MODELS,
     ...($dev
       ? [
           new sst.Secret("CLOUDFLARE_DEFAULT_ACCOUNT_ID", process.env.CLOUDFLARE_DEFAULT_ACCOUNT_ID!),
@@ -192,7 +107,6 @@ new sst.cloudflare.x.SolidStart("Console", {
     //VITE_DOCS_URL: web.url.apply((url) => url!),
     //VITE_API_URL: gateway.url.apply((url) => url!),
     VITE_AUTH_URL: auth.url.apply((url) => url!),
-    VITE_STRIPE_PUBLISHABLE_KEY: STRIPE_PUBLISHABLE_KEY.value,
   },
   transform: {
     server: {

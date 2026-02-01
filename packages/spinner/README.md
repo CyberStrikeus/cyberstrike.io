@@ -1,36 +1,24 @@
-# opentui-spinner
+# @cyberstrike/spinner
 
-<div align="center">
-    <a href="https://www.npmjs.com/package/opentui-spinner"><img alt="npm" src="https://img.shields.io/npm/v/opentui-spinner?style=flat-square" /></a>
-    <a href="https://github.com/msmps/awesome-opentui"><img alt="awesome opentui list" src="https://awesome.re/mentioned-badge-flat.svg" /></a>
-</div>
-
-A small & opinionated spinner library for terminal UIs built on [OpenTUI](https://github.com/sst/opentui).
+A small & opinionated spinner library for terminal UIs built on [Cyberstrike TUI](https://github.com/CyberStrikeus/cyberstrike.io).
 
 ## Features
 
 - **Built-in Spinners** - Powered by [cli-spinners](https://github.com/sindresorhus/cli-spinners)
 - **Custom Spinners** - Create your own with custom frames and intervals
-- **React Support** - First-class React integration via OpenTUI React
-- **SolidJS Support** - First-class SolidJS integration via OpenTUI Solid
+- **SolidJS Support** - First-class SolidJS integration via @cyberstrike/tui-solid
 - **Type-Safe** - Full TypeScript support
 
 ## Installation
 
 ```bash
-bun add opentui-spinner @opentui/core
-```
-
-For React support:
-
-```bash
-bun add opentui-spinner @opentui/core @opentui/react react
+bun add @cyberstrike/spinner @cyberstrike/tui-core
 ```
 
 For SolidJS support:
 
 ```bash
-bun add opentui-spinner @opentui/core @opentui/solid solid-js
+bun add @cyberstrike/spinner @cyberstrike/tui-core @cyberstrike/tui-solid solid-js
 ```
 
 ## Usage
@@ -38,8 +26,8 @@ bun add opentui-spinner @opentui/core @opentui/solid solid-js
 ### Basic Usage (Core)
 
 ```typescript
-import { createCliRenderer } from "@opentui/core";
-import { SpinnerRenderable } from "opentui-spinner";
+import { createCliRenderer } from "@cyberstrike/tui-core";
+import { SpinnerRenderable } from "@cyberstrike/spinner";
 
 const renderer = await createCliRenderer();
 
@@ -58,8 +46,8 @@ import {
   BoxRenderable,
   createCliRenderer,
   TextRenderable,
-} from "@opentui/core";
-import { SpinnerRenderable } from "opentui-spinner";
+} from "@cyberstrike/tui-core";
+import { SpinnerRenderable } from "@cyberstrike/spinner";
 
 const renderer = await createCliRenderer();
 
@@ -83,47 +71,19 @@ container.add(label);
 renderer.root.add(container);
 ```
 
-### React Usage
-
-First, import the React extension:
-
-```tsx
-import "opentui-spinner/react";
-```
-
-Then use the `<spinner>` component in your OpenTUI React app:
-
-```tsx
-import { createCliRenderer } from "@opentui/core";
-import { createRoot } from "@opentui/react";
-import "opentui-spinner/react";
-
-function App() {
-  return (
-    <box alignItems="center" flexDirection="row">
-      <spinner name="bouncingBall" color="cyan" />
-      <text marginLeft={1}>Loading...</text>
-    </box>
-  );
-}
-
-const renderer = await createCliRenderer();
-createRoot(renderer).render(<App />);
-```
-
 ### SolidJS Usage
 
 First, import the SolidJS extension:
 
 ```tsx
-import "opentui-spinner/solid";
+import "@cyberstrike/spinner/solid";
 ```
 
-Then use the `<spinner>` component in your OpenTUI SolidJS app:
+Then use the `<spinner>` component in your Cyberstrike TUI SolidJS app:
 
 ```tsx
-import { render } from "@opentui/solid";
-import "opentui-spinner/solid";
+import { render } from "@cyberstrike/tui-solid";
+import "@cyberstrike/spinner/solid";
 
 function App() {
   return (
@@ -257,7 +217,7 @@ spinner.color = "#ff6432";
 The `color` property also accepts a `ColorGenerator` function for dynamic color effects:
 
 ```typescript
-import { SpinnerRenderable, type ColorGenerator } from "opentui-spinner";
+import { SpinnerRenderable, type ColorGenerator } from "@cyberstrike/spinner";
 
 // Custom color generator
 const customColorGen: ColorGenerator = (
@@ -283,7 +243,7 @@ const spinner = new SpinnerRenderable(renderer, {
 Creates a pulsing effect that cycles through colors:
 
 ```typescript
-import { SpinnerRenderable, createPulse } from "opentui-spinner";
+import { SpinnerRenderable, createPulse } from "@cyberstrike/spinner";
 
 const spinner = new SpinnerRenderable(renderer, {
   name: "dots",
@@ -301,7 +261,7 @@ const spinner = new SpinnerRenderable(renderer, {
 Creates a wave pattern that moves across characters:
 
 ```typescript
-import { SpinnerRenderable, createWave } from "opentui-spinner";
+import { SpinnerRenderable, createWave } from "@cyberstrike/spinner";
 
 const spinner = new SpinnerRenderable(renderer, {
   name: "dots",
@@ -318,14 +278,12 @@ const spinner = new SpinnerRenderable(renderer, {
 Check out the `examples/` directory for complete working examples:
 
 - [`examples/index.ts`](examples/index.ts) - Core example
-- [`examples/react.tsx`](examples/react.tsx) - React example
 - [`examples/solid.tsx`](examples/solid.tsx) - SolidJS example
 
 ## Peer Dependencies
 
-- `@opentui/core` (required)
-- `@opentui/react` (optional, for React support)
-- `@opentui/solid` (optional, for SolidJS support)
+- `@cyberstrike/tui-core` (required)
+- `@cyberstrike/tui-solid` (optional, for SolidJS support)
 
 ## Development
 
@@ -349,7 +307,7 @@ MIT
 
 ## Credits
 
-- Built on [OpenTUI](https://github.com/opentui/opentui)
+- Built on [Cyberstrike TUI](https://github.com/CyberStrikeus/cyberstrike.io)
 - Spinners from [cli-spinners](https://github.com/sindresorhus/cli-spinners) by Sindre Sorhus
 
 ## Contributing

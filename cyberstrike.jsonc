@@ -1,0 +1,16 @@
+{
+  "$schema": "https://cyberstrike.io/config.json"
+
+  // MCP Servers Configuration (optional)
+  // Uncomment and configure the kali MCP after building:
+  //   1. cd packages/mcp-kali && bun install && bun run build
+  //   2. Update the path below to your installation directory
+  //
+  // "mcp": {
+  //   "kali": {
+  //     "type": "local",
+  //     "command": ["node", "./packages/mcp-kali/dist/index.js"],
+  //     "timeout": 60000
+  //   }
+  // }
+}

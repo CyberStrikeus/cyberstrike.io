@@ -1340,7 +1340,7 @@ describe("getPluginName", () => {
 
   test("extracts name from scoped npm package", () => {
     expect(Config.getPluginName("@scope/pkg@1.0.0")).toBe("@scope/pkg")
-    expect(Config.getPluginName("@cyberstrike/plugin@2.0.0")).toBe("@cyberstrike/plugin")
+    expect(Config.getPluginName("@cyberstrike-io/plugin@2.0.0")).toBe("@cyberstrike-io/plugin")
   })
 
   test("returns full string for package without version", () => {

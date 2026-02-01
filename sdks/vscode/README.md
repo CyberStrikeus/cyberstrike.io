@@ -15,7 +15,7 @@ This extension requires the [cyberstrike CLI](https://cyberstrike.io) to be inst
 
 ## Support
 
-This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/anomalyco/cyberstrike/issues.
+This is an early release. If you encounter issues or have feedback, please create an issue at https://github.com/CyberStrikeus/cyberstrike.io/issues.
 
 ## Development
 

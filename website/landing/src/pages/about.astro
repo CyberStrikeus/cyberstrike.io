@@ -1,0 +1,104 @@
+---
+/**
+ * * About page with team background and company logos
+ */
+import Badge from "@components/Badge/Badge.astro";
+import CtaCenter from "@components/Cta/CtaCardBgImage.astro";
+// main layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
+
+// Import company logos
+import expediaLogo from "@images/logos/expedia.png";
+import capitalOneLogo from "@images/logos/capitalone.png";
+import mufgLogo from "@images/logos/mufg.webp";
+import bugcrowdLogo from "@images/logos/bugcrowd.jpg";
+import hackeroneLogo from "@images/logos/hackerone.png";
+import cobaltLogo from "@images/logos/cobalt.png";
+
+const companyLogos = [
+  { image: expediaLogo, name: "Expedia" },
+  { image: capitalOneLogo, name: "Capital One" },
+  { image: mufgLogo, name: "MUFG" },
+  { image: bugcrowdLogo, name: "Bugcrowd" },
+  { image: hackeroneLogo, name: "HackerOne" },
+  { image: cobaltLogo, name: "Cobalt" },
+];
+---
+
+<BaseLayout title="About Us" description="Meet the team behind Cyberstrike - security professionals with 10+ years of experience.">
+  <!-- text section -->
+  <section class="site-container mx-auto mt-16 py-20">
+    <div class="mb-16 max-w-3xl">
+      <Badge>Built by pentesters, for pentesters</Badge>
+      <h1 class="h1">About Cyberstrike</h1>
+      <p class="description text-lg md:text-xl">
+        Cyberstrike is developed by a team of seasoned security professionals with over 10 years of combined experience in offensive security. Our team members have worked at leading companies and security platforms, conducting hundreds of manual penetration tests for Fortune 500 clients.
+      </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="mb-16 grid gap-8 sm:grid-cols-3">
+      <div class="group text-center sm:text-left">
+        <h3 class="stat-3d text-7xl font-black tracking-tighter md:text-8xl">500+</h3>
+        <p class="mt-3 text-sm font-semibold uppercase tracking-widest text-base-500 dark:text-base-400">Pentests completed</p>
+      </div>
+      <div class="group text-center sm:text-left">
+        <h3 class="stat-3d text-7xl font-black tracking-tighter md:text-8xl">10+</h3>
+        <p class="mt-3 text-sm font-semibold uppercase tracking-widest text-base-500 dark:text-base-400">Years experience</p>
+      </div>
+      <div class="group text-center sm:text-left">
+        <h3 class="stat-3d text-7xl font-black tracking-tighter md:text-8xl">50+</h3>
+        <p class="mt-3 text-sm font-semibold uppercase tracking-widest text-base-500 dark:text-base-400">Fortune 500 clients</p>
+      </div>
+    </div>
+
+    <style>
+      .stat-3d {
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow:
+          0 1px 0 rgba(255,255,255,0.1),
+          0 2px 0 rgba(0,0,0,0.1),
+          0 3px 0 rgba(0,0,0,0.1),
+          0 4px 0 rgba(0,0,0,0.05),
+          0 5px 10px rgba(0,0,0,0.2);
+        filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.3));
+        transition: all 0.3s ease;
+      }
+      .group:hover .stat-3d {
+        filter: drop-shadow(0 6px 12px rgba(139, 92, 246, 0.4));
+        transform: translateY(-2px);
+      }
+    </style>
+
+    <!-- Company Logos Section -->
+    <div class="mb-8">
+      <h2 class="h3 mb-4">Our Team's Background</h2>
+      <p class="description mb-8">
+        Our founders and core team members bring experience from industry-leading companies and security platforms:
+      </p>
+    </div>
+
+    <!-- Company logos grid -->
+    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        companyLogos.map((company) => (
+          <div class="hover-border-glow flex h-32 items-center justify-center rounded-xl border border-base-200 bg-white p-6 dark:border-base-700">
+            <Image
+              src={company.image}
+              alt={company.name}
+              width={240}
+              height={80}
+              class="h-20 w-auto object-contain"
+            />
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <CtaCenter />
+</BaseLayout>

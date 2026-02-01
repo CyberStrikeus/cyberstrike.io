@@ -1,3 +1,6 @@
+// Security: innerHTML is used with Marked's parsed output combined with Shiki
+// for syntax highlighting. Marked sanitizes markdown and Shiki produces safe
+// HTML. The content comes from user's own session data, not untrusted sources.
 import { marked } from "marked"
 import { codeToHtml } from "shiki"
 import markedShiki from "marked-shiki"

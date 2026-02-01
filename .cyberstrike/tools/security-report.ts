@@ -1,4 +1,4 @@
-import { tool } from "@cyberstrike/plugin"
+import { tool } from "@cyberstrike-io/plugin"
 import * as fs from "fs"
 import * as path from "path"
 

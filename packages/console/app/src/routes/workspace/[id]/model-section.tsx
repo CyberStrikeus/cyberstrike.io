@@ -1,8 +1,8 @@
-import { Model } from "@cyberstrike/console-core/model.js"
+import { Model } from "@cyberstrike-io/console-core/model.js"
 import { query, action, useParams, createAsync, json } from "@solidjs/router"
 import { createMemo, For, Show } from "solid-js"
 import { withActor } from "~/context/auth.withActor"
-import { ZenData } from "@cyberstrike/console-core/model.js"
+import { ArsenalData } from "@cyberstrike-io/console-core/model.js"
 import styles from "./model-section.module.css"
 import { querySessionInfo } from "../common"
 import {
@@ -33,11 +33,11 @@ const getModelsInfo = query(async (workspaceID: string) => {
   "use server"
   return withActor(async () => {
     return {
-      all: Object.entries(ZenData.list().models)
+      all: Object.entries(ArsenalData.list().models)
         .filter(([id, _model]) => !["claude-3-5-haiku"].includes(id))
         .filter(([id, _model]) => !id.startsWith("alpha-"))
         .sort(([idA, modelA], [idB, modelB]) => {
-          const priority = ["big-pickle", "minimax", "grok", "claude", "gpt", "gemini"]
+          const priority = ["hydra", "minimax", "grok", "claude", "gpt", "gemini"]
           const getPriority = (id: string) => {
             const index = priority.findIndex((p) => id.startsWith(p))
             return index === -1 ? Infinity : index
@@ -93,7 +93,7 @@ export function ModelSection() {
       <div data-slot="section-title">
         <h2>Models</h2>
         <p>
-          Manage which models workspace members can access. <a href="/docs/zen#pricing ">Learn more</a>.
+          Manage which models workspace members can access. <a href="/docs/arsenal#pricing ">Learn more</a>.
         </p>
       </div>
       <div data-slot="models-list">

@@ -1,10 +1,10 @@
 import { createStore } from "solid-js/store"
-import { createSimpleContext } from "@cyberstrike/ui/context"
+import { createSimpleContext } from "@cyberstrike-io/ui/context"
 import { batch, createMemo, createRoot, onCleanup } from "solid-js"
 import { useParams } from "@solidjs/router"
 import type { FileSelection } from "@/context/file"
 import { Persist, persisted } from "@/utils/persist"
-import { checksum } from "@cyberstrike/util/encode"
+import { checksum } from "@cyberstrike-io/util/encode"
 
 interface PartBase {
   content: string

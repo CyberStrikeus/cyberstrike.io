@@ -675,7 +675,7 @@ export default function Home() {
                 <Faq question="Do I need extra AI subscriptions to use Cyberstrike?">
                   Not necessarily, Cyberstrike comes with a set of free models that you can use without creating an
                   account. Aside from these, you can use any of the popular coding models by creating a{" "}
-                  <A href="/zen">Zen</A> account. While we encourage users to use Zen, Cyberstrike also works with all
+                  <A href="/arsenal">Arsenal</A> account. While we encourage users to use Arsenal, Cyberstrike also works with all
                   popular providers such as OpenAI, Anthropic, xAI etc. You can even connect your{" "}
                   <a href="/docs/providers/#lm-studio" target="_blank">
                     local models
@@ -705,7 +705,7 @@ export default function Home() {
               <li>
                 <Faq question="What about data and privacy?">
                   Your data and information is only stored when you use our free models or create sharable links. Learn
-                  more about <a href="/docs/zen/#privacy">our models</a> and{" "}
+                  more about <a href="/docs/arsenal/#privacy">our models</a> and{" "}
                   <a href="/docs/share/#privacy">share pages</a>.
                 </Faq>
               </li>
@@ -726,11 +726,11 @@ export default function Home() {
             </ul>
           </section>
 
-          <section data-component="zen-cta">
-            <div data-slot="zen-cta-copy">
+          <section data-component="arsenal-cta">
+            <div data-slot="arsenal-cta-copy">
               <strong>Access reliable optimized models for coding agents</strong>
               <p>
-                Zen gives you access to a handpicked set of AI models that Cyberstrike has tested and benchmarked
+                Arsenal gives you access to a handpicked set of AI models that Cyberstrike has tested and benchmarked
                 specifically for coding agents. No need to worry about inconsistent performance and quality across
                 providers, use validated models that work.
               </p>
@@ -815,8 +815,8 @@ export default function Home() {
                   </svg>
                 </div>
               </div>
-              <A href="/zen">
-                <span>Learn about Zen </span>
+              <A href="/arsenal">
+                <span>Learn about Arsenal </span>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M6.5 12L17 12M13 16.5L17.5 12L13 7.5"

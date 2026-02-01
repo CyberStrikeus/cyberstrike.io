@@ -1,5 +1,5 @@
 import type { JSX } from "solid-js"
-import type { RGBA } from "@cyberstrike/tui-core"
+import type { RGBA } from "@cyberstrike-io/tui-core"
 import open from "open"
 
 export interface LinkProps {

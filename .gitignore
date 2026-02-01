@@ -16,13 +16,29 @@ ts-dist
 /result
 refs
 Session.vim
-opencode.json
+cyberstrike.json
 a.out
 target
 .scripts
 .direnv/
 
 # Local dev files
-opencode-dev
+cyberstrike-dev
 logs/
 *.bun-build
+
+# Claude Code local settings (may contain secrets)
+.claude/settings.local.json
+
+# Audit reports (internal only)
+OPEN_SOURCE_AUDIT_REPORT.md
+OPEN_SOURCE_RELEASE_PLAN.md
+
+# Internal packages
+packages/console/
+packages/enterprise/
+infra/console.ts
+infra/enterprise.ts
+
+# Internal notes
+.cyberstrike/MEMORY.md

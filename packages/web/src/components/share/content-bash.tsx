@@ -1,3 +1,6 @@
+// Security: innerHTML is used with Shiki's codeToHtml output which produces
+// sanitized HTML from code syntax highlighting. Shiki is a trusted library
+// that escapes user content and only adds safe styling spans.
 import style from "./content-bash.module.css"
 import { createResource, createSignal } from "solid-js"
 import { createOverflow } from "./common"

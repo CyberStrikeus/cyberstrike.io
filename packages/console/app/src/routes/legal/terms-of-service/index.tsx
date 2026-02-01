@@ -70,8 +70,8 @@ export default function TermsOfService() {
               <p>
                 Cyberstrike is an AI-powered coding agent that helps you write, understand, and modify code using large
                 language models. Certain of these large language models are provided by third parties ("Third Party
-                Models") and certain of these models are provided directly by us if you use the Cyberstrike Zen paid
-                offering ("Zen"). Regardless of whether you use Third Party Models or Zen, Cyberstrike enables you to
+                Models") and certain of these models are provided directly by us if you use the Cyberstrike Arsenal paid
+                offering ("Arsenal"). Regardless of whether you use Third Party Models or Arsenal, Cyberstrike enables you to
                 access the functionality of models through a coding agent running within your terminal.
               </p>
 
@@ -258,8 +258,8 @@ export default function TermsOfService() {
 
               <h3>Paid Services</h3>
               <p>
-                Certain of our Services, including Zen, may be subject to payments now or in the future (the "Paid
-                Services"). Please see our Paid Services page <a href="/zen">https://cyberstrike.io/zen</a> for a
+                Certain of our Services, including Arsenal, may be subject to payments now or in the future (the "Paid
+                Services"). Please see our Paid Services page <a href="/arsenal">https://cyberstrike.io/arsenal</a> for a
                 description of the current Paid Services. Please note that any payment terms presented to you in the
                 process of using or signing up for a Paid Service are deemed part of these Terms.
               </p>

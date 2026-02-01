@@ -1,6 +1,16 @@
 {
-  "name": "@cyberstrike/ui",
+  "name": "@cyberstrike-io/ui",
+  "description": "Shared UI components and design system for Cyberstrike",
   "version": "1.1.36",
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/ui"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
   "type": "module",
   "license": "MIT",
   "exports": {
@@ -40,8 +50,8 @@
   },
   "dependencies": {
     "@kobalte/core": "catalog:",
-    "@cyberstrike/sdk": "workspace:*",
-    "@cyberstrike/util": "workspace:*",
+    "@cyberstrike-io/sdk": "workspace:*",
+    "@cyberstrike-io/util": "workspace:*",
     "@pierre/diffs": "catalog:",
     "@shikijs/transformers": "3.9.2",
     "@solid-primitives/bounds": "0.1.3",

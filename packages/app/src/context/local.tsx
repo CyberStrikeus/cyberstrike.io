@@ -1,9 +1,9 @@
 import { createStore } from "solid-js/store"
 import { batch, createMemo } from "solid-js"
-import { createSimpleContext } from "@cyberstrike/ui/context"
+import { createSimpleContext } from "@cyberstrike-io/ui/context"
 import { useSDK } from "./sdk"
 import { useSync } from "./sync"
-import { base64Encode } from "@cyberstrike/util/encode"
+import { base64Encode } from "@cyberstrike-io/util/encode"
 import { useProviders } from "@/hooks/use-providers"
 import { useModels } from "@/context/models"
 

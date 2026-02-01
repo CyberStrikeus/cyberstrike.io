@@ -1,4 +1,4 @@
-import { ASCIIFontRenderable, BoxRenderable, CodeRenderable, DiffRenderable, InputRenderable, LineNumberRenderable, MarkdownRenderable, ScrollBoxRenderable, SelectRenderable, TabSelectRenderable, TextareaRenderable, TextNodeRenderable, TextRenderable, type RenderContext, type TextNodeOptions } from "@cyberstrike/tui-core";
+import { ASCIIFontRenderable, BoxRenderable, CodeRenderable, DiffRenderable, InputRenderable, LineNumberRenderable, MarkdownRenderable, ScrollBoxRenderable, SelectRenderable, TabSelectRenderable, TextareaRenderable, TextNodeRenderable, TextRenderable, type RenderContext, type TextNodeOptions } from "@cyberstrike-io/tui-core";
 import type { RenderableConstructor } from "../types/elements";
 export * from "./hooks";
 export * from "./extras";

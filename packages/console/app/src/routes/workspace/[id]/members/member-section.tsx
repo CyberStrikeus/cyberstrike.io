@@ -3,9 +3,9 @@ import { createEffect, For, Show } from "solid-js"
 import { withActor } from "~/context/auth.withActor"
 import { createStore } from "solid-js/store"
 import styles from "./member-section.module.css"
-import { UserRole } from "@cyberstrike/console-core/schema/user.sql.js"
-import { Actor } from "@cyberstrike/console-core/actor.js"
-import { User } from "@cyberstrike/console-core/user.js"
+import { UserRole } from "@cyberstrike-io/console-core/schema/user.sql.js"
+import { Actor } from "@cyberstrike-io/console-core/actor.js"
+import { User } from "@cyberstrike-io/console-core/user.js"
 import { RoleDropdown } from "./role-dropdown"
 
 const listMembers = query(async (workspaceID: string) => {
@@ -255,7 +255,7 @@ export function MemberSection() {
       </div>
       <div data-slot="beta-notice">
         Workspaces are free for teams during the beta.{" "}
-        <a href="/docs/zen/#for-teams" target="_blank" rel="noopener noreferrer">
+        <a href="/docs/arsenal/#for-teams" target="_blank" rel="noopener noreferrer">
           Learn more
         </a>
         .

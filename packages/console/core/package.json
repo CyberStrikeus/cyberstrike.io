@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@cyberstrike/console-core",
+  "name": "@cyberstrike-io/console-core",
   "version": "1.1.36",
   "private": true,
   "type": "module",
@@ -8,13 +8,12 @@
   "dependencies": {
     "@aws-sdk/client-sts": "3.782.0",
     "@jsx-email/render": "1.1.1",
-    "@cyberstrike/console-mail": "workspace:*",
-    "@cyberstrike/console-resource": "workspace:*",
-    "@planetscale/database": "1.19.0",
+    "@cyberstrike-io/console-mail": "workspace:*",
+    "@cyberstrike-io/console-resource": "workspace:*",
+    "@tidbcloud/serverless": "0.2.0",
     "aws4fetch": "1.0.20",
     "drizzle-orm": "0.41.0",
     "postgres": "3.4.7",
-    "stripe": "18.0.0",
     "ulid": "catalog:",
     "zod": "catalog:"
   },

@@ -1,7 +1,6 @@
 ---
 name: cloud-security
 description: Cloud infrastructure security assessment agent for AWS, GCP, and Azure
-model: anthropic/claude-sonnet-4-5
 ---
 
 # Cloud Security Assessment Agent

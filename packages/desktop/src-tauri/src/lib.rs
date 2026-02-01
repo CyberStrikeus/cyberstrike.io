@@ -25,7 +25,7 @@ use tokio::sync::oneshot;
 
 use crate::window_customizer::PinchZoomDisablePlugin;
 
-const SETTINGS_STORE: &str = "opencode.settings.dat";
+const SETTINGS_STORE: &str = "cyberstrike.settings.dat";
 const DEFAULT_SERVER_URL_KEY: &str = "defaultServerUrl";
 
 #[derive(Clone, serde::Serialize)]
@@ -139,9 +139,9 @@ async fn set_default_server_url(app: AppHandle, url: Option<String>) -> Result<(
 }
 
 fn get_sidecar_port() -> u32 {
-    option_env!("WHYKIDO_PORT")
+    option_env!("CYBERSTRIKE_PORT")
         .map(|s| s.to_string())
-        .or_else(|| std::env::var("WHYKIDO_PORT").ok())
+        .or_else(|| std::env::var("CYBERSTRIKE_PORT").ok())
         .and_then(|port_str| port_str.parse().ok())
         .unwrap_or_else(|| {
             TcpListener::bind("127.0.0.1:0")
@@ -162,10 +162,10 @@ fn spawn_sidecar(app: &AppHandle, hostname: &str, port: u32, password: &str) -> 
         app,
         format!("serve --hostname {hostname} --port {port}").as_str(),
     )
-    .env("WHYKIDO_SERVER_USERNAME", "opencode")
-    .env("WHYKIDO_SERVER_PASSWORD", password)
+    .env("CYBERSTRIKE_SERVER_USERNAME", "cyberstrike")
+    .env("CYBERSTRIKE_SERVER_PASSWORD", password)
     .spawn()
-    .expect("Failed to spawn opencode");
+    .expect("Failed to spawn cyberstrike");
 
     tauri::async_runtime::spawn(async move {
         while let Some(event) = rx.recv().await {
@@ -237,7 +237,7 @@ async fn check_server_health(url: &str, password: Option<&str>) -> bool {
     let mut req = client.get(health_url);
 
     if let Some(password) = password {
-        req = req.basic_auth("opencode", Some(password));
+        req = req.basic_auth("cyberstrike", Some(password));
     }
 
     req.send()
@@ -252,7 +252,7 @@ pub fn run() {
 
     #[cfg(all(target_os = "macos", not(debug_assertions)))]
     let _ = std::process::Command::new("killall")
-        .arg("opencode-cli")
+        .arg("cyberstrike-cli")
         .output();
 
     let mut builder = tauri::Builder::default()
@@ -317,8 +317,8 @@ pub fn run() {
                 .inner_size(size.width as f64, size.height as f64)
                 .initialization_script(format!(
                     r#"
-                      window.__WHYKIDO__ ??= {{}};
-                      window.__WHYKIDO__.updaterEnabled = {updater_enabled};
+                      window.__CYBERSTRIKE__ ??= {{}};
+                      window.__CYBERSTRIKE__.updaterEnabled = {updater_enabled};
                     "#
                 ));
 
@@ -513,7 +513,7 @@ async fn spawn_local_server(
     loop {
         if timestamp.elapsed() > Duration::from_secs(30) {
             break Err(format!(
-                "Failed to spawn OpenCode Server. Logs:\n{}",
+                "Failed to spawn Cyberstrike Server. Logs:\n{}",
                 get_logs(app.clone()).await.unwrap()
             ));
         }

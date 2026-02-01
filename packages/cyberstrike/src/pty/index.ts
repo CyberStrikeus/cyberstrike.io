@@ -6,7 +6,7 @@ import { Identifier } from "../id/id"
 import { Log } from "../util/log"
 import type { WSContext } from "hono/ws"
 import { Instance } from "../project/instance"
-import { lazy } from "@cyberstrike/util/lazy"
+import { lazy } from "@cyberstrike-io/util/lazy"
 import { Shell } from "@/shell/shell"
 
 export namespace Pty {

@@ -11,12 +11,13 @@ import { WebFetchTool } from "./webfetch"
 import { WriteTool } from "./write"
 import { InvalidTool } from "./invalid"
 import { SkillTool } from "./skill"
+import { BrowserTool } from "./browser"
 import type { Agent } from "../agent/agent"
 import { Tool } from "./tool"
 import { Instance } from "../project/instance"
 import { Config } from "../config/config"
 import path from "path"
-import { type ToolContext as PluginToolContext, type ToolDefinition } from "@cyberstrike/plugin"
+import { type ToolContext as PluginToolContext, type ToolDefinition } from "@cyberstrike-io/plugin"
 import z from "zod"
 import { Plugin } from "../plugin"
 import { WebSearchTool } from "./websearch"
@@ -27,6 +28,9 @@ import { LspTool } from "./lsp"
 import { Truncate } from "./truncation"
 import { PlanExitTool, PlanEnterTool } from "./plan"
 import { ApplyPatchTool } from "./apply_patch"
+import { MemorySearchTool, MemoryWriteTool, MemoryReadTool, MemoryContextTool } from "./memory"
+import { ToolSearchTool, LoadToolsTool, UnloadToolsTool, ListLoadedToolsTool } from "./tool-search"
+import { LazyToolRegistry } from "./lazy-registry"
 
 export namespace ToolRegistry {
   const log = Log.create({ service: "tool.registry" })
@@ -105,17 +109,48 @@ export namespace ToolRegistry {
       WriteTool,
       TaskTool,
       WebFetchTool,
+      BrowserTool,
       TodoWriteTool,
       TodoReadTool,
       WebSearchTool,
       CodeSearchTool,
       SkillTool,
       ApplyPatchTool,
+      // Memory tools for persistent context
+      MemorySearchTool,
+      MemoryWriteTool,
+      MemoryReadTool,
+      MemoryContextTool,
+      // Dynamic tool loading (ToolSearch pattern)
+      // These meta-tools enable scaling to 100+ MCP tools without context overflow
+      ToolSearchTool,
+      LoadToolsTool,
+      UnloadToolsTool,
+      ListLoadedToolsTool,
       ...(Flag.CYBERSTRIKE_EXPERIMENTAL_LSP_TOOL ? [LspTool] : []),
       ...(config.experimental?.batch_tool === true ? [BatchTool] : []),
       ...(Flag.CYBERSTRIKE_EXPERIMENTAL_PLAN_MODE && Flag.CYBERSTRIKE_CLIENT === "cli" ? [PlanExitTool, PlanEnterTool] : []),
       ...custom,
     ]
+  }
+
+  /**
+   * Initialize lazy tool registry for dynamic MCP tool loading
+   */
+  export async function initLazyRegistry(): Promise<void> {
+    await LazyToolRegistry.init()
+  }
+
+  /**
+   * Get dynamically loaded MCP tools
+   */
+  export function getLoadedMCPTools(): Record<string, any> {
+    const loaded = LazyToolRegistry.getLoaded()
+    const result: Record<string, any> = {}
+    for (const t of loaded) {
+      result[t.id] = t.tool
+    }
+    return result
   }
 
   export async function ids() {

@@ -1,4 +1,5 @@
 import { Auth } from "../../auth"
+import { getClaudeCliCredentialStatus, hasValidClaudeCliCredentials } from "../../auth/cli-credentials"
 import { cmd } from "./cmd"
 import * as prompts from "@clack/prompts"
 import { UI } from "../ui"
@@ -10,7 +11,7 @@ import { Config } from "../../config/config"
 import { Global } from "../../global"
 import { Plugin } from "../../plugin"
 import { Instance } from "../../project/instance"
-import type { Hooks } from "@cyberstrike/plugin"
+import type { Hooks } from "@cyberstrike-io/plugin"
 
 type PluginAuth = NonNullable<Hooks["auth"]>
 
@@ -270,17 +271,42 @@ export const AuthLoginCommand = cmd({
 
         const priority: Record<string, number> = {
           cyberstrike: 0,
-          anthropic: 1,
-          "github-copilot": 2,
-          openai: 3,
-          google: 4,
-          openrouter: 5,
-          vercel: 6,
+          "claude-api": 1,
+          "claude-cli": 2,
+          openrouter: 3,
+          anthropic: 4,
+          "github-copilot": 5,
+          openai: 6,
+          google: 7,
+          vercel: 8,
         }
+
+        // Check if Claude CLI is available
+        const cliStatus = getClaudeCliCredentialStatus()
+        const claudeCliOptions = cliStatus.installed
+          ? [
+              ...(cliStatus.hasCredentials
+                ? [
+                    {
+                      label: "Claude Code CLI (API)",
+                      value: "claude-api",
+                      hint: "Fast, real streaming via Anthropic API",
+                    },
+                  ]
+                : []),
+              {
+                label: "Claude Code CLI (Subprocess)",
+                value: "claude-cli",
+                hint: "Uses CLI subprocess for each request",
+              },
+            ]
+          : []
+
         let provider = await prompts.autocomplete({
           message: "Select provider",
           maxItems: 8,
           options: [
+            ...claudeCliOptions,
             ...pipe(
               providers,
               values(),
@@ -293,7 +319,8 @@ export const AuthLoginCommand = cmd({
                 value: x.id,
                 hint: {
                   cyberstrike: "recommended",
-                  anthropic: "Claude Max or API key",
+                  openrouter: "free tier available",
+                  anthropic: "API key from console.anthropic.com",
                   openai: "ChatGPT Plus/Pro or API key",
                 }[x.id],
               })),
@@ -346,6 +373,54 @@ export const AuthLoginCommand = cmd({
 
         if (provider === "cyberstrike") {
           prompts.log.info("Create an api key at https://cyberstrike.io/auth")
+        }
+
+        // Handle Claude API provider - uses CLI credentials with Anthropic API
+        if (provider === "claude-api") {
+          prompts.log.success(
+            "Claude Code CLI (API mode) is ready to use!\n\n" +
+              "This uses your existing Claude Max/Pro subscription via the Anthropic API.\n" +
+              "Real streaming support, faster response times.\n\n" +
+              "Available models:\n" +
+              "  • claude-api/claude-opus-4-5-20250514 - Claude Opus 4.5\n" +
+              "  • claude-api/claude-sonnet-4-5-20250514 - Claude Sonnet 4.5\n" +
+              "  • claude-api/claude-haiku-4-5-20250514 - Claude Haiku 4.5\n\n" +
+              "Set your default model in cyberstrike.json:\n" +
+              '  { "model": "claude-api/claude-sonnet-4-5-20250514" }',
+          )
+          prompts.outro("Done")
+          return
+        }
+
+        // Handle Claude CLI provider - subprocess mode, no API key needed
+        if (provider === "claude-cli") {
+          prompts.log.success(
+            "Claude Code CLI (Subprocess mode) is ready to use!\n\n" +
+              "This uses your existing Claude Max/Pro subscription through the CLI subprocess.\n" +
+              "Slower but works without API credentials.\n\n" +
+              "Available models:\n" +
+              "  • claude-cli/opus - Claude Opus 4.5 (Most capable for complex work)\n" +
+              "  • claude-cli/sonnet - Claude Sonnet 4.5 (Best for everyday tasks)\n" +
+              "  • claude-cli/haiku - Claude Haiku 4.5 (Fastest for quick answers)\n\n" +
+              "Set your default model in cyberstrike.json:\n" +
+              '  { "model": "claude-cli/sonnet" }',
+          )
+          prompts.outro("Done")
+          return
+        }
+
+        if (provider === "openrouter") {
+          prompts.log.info(
+            "OpenRouter offers free tier models!\n\n" +
+              "1. Create a free account at https://openrouter.ai/keys\n" +
+              "2. Generate an API key (no credit card required)\n\n" +
+              "Free models available:\n" +
+              "  • meta-llama/llama-4-scout:free\n" +
+              "  • google/gemini-2.0-flash-exp:free\n" +
+              "  • mistralai/mistral-small-3.2-24b-instruct:free\n\n" +
+              "Set your default model in cyberstrike.json:\n" +
+              '  { "model": "openrouter/meta-llama/llama-4-scout:free" }',
+          )
         }
 
         if (provider === "vercel") {

@@ -35,7 +35,7 @@ const solidTransformPlugin: BunPlugin = {
           [
             solid,
             {
-              moduleName: "@cyberstrike/tui-solid",
+              moduleName: "@cyberstrike-io/tui-solid",
               generate: "universal",
             },
           ],

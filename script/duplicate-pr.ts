@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import path from "path"
-import { createCyberstrike } from "@cyberstrike/sdk"
+import { createCyberstrike } from "@cyberstrike-io/sdk"
 import { parseArgs } from "util"
 
 async function main() {
