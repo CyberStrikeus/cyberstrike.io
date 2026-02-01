@@ -1,0 +1,256 @@
+{
+  "$schema": "https://cyberstrike.io/theme.json",
+  "defs": {
+    "voidBlack": "#050508",
+    "darkSpace": "#0a0a10",
+    "deepSpace": "#0f0f18",
+    "cosmicDark": "#141420",
+    "nebulaDark": "#1a1a28",
+    "starDust": "#242432",
+    "cosmicGray": "#32324a",
+    "silverMist": "#4a4a68",
+    "moonGlow": "#7878a0",
+    "starLight": "#b8b8d8",
+    "pureLight": "#e8e8ff",
+
+    "neonCyan": "#00ffff",
+    "electricCyan": "#00e5ff",
+    "cyberCyan": "#00ccdd",
+    "deepCyan": "#00a0b0",
+
+    "terminalGreen": "#00ff88",
+    "matrixGreen": "#00ff66",
+    "neonGreen": "#39ff14",
+    "cyberGreen": "#00dd55",
+
+    "electricBlue": "#00aaff",
+    "cyberBlue": "#0088dd",
+    "deepBlue": "#0066aa",
+
+    "accentPurple": "#aa66ff",
+    "electricPurple": "#8844ee",
+    "deepPurple": "#6633bb",
+
+    "warningYellow": "#ffdd00",
+    "alertOrange": "#ff9900",
+    "fireOrange": "#ff6600",
+
+    "dangerRed": "#ff3344",
+    "bloodRed": "#ee0033",
+    "alertRed": "#ff4455",
+
+    "lightBg": "#f0f2f8",
+    "lightPanel": "#e4e6f0",
+    "lightElement": "#d8dae8",
+    "lightBorder": "#c0c4d8",
+    "lightText": "#181828",
+    "lightMuted": "#606080"
+  },
+  "theme": {
+    "primary": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "secondary": {
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
+    },
+    "accent": {
+      "dark": "accentPurple",
+      "light": "electricPurple"
+    },
+    "error": {
+      "dark": "dangerRed",
+      "light": "bloodRed"
+    },
+    "warning": {
+      "dark": "warningYellow",
+      "light": "alertOrange"
+    },
+    "success": {
+      "dark": "matrixGreen",
+      "light": "cyberGreen"
+    },
+    "info": {
+      "dark": "electricBlue",
+      "light": "cyberBlue"
+    },
+    "text": {
+      "dark": "pureLight",
+      "light": "lightText"
+    },
+    "textMuted": {
+      "dark": "moonGlow",
+      "light": "lightMuted"
+    },
+    "background": {
+      "dark": "voidBlack",
+      "light": "lightBg"
+    },
+    "backgroundPanel": {
+      "dark": "darkSpace",
+      "light": "lightPanel"
+    },
+    "backgroundElement": {
+      "dark": "deepSpace",
+      "light": "lightElement"
+    },
+    "backgroundMenu": {
+      "dark": "cosmicDark",
+      "light": "lightElement"
+    },
+    "border": {
+      "dark": "cosmicGray",
+      "light": "lightBorder"
+    },
+    "borderActive": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "borderSubtle": {
+      "dark": "nebulaDark",
+      "light": "lightPanel"
+    },
+    "diffAdded": {
+      "dark": "matrixGreen",
+      "light": "cyberGreen"
+    },
+    "diffRemoved": {
+      "dark": "dangerRed",
+      "light": "bloodRed"
+    },
+    "diffContext": {
+      "dark": "moonGlow",
+      "light": "lightMuted"
+    },
+    "diffHunkHeader": {
+      "dark": "electricBlue",
+      "light": "cyberBlue"
+    },
+    "diffHighlightAdded": {
+      "dark": "neonGreen",
+      "light": "#2db36e"
+    },
+    "diffHighlightRemoved": {
+      "dark": "alertRed",
+      "light": "#d63333"
+    },
+    "diffAddedBg": {
+      "dark": "#061a10",
+      "light": "#e0f5e8"
+    },
+    "diffRemovedBg": {
+      "dark": "#1a060a",
+      "light": "#f5e0e4"
+    },
+    "diffContextBg": {
+      "dark": "darkSpace",
+      "light": "lightPanel"
+    },
+    "diffLineNumber": {
+      "dark": "starDust",
+      "light": "lightBorder"
+    },
+    "diffAddedLineNumberBg": {
+      "dark": "#04140c",
+      "light": "#d0e8d8"
+    },
+    "diffRemovedLineNumberBg": {
+      "dark": "#140408",
+      "light": "#e8d0d4"
+    },
+    "markdownText": {
+      "dark": "pureLight",
+      "light": "lightText"
+    },
+    "markdownHeading": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "markdownLink": {
+      "dark": "electricBlue",
+      "light": "cyberBlue"
+    },
+    "markdownLinkText": {
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
+    },
+    "markdownCode": {
+      "dark": "matrixGreen",
+      "light": "cyberGreen"
+    },
+    "markdownBlockQuote": {
+      "dark": "moonGlow",
+      "light": "lightMuted"
+    },
+    "markdownEmph": {
+      "dark": "warningYellow",
+      "light": "alertOrange"
+    },
+    "markdownStrong": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "markdownHorizontalRule": {
+      "dark": "cosmicGray",
+      "light": "lightBorder"
+    },
+    "markdownListItem": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "markdownListEnumeration": {
+      "dark": "accentPurple",
+      "light": "electricPurple"
+    },
+    "markdownImage": {
+      "dark": "electricBlue",
+      "light": "cyberBlue"
+    },
+    "markdownImageText": {
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
+    },
+    "markdownCodeBlock": {
+      "dark": "pureLight",
+      "light": "lightText"
+    },
+    "syntaxComment": {
+      "dark": "moonGlow",
+      "light": "lightMuted"
+    },
+    "syntaxKeyword": {
+      "dark": "neonCyan",
+      "light": "cyberBlue"
+    },
+    "syntaxFunction": {
+      "dark": "electricBlue",
+      "light": "cyberBlue"
+    },
+    "syntaxVariable": {
+      "dark": "starLight",
+      "light": "lightText"
+    },
+    "syntaxString": {
+      "dark": "terminalGreen",
+      "light": "cyberGreen"
+    },
+    "syntaxNumber": {
+      "dark": "alertOrange",
+      "light": "fireOrange"
+    },
+    "syntaxType": {
+      "dark": "accentPurple",
+      "light": "electricPurple"
+    },
+    "syntaxOperator": {
+      "dark": "electricCyan",
+      "light": "cyberCyan"
+    },
+    "syntaxPunctuation": {
+      "dark": "starLight",
+      "light": "lightText"
+    },
+    "thinkingOpacity": 0.5
+  }
+}

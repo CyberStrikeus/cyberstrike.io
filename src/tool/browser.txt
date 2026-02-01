@@ -1,0 +1,52 @@
+Browser automation tool - USE THIS FOR ALL WEB OPERATIONS.
+
+CRITICAL: This tool MUST be used for ALL web-related tasks:
+- Opening URLs → use `navigate` action
+- Web searching → use `navigate url="https://google.com/search?q=..."`
+- Fetching web content → use `navigate` then `execute script="document.body.innerText"`
+- Web scraping → use `navigate` then `execute` with scraping script
+- Any website interaction → use this tool
+
+NEVER use these alternatives:
+- `open` or `xdg-open` commands (no traffic capture)
+- `webfetch` tool (no traffic capture)
+- `websearch` tool (no traffic capture)
+
+This tool provides full browser control via Playwright with traffic capture for security analysis.
+
+## Capabilities:
+- **launch**: Start Cyberstrike browser with traffic capture
+- **navigate**: Go to a URL (use url parameter)
+- **status**: Get current page state (URL, title, recent requests) - USE THIS TO CHECK WHAT USER DID
+- **content**: Get page text content, links, and forms - USE THIS AFTER USER ACTIONS
+- **click**: Click an element (use selector parameter)
+- **fill**: Fill a form field (use selector and value parameters)
+- **wait**: Wait for element or network idle (use selector parameter)
+- **screenshot**: Capture full page or element screenshot
+- **execute**: Run JavaScript in page context
+- **network**: Get captured network traffic (requests/responses)
+- **har**: Export network traffic as HAR file
+- **console**: Get browser console logs
+- **close**: Close browser and save HAR file
+
+## Usage Notes:
+- Always launch a browser before other operations
+- Network capture starts automatically on launch
+- Use `har` action to export traffic for security analysis
+- Screenshots are saved to the project directory
+- Console logs include errors, warnings, and info messages
+
+## IMPORTANT: Monitoring User Actions
+After opening a page, the user may interact with the browser (login, click buttons, etc.).
+To see what the user did:
+1. Use `browser status` to check current URL and recent network requests
+2. Use `browser content` to get the current page content, links, and forms
+3. Ask the user "What did you do?" or "Are you logged in now?" before proceeding
+4. Periodically check status to stay aware of page changes
+
+## Security Testing Use Cases:
+- Capture all HTTP traffic for vulnerability analysis
+- Execute JavaScript to test XSS vulnerabilities
+- Monitor console for security errors
+- Take screenshots as evidence
+- Analyze request/response headers and bodies
