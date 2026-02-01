@@ -1,3 +1,6 @@
+![License](https://img.shields.io/badge/license-AGPL--3.0-blue)
+![GitHub stars](https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io)
+  
 # Cyberstrike
 
 AI-powered autonomous penetration testing agent.
