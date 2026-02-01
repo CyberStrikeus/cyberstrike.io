@@ -7,7 +7,7 @@ import { UI } from "@/cli/ui"
 import { iife } from "@/util/iife"
 import { Log } from "@/util/log"
 import { withNetworkOptions, resolveNetworkOptions } from "@/cli/network"
-import type { Event } from "@cyberstrike/sdk/v2"
+import type { Event } from "@cyberstrike-io/sdk/v2"
 import type { EventSource } from "./context/sdk"
 
 declare global {

@@ -122,13 +122,13 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} API key",
   "provider.connect.apiKey.placeholder": "API key",
   "provider.connect.apiKey.required": "API key is required",
-  "provider.connect.cyberstrikeZen.line1":
-    "Cyberstrike Zen gives you access to a curated set of reliable optimized models for coding agents.",
-  "provider.connect.cyberstrikeZen.line2":
+  "provider.connect.cyberstrikeArsenal.line1":
+    "Cyberstrike Arsenal gives you access to a curated set of reliable optimized models for coding agents.",
+  "provider.connect.cyberstrikeArsenal.line2":
     "With a single API key you'll get access to models such as Claude, GPT, Gemini, GLM and more.",
-  "provider.connect.cyberstrikeZen.visit.prefix": "Visit ",
-  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
-  "provider.connect.cyberstrikeZen.visit.suffix": " to collect your API key.",
+  "provider.connect.cyberstrikeArsenal.visit.prefix": "Visit ",
+  "provider.connect.cyberstrikeArsenal.visit.link": "cyberstrike.io/arsenal",
+  "provider.connect.cyberstrikeArsenal.visit.suffix": " to collect your API key.",
   "provider.connect.oauth.code.visit.prefix": "Visit ",
   "provider.connect.oauth.code.visit.link": "this link",
   "provider.connect.oauth.code.visit.suffix":

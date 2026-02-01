@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { $ } from "bun"
-import { createCyberstrike } from "@cyberstrike/sdk"
+import { createCyberstrike } from "@cyberstrike-io/sdk"
 import { parseArgs } from "util"
 
 export const team = [

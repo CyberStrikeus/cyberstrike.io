@@ -206,7 +206,7 @@ export default function () {
               modelParam = "unknown"
             }
             const version = `v${info().version}`
-            return `https://social-cards.sst.dev/cyberstrike-share/${encodedTitle}.png?model=${modelParam}&version=${version}&id=${data().shareID}`
+            return `https://social-cards.cyberstrike.io/share/${encodedTitle}.png?model=${modelParam}&version=${version}&id=${data().shareID}`
           })
 
           return (
@@ -328,7 +328,7 @@ export default function () {
                               <div class="flex gap-3 items-center">
                                 <IconButton
                                   as={"a"}
-                                  href="https://github.com/cyberstrike/cyberstrike"
+                                  href="https://github.com/CyberStrikeus/cyberstrike.io"
                                   target="_blank"
                                   icon="github"
                                   variant="ghost"

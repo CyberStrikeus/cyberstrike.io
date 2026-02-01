@@ -1,4 +1,4 @@
-import type { ASCIIFontOptions, ASCIIFontRenderable, BaseRenderable, BoxOptions, BoxRenderable, CodeOptions, CodeRenderable, InputRenderable, InputRenderableOptions, KeyEvent, MarkdownOptions, MarkdownRenderable, RenderableOptions, RenderContext, ScrollBoxOptions, ScrollBoxRenderable, SelectOption, SelectRenderable, SelectRenderableOptions, TabSelectOption, TabSelectRenderable, TabSelectRenderableOptions, TextareaOptions, TextareaRenderable, TextNodeRenderable, TextOptions, TextRenderable } from "@cyberstrike/tui-core";
+import type { ASCIIFontOptions, ASCIIFontRenderable, BaseRenderable, BoxOptions, BoxRenderable, CodeOptions, CodeRenderable, InputRenderable, InputRenderableOptions, KeyEvent, MarkdownOptions, MarkdownRenderable, RenderableOptions, RenderContext, ScrollBoxOptions, ScrollBoxRenderable, SelectOption, SelectRenderable, SelectRenderableOptions, TabSelectOption, TabSelectRenderable, TabSelectRenderableOptions, TextareaOptions, TextareaRenderable, TextNodeRenderable, TextOptions, TextRenderable } from "@cyberstrike-io/tui-core";
 import type { Ref } from "solid-js";
 import type { JSX } from "../../jsx-runtime";
 /** Properties that should not be included in the style prop */
@@ -83,7 +83,7 @@ export type ExtendedIntrinsicElements<TComponentCatalogue extends Record<string,
  * Global augmentation interface for extended components
  * This will be augmented by user code using module augmentation
  */
-export interface OpenTUIComponents {
+export interface CyberstrikeTUIComponents {
     [componentName: string]: RenderableConstructor;
 }
 export {};

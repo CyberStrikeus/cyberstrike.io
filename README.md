@@ -147,4 +147,4 @@ MIT
 
 ---
 
-Based on [Cyberstrike](https://github.com/cyberstrike/cyberstrike) - The open source AI coding agent.
+Based on [Cyberstrike](https://github.com/CyberStrikeus/cyberstrike.io) - The open source AI coding agent.

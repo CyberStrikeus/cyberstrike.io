@@ -37,7 +37,7 @@ import { Config } from "@/config/config"
 import { Todo } from "@/session/todo"
 import { z } from "zod"
 import { LoadAPIKeyError } from "ai"
-import type { Event, CyberstrikeClient, SessionMessageResponse } from "@cyberstrike/sdk/v2"
+import type { Event, CyberstrikeClient, SessionMessageResponse } from "@cyberstrike-io/sdk/v2"
 import { applyPatch } from "diff"
 
 export namespace ACP {
@@ -1361,8 +1361,8 @@ export namespace ACP {
 
     const cyberstrikeProvider = providers.find((p) => p.id === "cyberstrike")
     if (cyberstrikeProvider) {
-      if (cyberstrikeProvider.models["big-pickle"]) {
-        return { providerID: "cyberstrike", modelID: "big-pickle" }
+      if (cyberstrikeProvider.models["hydra"]) {
+        return { providerID: "cyberstrike", modelID: "hydra" }
       }
       const [best] = Provider.sort(Object.values(cyberstrikeProvider.models))
       if (best) {
@@ -1384,7 +1384,7 @@ export namespace ACP {
 
     if (specified) return specified
 
-    return { providerID: "cyberstrike", modelID: "big-pickle" }
+    return { providerID: "cyberstrike", modelID: "hydra" }
   }
 
   function parseUri(

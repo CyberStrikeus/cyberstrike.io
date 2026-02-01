@@ -1,15 +1,19 @@
 {
-  "name": "@cyberstrike/tui-core",
+  "name": "@cyberstrike-io/tui-core",
   "module": "index.js",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
   "version": "0.1.75",
   "description": "CyberstrikeTUI is a TypeScript library for building terminal user interfaces (TUIs)",
+  "author": "Cyberstrike Team",
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AUMLabs-net/cyberstrike.io",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
     "directory": "packages/tui-core"
   },
   "exports": {
@@ -57,11 +61,11 @@
     "bun-webgpu": "0.1.4",
     "planck": "^1.4.2",
     "three": "0.177.0",
-    "@opentui/core-darwin-x64": "0.1.75",
-    "@opentui/core-darwin-arm64": "0.1.75",
-    "@opentui/core-linux-x64": "0.1.75",
-    "@opentui/core-linux-arm64": "0.1.75",
-    "@opentui/core-win32-x64": "0.1.75",
-    "@opentui/core-win32-arm64": "0.1.75"
+    "@cyberstrike-io/tui-core-darwin-x64": "0.1.75",
+    "@cyberstrike-io/tui-core-darwin-arm64": "0.1.75",
+    "@cyberstrike-io/tui-core-linux-x64": "0.1.75",
+    "@cyberstrike-io/tui-core-linux-arm64": "0.1.75",
+    "@cyberstrike-io/tui-core-win32-x64": "0.1.75",
+    "@cyberstrike-io/tui-core-win32-arm64": "0.1.75"
   }
 }

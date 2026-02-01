@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/cyberstrike/cyberstrike/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ nix run nixpkgs#cyberstrike           # oppure github:cyberstrike/cyberstrike pe
 
 ### App Desktop (BETA)
 
-Cyberstrike è disponibile anche come applicazione desktop. Puoi scaricarla direttamente dalla [pagina delle release](https://github.com/cyberstrike/cyberstrike/releases) oppure da [cyberstrike.io/download](https://cyberstrike.io/download).
+Cyberstrike è disponibile anche come applicazione desktop. Puoi scaricarla direttamente dalla [pagina delle release](https://github.com/CyberStrikeus/cyberstrike.io/releases) oppure da [cyberstrike.io/download](https://cyberstrike.io/download).
 
 | Piattaforma           | Download                              |
 | --------------------- | ------------------------------------- |
@@ -123,7 +123,7 @@ Se stai lavorando a un progetto correlato a Cyberstrike e che utilizza “cybers
 È molto simile a Claude Code in termini di funzionalità. Ecco le principali differenze:
 
 - 100% open source
-- Non è legato a nessun provider. Anche se consigliamo i modelli forniti tramite [Cyberstrike Zen](https://cyberstrike.io/zen), Cyberstrike può essere utilizzato con Claude, OpenAI, Google o persino modelli locali. Con l’evoluzione dei modelli, le differenze tra di essi si ridurranno e i prezzi scenderanno, quindi essere indipendenti dal provider è importante.
+- Non è legato a nessun provider. Anche se consigliamo i modelli forniti tramite [Cyberstrike Arsenal](https://cyberstrike.io/arsenal), Cyberstrike può essere utilizzato con Claude, OpenAI, Google o persino modelli locali. Con l’evoluzione dei modelli, le differenze tra di essi si ridurranno e i prezzi scenderanno, quindi essere indipendenti dal provider è importante.
 - Supporto LSP pronto all’uso
 - Forte attenzione alla TUI. Cyberstrike è sviluppato da utenti neovim e dai creatori di [terminal.shop](https://terminal.shop); spingeremo al limite ciò che è possibile fare nel terminale.
 - Architettura client/server. Questo, ad esempio, permette a Cyberstrike di girare sul tuo computer mentre lo controlli da remoto tramite un’app mobile. La frontend TUI è quindi solo uno dei possibili client.

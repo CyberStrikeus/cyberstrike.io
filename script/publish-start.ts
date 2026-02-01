@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
 import { $ } from "bun"
-import { Script } from "@cyberstrike/script"
+import { Script } from "@cyberstrike-io/script"
 import { buildNotes, getLatestRelease } from "./changelog"
 
 const highlightsTemplate = `## Highlights

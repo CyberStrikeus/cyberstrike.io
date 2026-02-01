@@ -1,5 +1,15 @@
 {
-  "name": "@cyberstrike/web",
+  "name": "@cyberstrike-io/web",
+  "description": "Documentation and marketing website for Cyberstrike",
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/web"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
   "type": "module",
   "license": "MIT",
   "version": "1.1.36",

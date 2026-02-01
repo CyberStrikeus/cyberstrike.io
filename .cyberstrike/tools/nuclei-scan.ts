@@ -1,4 +1,4 @@
-import { tool } from "@cyberstrike/plugin"
+import { tool } from "@cyberstrike-io/plugin"
 
 /**
  * Nuclei Scanner Tool - Vulnerability scanning with nuclei templates

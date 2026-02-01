@@ -42,6 +42,7 @@ export namespace Agent {
         })
         .optional(),
       prompt: z.string().optional(),
+      skills: z.array(z.string()).optional(), // Preloaded skills for domain knowledge
       options: z.record(z.string(), z.any()),
       steps: z.number().int().positive().optional(),
     })
@@ -209,11 +210,13 @@ export namespace Agent {
         native: true,
         color: "red",
         prompt: PROMPT_WEB_APPLICATION,
+        skills: ["owasp-wstg", "sql-injection"], // Preload security testing knowledge
         permission: PermissionNext.merge(
           defaults,
           PermissionNext.fromConfig({
             question: "allow",
             bash: "allow",
+            browser: "allow",
             read: "allow",
             glob: "allow",
             grep: "allow",
@@ -236,6 +239,7 @@ export namespace Agent {
           PermissionNext.fromConfig({
             question: "allow",
             bash: "allow",
+            browser: "allow",
             read: "allow",
             glob: "allow",
             grep: "allow",
@@ -256,6 +260,7 @@ export namespace Agent {
           PermissionNext.fromConfig({
             question: "allow",
             bash: "allow",
+            browser: "allow",
             read: "allow",
             glob: "allow",
             grep: "allow",
@@ -271,11 +276,13 @@ export namespace Agent {
         native: true,
         color: "green",
         prompt: PROMPT_BUG_HUNTER,
+        skills: ["recon-methodology", "owasp-wstg"], // Preload recon and testing knowledge
         permission: PermissionNext.merge(
           defaults,
           PermissionNext.fromConfig({
             question: "allow",
             bash: "allow",
+            browser: "allow",
             read: "allow",
             glob: "allow",
             grep: "allow",

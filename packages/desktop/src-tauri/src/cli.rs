@@ -1,8 +1,8 @@
 use tauri::{AppHandle, Manager, path::BaseDirectory};
 use tauri_plugin_shell::{ShellExt, process::Command};
 
-const CLI_INSTALL_DIR: &str = ".whykido/bin";
-const CLI_BINARY_NAME: &str = "whykido";
+const CLI_INSTALL_DIR: &str = ".cyberstrike/bin";
+const CLI_BINARY_NAME: &str = "cyberstrike";
 
 #[derive(serde::Deserialize)]
 pub struct ServerConfig {
@@ -39,7 +39,7 @@ pub fn get_sidecar_path(app: &tauri::AppHandle) -> std::path::PathBuf {
         .expect("Failed to get current binary")
         .parent()
         .expect("Failed to get parent dir")
-        .join("whykido-cli")
+        .join("cyberstrike-cli")
 }
 
 fn is_cli_installed() -> bool {
@@ -61,7 +61,7 @@ pub fn install_cli(app: tauri::AppHandle) -> Result<String, String> {
         return Err("Sidecar binary not found".to_string());
     }
 
-    let temp_script = std::env::temp_dir().join("whykido-install.sh");
+    let temp_script = std::env::temp_dir().join("cyberstrike-install.sh");
     std::fs::write(&temp_script, INSTALL_SCRIPT)
         .map_err(|e| format!("Failed to write install script: {}", e))?;
 
@@ -153,12 +153,12 @@ pub fn create_command(app: &tauri::AppHandle, args: &str) -> Command {
     #[cfg(target_os = "windows")]
     return app
         .shell()
-        .sidecar("whykido-cli")
+        .sidecar("cyberstrike-cli")
         .unwrap()
         .args(args.split_whitespace())
-        .env("WHYKIDO_EXPERIMENTAL_ICON_DISCOVERY", "true")
-        .env("WHYKIDO_EXPERIMENTAL_FILEWATCHER", "true")
-        .env("WHYKIDO_CLIENT", "desktop")
+        .env("CYBERSTRIKE_EXPERIMENTAL_ICON_DISCOVERY", "true")
+        .env("CYBERSTRIKE_EXPERIMENTAL_FILEWATCHER", "true")
+        .env("CYBERSTRIKE_CLIENT", "desktop")
         .env("XDG_STATE_HOME", &state_dir);
 
     #[cfg(not(target_os = "windows"))]
@@ -174,9 +174,9 @@ pub fn create_command(app: &tauri::AppHandle, args: &str) -> Command {
 
         app.shell()
             .command(&shell)
-            .env("WHYKIDO_EXPERIMENTAL_ICON_DISCOVERY", "true")
-            .env("WHYKIDO_EXPERIMENTAL_FILEWATCHER", "true")
-            .env("WHYKIDO_CLIENT", "desktop")
+            .env("CYBERSTRIKE_EXPERIMENTAL_ICON_DISCOVERY", "true")
+            .env("CYBERSTRIKE_EXPERIMENTAL_FILEWATCHER", "true")
+            .env("CYBERSTRIKE_CLIENT", "desktop")
             .env("XDG_STATE_HOME", &state_dir)
             .args(["-il", "-c", &cmd])
     };

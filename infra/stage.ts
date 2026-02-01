@@ -7,11 +7,12 @@ export const domain = (() => {
 // TODO: Update zone ID for cyberstrike.io domain
 export const zoneID = "430ba34c138cfb5360826c4909f99be8"
 
-new cloudflare.RegionalHostname("RegionalHostname", {
-  hostname: domain,
-  regionKey: "us",
-  zoneId: zoneID,
-})
+// RegionalHostname requires Cloudflare Enterprise - disabled for free tier
+// new cloudflare.RegionalHostname("RegionalHostname", {
+//   hostname: domain,
+//   regionKey: "us",
+//   zoneId: zoneID,
+// })
 
 export const shortDomain = (() => {
   if ($app.stage === "production") return "cyberstrike.io"

@@ -1,15 +1,15 @@
 import { query, useParams, createAsync } from "@solidjs/router"
 import { createMemo, createSignal, Show } from "solid-js"
 import { IconCopy, IconCheck } from "~/component/icon"
-import { Key } from "@cyberstrike/console-core/key.js"
-import { Billing } from "@cyberstrike/console-core/billing.js"
+import { Key } from "@cyberstrike-io/console-core/key.js"
+import { Usage } from "@cyberstrike-io/console-core/usage.js"
 import { withActor } from "~/context/auth.withActor"
 import styles from "./new-user-section.module.css"
 
 const getUsageInfo = query(async (workspaceID: string) => {
   "use server"
   return withActor(async () => {
-    return await Billing.usages()
+    return await Usage.list()
   }, workspaceID)
 }, "usage.list")
 
@@ -51,7 +51,7 @@ export function NewUserSection() {
           </div>
           <div data-slot="feature">
             <h3>No Lock-in</h3>
-            <p>Use Zen with any coding agent, and continue using other providers with cyberstrike whenever you want.</p>
+            <p>Use Arsenal with any coding agent, and continue using other providers with cyberstrike whenever you want.</p>
           </div>
         </div>
 
@@ -88,7 +88,6 @@ export function NewUserSection() {
 
         <div data-component="next-steps">
           <ol>
-            <li>Enable billing</li>
             <li>
               Run <code>cyberstrike auth login</code> and select cyberstrike
             </li>

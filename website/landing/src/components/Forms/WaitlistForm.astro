@@ -1,0 +1,123 @@
+---
+/**
+ * * Waitlist form for early access
+ * Submits to Cloudflare Worker → NocoDB
+ */
+
+import Button from "@components/Button/Button.astro";
+import { FORM_CONFIG } from "@/config/forms";
+---
+
+<section id="waitlist" class="w-full max-w-md">
+  <form id="waitlist-form" name="waitlist" class="flex flex-col gap-4">
+    <!-- Honeypot field for bot detection -->
+    <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off" />
+
+    <div>
+      <label for="waitlist-name" class="form__label sr-only">Your Name</label>
+      <input
+        type="text"
+        class="form__input"
+        name="name"
+        id="waitlist-name"
+        placeholder="Your name"
+        required
+      />
+    </div>
+    <div>
+      <label for="waitlist-email" class="form__label sr-only mb-1">Email Address</label>
+      <input
+        type="email"
+        class="form__input"
+        name="email"
+        id="waitlist-email"
+        inputmode="email"
+        placeholder="Email address"
+        required
+      />
+    </div>
+    <div>
+      <label for="waitlist-role" class="form__label sr-only mb-1">Role</label>
+      <select
+        name="role"
+        class="form__input"
+        id="waitlist-role"
+        required
+      >
+        <option value="" disabled selected>What describes you best?</option>
+        <option value="pentester">Penetration Tester</option>
+        <option value="security-researcher">Security Researcher</option>
+        <option value="red-team">Red Team Operator</option>
+        <option value="bug-bounty">Bug Bounty Hunter</option>
+        <option value="security-engineer">Security Engineer</option>
+        <option value="developer">Developer</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <Button variant="primary" type="submit" class="rounded-md before:rounded-md" id="waitlist-submit-btn">
+      <span class="btn-text">Join Waitlist</span>
+      <span class="btn-loading hidden">Joining...</span>
+    </Button>
+
+    <p id="waitlist-error" class="text-red-500 text-sm hidden"></p>
+    <p id="waitlist-success" class="text-green-500 text-sm hidden"></p>
+
+    <p class="text-center text-sm text-base-500 dark:text-base-400">
+      We'll notify you when Cyberstrike Pro is available.
+    </p>
+  </form>
+</section>
+
+<script define:vars={{ handlerUrl: FORM_CONFIG.handlerUrl, endpoint: FORM_CONFIG.endpoints.waitlist }}>
+  const form = document.getElementById('waitlist-form');
+  const submitBtn = document.getElementById('waitlist-submit-btn');
+  const errorEl = document.getElementById('waitlist-error');
+  const successEl = document.getElementById('waitlist-success');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+
+    // Honeypot check
+    if (formData.get('website')) {
+      return;
+    }
+
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.querySelector('.btn-text')?.classList.add('hidden');
+    submitBtn.querySelector('.btn-loading')?.classList.remove('hidden');
+    errorEl?.classList.add('hidden');
+    successEl?.classList.add('hidden');
+
+    try {
+      const response = await fetch(`${handlerUrl}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(Object.fromEntries(formData))
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        successEl.textContent = 'You\'re on the list! We\'ll notify you soon.';
+        successEl?.classList.remove('hidden');
+        form.reset();
+      } else {
+        throw new Error(result.error || 'Something went wrong');
+      }
+    } catch (error) {
+      errorEl.textContent = error.message || 'Failed to join. Please try again.';
+      errorEl?.classList.remove('hidden');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.querySelector('.btn-text')?.classList.remove('hidden');
+      submitBtn.querySelector('.btn-loading')?.classList.add('hidden');
+    }
+  });
+</script>

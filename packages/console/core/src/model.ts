@@ -5,9 +5,9 @@ import { ModelTable } from "./schema/model.sql"
 import { Identifier } from "./identifier"
 import { fn } from "./util/fn"
 import { Actor } from "./actor"
-import { Resource } from "@cyberstrike/console-resource"
+import { Resource } from "@cyberstrike-io/console-resource"
 
-export namespace ZenData {
+export namespace ArsenalData {
   const FormatSchema = z.enum(["anthropic", "google", "openai", "oa-compat"])
   const TrialSchema = z.object({
     provider: z.string(),
@@ -68,14 +68,14 @@ export namespace ZenData {
 
   export const list = fn(z.void(), () => {
     const json = JSON.parse(
-      Resource.ZEN_MODELS1.value +
-        Resource.ZEN_MODELS2.value +
-        Resource.ZEN_MODELS3.value +
-        Resource.ZEN_MODELS4.value +
-        Resource.ZEN_MODELS5.value +
-        Resource.ZEN_MODELS6.value +
-        Resource.ZEN_MODELS7.value +
-        Resource.ZEN_MODELS8.value,
+      Resource.ARSENAL_MODELS1.value +
+        Resource.ARSENAL_MODELS2.value +
+        Resource.ARSENAL_MODELS3.value +
+        Resource.ARSENAL_MODELS4.value +
+        Resource.ARSENAL_MODELS5.value +
+        Resource.ARSENAL_MODELS6.value +
+        Resource.ARSENAL_MODELS7.value +
+        Resource.ARSENAL_MODELS8.value,
     )
     return ModelsSchema.parse(json)
   })

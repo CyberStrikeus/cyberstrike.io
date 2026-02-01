@@ -9,9 +9,9 @@ import {
   type Accessor,
   type ParentProps,
 } from "solid-js"
-import { useKeyboard } from "@cyberstrike/tui-solid"
+import { useKeyboard } from "@cyberstrike-io/tui-solid"
 import { useKeybind } from "@tui/context/keybind"
-import type { KeybindsConfig } from "@cyberstrike/sdk/v2"
+import type { KeybindsConfig } from "@cyberstrike-io/sdk/v2"
 
 type Context = ReturnType<typeof init>
 const ctx = createContext<Context>()

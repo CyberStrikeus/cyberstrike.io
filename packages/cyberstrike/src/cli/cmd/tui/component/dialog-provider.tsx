@@ -1,108 +1,136 @@
 import { createMemo, createSignal, onMount, Show } from "solid-js"
 import { useSync } from "@tui/context/sync"
-import { map, pipe, sortBy } from "remeda"
 import { DialogSelect } from "@tui/ui/dialog-select"
 import { useDialog } from "@tui/ui/dialog"
 import { useSDK } from "../context/sdk"
 import { DialogPrompt } from "../ui/dialog-prompt"
 import { Link } from "../ui/link"
 import { useTheme } from "../context/theme"
-import { TextAttributes } from "@cyberstrike/tui-core"
-import type { ProviderAuthAuthorization } from "@cyberstrike/sdk/v2"
+import { TextAttributes } from "@cyberstrike-io/tui-core"
+import type { ProviderAuthAuthorization } from "@cyberstrike-io/sdk/v2"
 import { DialogModel } from "./dialog-model"
-import { useKeyboard } from "@cyberstrike/tui-solid"
+import { useKeyboard } from "@cyberstrike-io/tui-solid"
 import { Clipboard } from "@tui/util/clipboard"
 import { useToast } from "../ui/toast"
 
-const PROVIDER_PRIORITY: Record<string, number> = {
-  cyberstrike: 0,
-  anthropic: 1,
-  "github-copilot": 2,
-  openai: 3,
-  google: 4,
+// Simplified provider list for initial release
+const ENABLED_PROVIDERS = ["openai", "claude-api", "claude-cli", "ollama"] as const
+
+interface SimpleProvider {
+  id: string
+  name: string
+  description: string
 }
+
+const SIMPLE_PROVIDERS: SimpleProvider[] = [
+  {
+    id: "claude-api",
+    name: "Claude Code CLI (API)",
+    description: "Use your Claude Max/Pro subscription - Fast, real streaming",
+  },
+  {
+    id: "claude-cli",
+    name: "Claude Code CLI (Subprocess)",
+    description: "Use your Claude Max/Pro subscription - Subprocess mode",
+  },
+  {
+    id: "openai",
+    name: "OpenAI",
+    description: "GPT-4o, GPT-5 and other OpenAI models",
+  },
+  {
+    id: "ollama",
+    name: "Local Llama (Ollama)",
+    description: "Run AI locally with Ollama or any OpenAI-compatible API",
+  },
+]
 
 export function createDialogProviderOptions() {
   const sync = useSync()
   const dialog = useDialog()
   const sdk = useSDK()
   const connected = createMemo(() => new Set(sync.data.provider_next.connected))
+
   const options = createMemo(() => {
-    return pipe(
-      sync.data.provider_next.all,
-      sortBy((x) => PROVIDER_PRIORITY[x.id] ?? 99),
-      map((provider) => {
-        const isConnected = connected().has(provider.id)
-        return {
-          title: provider.name,
-          value: provider.id,
-          description: {
-            cyberstrike: "(Recommended)",
-            anthropic: "(Claude Max or API key)",
-            openai: "(ChatGPT Plus/Pro or API key)",
-          }[provider.id],
-          category: provider.id in PROVIDER_PRIORITY ? "Popular" : "Other",
-          footer: isConnected ? "Connected" : undefined,
-          async onSelect() {
-            const methods = sync.data.provider_auth[provider.id] ?? [
-              {
-                type: "api",
-                label: "API key",
-              },
-            ]
-            let index: number | null = 0
-            if (methods.length > 1) {
-              index = await new Promise<number | null>((resolve) => {
-                dialog.replace(
-                  () => (
-                    <DialogSelect
-                      title="Select auth method"
-                      options={methods.map((x, index) => ({
-                        title: x.label,
-                        value: index,
-                      }))}
-                      onSelect={(option) => resolve(option.value)}
-                    />
-                  ),
-                  () => resolve(null),
-                )
-              })
-            }
-            if (index == null) return
-            const method = methods[index]
-            if (method.type === "oauth") {
-              const result = await sdk.client.provider.oauth.authorize({
-                providerID: provider.id,
-                method: index,
-              })
-              if (result.data?.method === "code") {
-                dialog.replace(() => (
-                  <CodeMethod
-                    providerID={provider.id}
-                    title={method.label}
-                    index={index}
-                    authorization={result.data!}
+    return SIMPLE_PROVIDERS.map((provider) => {
+      const isConnected = connected().has(provider.id)
+      return {
+        title: provider.name,
+        value: provider.id,
+        description: provider.description,
+        footer: isConnected ? "Connected" : undefined,
+        async onSelect() {
+          // Claude CLI providers don't need authentication - they use local CLI credentials
+          if (provider.id === "claude-cli" || provider.id === "claude-api") {
+            dialog.replace(() => <DialogModel providerID={provider.id} />)
+            return
+          }
+
+          // Ollama / Local Llama needs base URL configuration
+          if (provider.id === "ollama") {
+            dialog.replace(() => <OllamaMethod />)
+            return
+          }
+
+          // Other providers use API key
+          const methods = sync.data.provider_auth[provider.id] ?? [
+            {
+              type: "api",
+              label: "API key",
+            },
+          ]
+          let index: number | null = 0
+          if (methods.length > 1) {
+            index = await new Promise<number | null>((resolve) => {
+              dialog.replace(
+                () => (
+                  <DialogSelect
+                    title="Select auth method"
+                    options={methods.map((x, index) => ({
+                      title: x.label,
+                      value: index,
+                    }))}
+                    onSelect={(option) => resolve(option.value)}
                   />
-                ))
-              }
-              if (result.data?.method === "auto") {
-                dialog.replace(() => (
-                  <AutoMethod
-                    providerID={provider.id}
-                    title={method.label}
-                    index={index}
-                    authorization={result.data!}
-                  />
-                ))
-              }
+                ),
+                () => resolve(null),
+              )
+            })
+          }
+          if (index == null) return
+          const method = methods[index]
+          if (method.type === "oauth") {
+            const result = await sdk.client.provider.oauth.authorize({
+              providerID: provider.id,
+              method: index,
+            })
+            if (result.data?.method === "code") {
+              dialog.replace(() => (
+                <CodeMethod
+                  providerID={provider.id}
+                  title={method.label}
+                  index={index}
+                  authorization={result.data!}
+                />
+              ))
             }
-            if (method.type === "api") {
-              return dialog.replace(() => <ApiMethod providerID={provider.id} title={method.label} />)
+            if (result.data?.method === "auto") {
+              dialog.replace(() => (
+                <AutoMethod
+                  providerID={provider.id}
+                  title={method.label}
+                  index={index}
+                  authorization={result.data!}
+                />
+              ))
             }
-          },
-        }
-      }),
-    )
+          }
+          if (method.type === "api") {
+            return dialog.replace(() => <ApiMethod providerID={provider.id} title={method.label} />)
+          }
+        },
+      }
+    })
   })
   return options
 }
@@ -227,13 +255,18 @@ function ApiMethod(props: ApiMethodProps) {
       title={props.title}
       placeholder="API key"
       description={
-        props.providerID === "cyberstrike" ? (
+        props.providerID === "openai" ? (
           <box gap={1}>
-            <text fg={theme.textMuted}>
-              cyberstrike gives you access to all the best AI models for penetration testing with a single API key.
-            </text>
+            <text fg={theme.textMuted}>Enter your OpenAI API key from platform.openai.com</text>
             <text fg={theme.text}>
-              Go to <span style={{ fg: theme.primary }}>https://cyberstrike.io/zen</span> to get a key
+              Get your API key at <span style={{ fg: theme.primary }}>https://platform.openai.com/api-keys</span>
+            </text>
+          </box>
+        ) : props.providerID === "anthropic" ? (
+          <box gap={1}>
+            <text fg={theme.textMuted}>Enter your Anthropic API key from console.anthropic.com</text>
+            <text fg={theme.textMuted}>
+              Tip: Use "Claude Code CLI" provider to use your Claude Max subscription instead
             </text>
           </box>
         ) : undefined
@@ -252,5 +285,83 @@ function ApiMethod(props: ApiMethodProps) {
         dialog.replace(() => <DialogModel providerID={props.providerID} />)
       }}
     />
+  )
+}
+
+function OllamaMethod() {
+  const dialog = useDialog()
+  const sdk = useSDK()
+  const sync = useSync()
+  const { theme } = useTheme()
+  const [step, setStep] = createSignal<"url" | "key">("url")
+  const [baseUrl, setBaseUrl] = createSignal("http://localhost:11434/v1")
+
+  return (
+    <Show
+      when={step() === "url"}
+      fallback={
+        <DialogPrompt
+          title="API Key (optional)"
+          placeholder="Leave empty if not required"
+          description={
+            <box gap={1}>
+              <text fg={theme.textMuted}>
+                Most local Ollama setups don't require an API key.
+              </text>
+              <text fg={theme.textMuted}>
+                Press Enter to skip, or enter a key if your setup requires it.
+              </text>
+            </box>
+          }
+          onConfirm={async (value) => {
+            // Save ollama config
+            await sdk.client.auth.set({
+              providerID: "ollama",
+              auth: {
+                type: "api",
+                key: value || "ollama", // Use "ollama" as placeholder if no key
+              },
+            })
+            // Also need to set the base URL in config
+            await sdk.client.config.update({
+              config: {
+                provider: {
+                  ollama: {
+                    options: {
+                      baseURL: baseUrl(),
+                    },
+                  },
+                },
+              },
+            })
+            await sdk.client.instance.dispose()
+            await sync.bootstrap()
+            dialog.replace(() => <DialogModel providerID="ollama" />)
+          }}
+        />
+      }
+    >
+      <DialogPrompt
+        title="Ollama Base URL"
+        placeholder="http://localhost:11434/v1"
+        description={
+          <box gap={1}>
+            <text fg={theme.textMuted}>
+              Enter the base URL of your Ollama or OpenAI-compatible API server.
+            </text>
+            <text fg={theme.text}>
+              Default: <span style={{ fg: theme.primary }}>http://localhost:11434/v1</span>
+            </text>
+            <text fg={theme.textMuted}>
+              Make sure Ollama is running: <span style={{ fg: theme.accent }}>ollama serve</span>
+            </text>
+          </box>
+        }
+        onConfirm={async (value) => {
+          setBaseUrl(value || "http://localhost:11434/v1")
+          setStep("key")
+        }}
+      />
+    </Show>
   )
 }

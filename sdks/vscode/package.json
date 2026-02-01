@@ -3,10 +3,10 @@
   "displayName": "cyberstrike",
   "description": "cyberstrike for VS Code",
   "version": "1.1.36",
-  "publisher": "sst-dev",
+  "publisher": "cyberstrike",
   "repository": {
     "type": "git",
-    "url": "https://github.com/anomalyco/cyberstrike"
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io"
   },
   "license": "MIT",
   "icon": "images/icon.png",

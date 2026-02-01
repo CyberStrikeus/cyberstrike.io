@@ -14,7 +14,7 @@ export default function WorkspaceLayout(props: RouteSectionProps) {
           <nav data-component="nav-desktop">
             <div data-component="workspace-nav-items">
               <A href={`/workspace/${params.id}`} end activeClass="active" data-nav-button>
-                Zen
+                Arsenal
               </A>
               <A href={`/workspace/${params.id}/keys`} activeClass="active" data-nav-button>
                 API Keys
@@ -23,9 +23,6 @@ export default function WorkspaceLayout(props: RouteSectionProps) {
                 Members
               </A>
               <Show when={userInfo()?.isAdmin}>
-                <A href={`/workspace/${params.id}/billing`} activeClass="active" data-nav-button>
-                  Billing
-                </A>
                 <A href={`/workspace/${params.id}/settings`} activeClass="active" data-nav-button>
                   Settings
                 </A>
@@ -36,7 +33,7 @@ export default function WorkspaceLayout(props: RouteSectionProps) {
           <nav data-component="nav-mobile">
             <div data-component="workspace-nav-items">
               <A href={`/workspace/${params.id}`} end activeClass="active" data-nav-button>
-                Zen
+                Arsenal
               </A>
               <A href={`/workspace/${params.id}/keys`} activeClass="active" data-nav-button>
                 API Keys
@@ -45,9 +42,6 @@ export default function WorkspaceLayout(props: RouteSectionProps) {
                 Members
               </A>
               <Show when={userInfo()?.isAdmin}>
-                <A href={`/workspace/${params.id}/billing`} activeClass="active" data-nav-button>
-                  Billing
-                </A>
                 <A href={`/workspace/${params.id}/settings`} activeClass="active" data-nav-button>
                   Settings
                 </A>

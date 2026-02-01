@@ -9,6 +9,53 @@ declare module "sst" {
       "type": "sst.sst.Secret"
       "value": string
     }
+    "ARSENAL_BLACK_LIMITS": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_BLACK_PRICE": {
+      "plan100": string
+      "plan20": string
+      "plan200": string
+      "product": string
+      "type": "sst.sst.Linkable"
+    }
+    "ARSENAL_MODELS1": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS2": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS3": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS4": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS5": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS6": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS7": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_MODELS8": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "ARSENAL_SESSION_SECRET": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "AUTH_API_URL": {
       "type": "sst.sst.Linkable"
       "value": string
@@ -25,6 +72,14 @@ declare module "sst" {
       "type": "sst.cloudflare.Worker"
       "url": string
     }
+    "ArsenalData": {
+      "name": string
+      "type": "sst.cloudflare.Bucket"
+    }
+    "ArsenalDataNew": {
+      "name": string
+      "type": "sst.cloudflare.Bucket"
+    }
     "AuthApi": {
       "type": "sst.cloudflare.Worker"
       "url": string
@@ -36,14 +91,6 @@ declare module "sst" {
     "Bucket": {
       "name": string
       "type": "sst.cloudflare.Bucket"
-    }
-    "CLOUDFLARE_API_TOKEN": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "CLOUDFLARE_DEFAULT_ACCOUNT_ID": {
-      "type": "sst.sst.Secret"
-      "value": string
     }
     "Console": {
       "type": "sst.cloudflare.SolidStart"
@@ -105,13 +152,6 @@ declare module "sst" {
       "namespaceId": string
       "type": "sst.cloudflare.Kv"
     }
-    "HONEYCOMB_API_KEY": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "LogProcessor": {
-      "type": "sst.cloudflare.Worker"
-    }
     "R2AccessKey": {
       "type": "sst.sst.Secret"
       "value": string
@@ -132,6 +172,22 @@ declare module "sst" {
       "type": "sst.sst.Linkable"
       "value": string
     }
+    "TIDB_DATABASE": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "TIDB_HOST": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "TIDB_PASSWORD": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
+    "TIDB_USER": {
+      "type": "sst.sst.Secret"
+      "value": string
+    }
     "Teams": {
       "type": "sst.cloudflare.SolidStart"
       "url": string
@@ -143,61 +199,6 @@ declare module "sst" {
     "WebApp": {
       "type": "sst.cloudflare.StaticSite"
       "url": string
-    }
-    "ZEN_BLACK_LIMITS": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_BLACK_PRICE": {
-      "plan100": string
-      "plan20": string
-      "plan200": string
-      "product": string
-      "type": "sst.sst.Linkable"
-    }
-    "ZEN_MODELS1": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS2": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS3": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS4": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS5": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS6": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS7": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_MODELS8": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZEN_SESSION_SECRET": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
-    "ZenData": {
-      "name": string
-      "type": "sst.cloudflare.Bucket"
-    }
-    "ZenDataNew": {
-      "name": string
-      "type": "sst.cloudflare.Bucket"
     }
   }
 }

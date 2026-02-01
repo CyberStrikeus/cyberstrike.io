@@ -118,13 +118,13 @@ export const dict = {
   "provider.connect.apiKey.label": "Klucz API {{provider}}",
   "provider.connect.apiKey.placeholder": "Klucz API",
   "provider.connect.apiKey.required": "Klucz API jest wymagany",
-  "provider.connect.cyberstrikeZen.line1":
-    "Cyberstrike Zen daje dostęp do wybranego zestawu niezawodnych, zoptymalizowanych modeli dla agentów kodujących.",
-  "provider.connect.cyberstrikeZen.line2":
+  "provider.connect.cyberstrikeArsenal.line1":
+    "Cyberstrike Arsenal daje dostęp do wybranego zestawu niezawodnych, zoptymalizowanych modeli dla agentów kodujących.",
+  "provider.connect.cyberstrikeArsenal.line2":
     "Z jednym kluczem API uzyskasz dostęp do modeli takich jak Claude, GPT, Gemini, GLM i więcej.",
-  "provider.connect.cyberstrikeZen.visit.prefix": "Odwiedź ",
-  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
-  "provider.connect.cyberstrikeZen.visit.suffix": ", aby odebrać swój klucz API.",
+  "provider.connect.cyberstrikeArsenal.visit.prefix": "Odwiedź ",
+  "provider.connect.cyberstrikeArsenal.visit.link": "cyberstrike.io/arsenal",
+  "provider.connect.cyberstrikeArsenal.visit.suffix": ", aby odebrać swój klucz API.",
   "provider.connect.oauth.code.visit.prefix": "Odwiedź ",
   "provider.connect.oauth.code.visit.link": "ten link",
   "provider.connect.oauth.code.visit.suffix":

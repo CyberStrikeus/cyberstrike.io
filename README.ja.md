@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/cyberstrike/cyberstrike/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ nix run nixpkgs#cyberstrike           # または github:cyberstrike/cyberstrike
 
 ### デスクトップアプリ (BETA)
 
-Cyberstrike はデスクトップアプリとしても利用できます。[releases page](https://github.com/cyberstrike/cyberstrike/releases) から直接ダウンロードするか、[cyberstrike.io/download](https://cyberstrike.io/download) を利用してください。
+Cyberstrike はデスクトップアプリとしても利用できます。[releases page](https://github.com/CyberStrikeus/cyberstrike.io/releases) から直接ダウンロードするか、[cyberstrike.io/download](https://cyberstrike.io/download) を利用してください。
 
 | プラットフォーム      | ダウンロード                          |
 | --------------------- | ------------------------------------- |
@@ -123,7 +123,7 @@ Cyberstrike に関連するプロジェクトで、名前に "cyberstrike"（例
 機能面では Claude Code と非常に似ています。主な違いは次のとおりです。
 
 - 100% オープンソース
-- 特定のプロバイダーに依存しません。[Cyberstrike Zen](https://cyberstrike.io/zen) で提供しているモデルを推奨しますが、Cyberstrike は Claude、OpenAI、Google、またはローカルモデルでも利用できます。モデルが進化すると差は縮まり価格も下がるため、provider-agnostic であることが重要です。
+- 特定のプロバイダーに依存しません。[Cyberstrike Arsenal](https://cyberstrike.io/arsenal) で提供しているモデルを推奨しますが、Cyberstrike は Claude、OpenAI、Google、またはローカルモデルでも利用できます。モデルが進化すると差は縮まり価格も下がるため、provider-agnostic であることが重要です。
 - そのまま使える LSP サポート
 - TUI にフォーカス。Cyberstrike は neovim ユーザーと [terminal.shop](https://terminal.shop) の制作者によって作られており、ターミナルで可能なことの限界を押し広げます。
 - クライアント/サーバー構成。例えば Cyberstrike をあなたのPCで動かし、モバイルアプリからリモート操作できます。TUI フロントエンドは複数あるクライアントの1つにすぎません。

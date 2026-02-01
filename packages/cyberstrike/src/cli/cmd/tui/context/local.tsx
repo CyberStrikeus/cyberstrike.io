@@ -11,7 +11,7 @@ import { useToast } from "../ui/toast"
 import { Provider } from "@/provider/provider"
 import { useArgs } from "./args"
 import { useSDK } from "./sdk"
-import { RGBA } from "@cyberstrike/tui-core"
+import { RGBA } from "@cyberstrike-io/tui-core"
 
 export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
   name: "Local",

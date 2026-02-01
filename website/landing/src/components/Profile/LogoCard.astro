@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+  name: string;
+}
+
+const { image, name } = Astro.props;
+---
+
+<div class="w-full">
+  <div
+    class="hover-border-glow border-base-200 bg-base-100 dark:border-base-800 dark:bg-base-950 flex h-full items-center justify-center rounded-xl border p-6 dark:border"
+  >
+    <Image
+      src={image}
+      alt={name}
+      width={160}
+      height={48}
+      class="h-12 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300"
+    />
+  </div>
+</div>

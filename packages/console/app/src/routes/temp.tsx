@@ -46,7 +46,7 @@ export default function Home() {
           <img data-slot="logo dark" src={logoDark} alt="cyberstrike logo dark" />
           <h1 data-slot="title">The AI coding agent built for the terminal</h1>
           <div data-slot="login">
-            <a href="/auth">cyberstrike zen</a>
+            <a href="/auth">cyberstrike arsenal</a>
           </div>
         </section>
 
@@ -55,7 +55,7 @@ export default function Home() {
             <a href="/docs">Get Started</a>
           </div>
           <div data-slot="center">
-            <a href="/auth">cyberstrike zen</a>
+            <a href="/auth">cyberstrike arsenal</a>
           </div>
           <div data-slot="right">
             <button data-copy data-slot="command">
@@ -79,7 +79,7 @@ export default function Home() {
               <strong>LSP enabled</strong> Automatically loads the right LSPs for the LLM
             </li>
             <li>
-              <strong>cyberstrike zen</strong> A <a href="/docs/zen">curated list of models</a> provided by cyberstrike{" "}
+              <strong>cyberstrike arsenal</strong> A <a href="/docs/arsenal">curated list of models</a> provided by cyberstrike{" "}
               <label>New</label>
             </li>
             <li>
@@ -154,7 +154,7 @@ export default function Home() {
             <a href="https://x.com/cyberstrike">X.com</a>
           </div>
           <div data-slot="cell">
-            <a href="https://github.com/cyberstrike/cyberstrike">GitHub</a>
+            <a href="https://github.com/CyberStrikeus/cyberstrike.io">GitHub</a>
           </div>
           <div data-slot="cell">
             <a href="https://cyberstrike.io/discord">Discord</a>

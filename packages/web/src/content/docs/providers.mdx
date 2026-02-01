@@ -48,13 +48,13 @@ You can customize the base URL for any provider by setting the `baseURL` option.
 
 ---
 
-## Cyberstrike Zen
+## Cyberstrike Arsenal
 
-Cyberstrike Zen is a list of models provided by the Cyberstrike team that have been
-tested and verified to work well with Cyberstrike. [Learn more](/docs/zen).
+Cyberstrike Arsenal is a list of models provided by the Cyberstrike team that have been
+tested and verified to work well with Cyberstrike. [Learn more](/docs/arsenal).
 
 :::tip
-If you are new, we recommend starting with Cyberstrike Zen.
+If you are new, we recommend starting with Cyberstrike Arsenal.
 :::
 
 1. Run the `/connect` command in the TUI, select cyberstrike, and head to [cyberstrike.io/auth](https://cyberstrike.io/auth).
@@ -746,7 +746,7 @@ Then expose application ID as environment variable:
 export GITLAB_OAUTH_CLIENT_ID=your_application_id_here
 ```
 
-More documentation on [opencode-gitlab-auth](https://www.npmjs.com/package/@gitlab/opencode-gitlab-auth) homepage.
+More documentation on [cyberstrike-gitlab-auth](https://www.npmjs.com/package/@gitlab/cyberstrike-gitlab-auth) homepage.
 
 ##### Configuration
 
@@ -776,7 +776,7 @@ To access GitLab tools (merge requests, issues, pipelines, CI/CD, etc.):
 ```json title="cyberstrike.json"
 {
   "$schema": "https://cyberstrike.io/config.json",
-  "plugin": ["@gitlab/opencode-gitlab-plugin"]
+  "plugin": ["@gitlab/cyberstrike-gitlab-plugin"]
 }
 ```
 
@@ -1005,17 +1005,17 @@ Helicone supports custom headers for features like caching, user tracking, and s
 
 ##### Session tracking
 
-Helicone's [Sessions](https://docs.helicone.ai/features/sessions) feature lets you group related LLM requests together. Use the [opencode-helicone-session](https://github.com/H2Shami/opencode-helicone-session) plugin to automatically log each Cyberstrike conversation as a session in Helicone.
+Helicone's [Sessions](https://docs.helicone.ai/features/sessions) feature lets you group related LLM requests together. Use the [cyberstrike-helicone-session](https://github.com/H2Shami/cyberstrike-helicone-session) plugin to automatically log each Cyberstrike conversation as a session in Helicone.
 
 ```bash
-npm install -g opencode-helicone-session
+npm install -g cyberstrike-helicone-session
 ```
 
 Add it to your config.
 
 ```json title="cyberstrike.json"
 {
-  "plugin": ["opencode-helicone-session"]
+  "plugin": ["cyberstrike-helicone-session"]
 }
 ```
 
@@ -1328,13 +1328,13 @@ If you already have an API key, you can select **Manually enter API Key** and pa
 
 ---
 
-### Cyberstrike Zen
+### Cyberstrike Arsenal
 
-Cyberstrike Zen is a list of tested and verified models provided by the Cyberstrike team. [Learn more](/docs/zen).
+Cyberstrike Arsenal is a list of tested and verified models provided by the Cyberstrike team. [Learn more](/docs/arsenal).
 
-1. Sign in to **<a href={console}>Cyberstrike Zen</a>** and click **Create API Key**.
+1. Sign in to **<a href={console}>Cyberstrike Arsenal</a>** and click **Create API Key**.
 
-2. Run the `/connect` command and search for **Cyberstrike Zen**.
+2. Run the `/connect` command and search for **Cyberstrike Arsenal**.
 
    ```txt
    /connect
@@ -1449,7 +1449,7 @@ SAP AI Core provides access to 40+ models from OpenAI, Anthropic, Google, Amazon
    Or set the `AICORE_SERVICE_KEY` environment variable:
 
    ```bash
-   AICORE_SERVICE_KEY='{"clientid":"...","clientsecret":"...","url":"...","serviceurls":{"AI_API_URL":"..."}}' opencode
+   AICORE_SERVICE_KEY='{"clientid":"...","clientsecret":"...","url":"...","serviceurls":{"AI_API_URL":"..."}}' cyberstrike
    ```
 
    Or add it to your bash profile:
@@ -1505,7 +1505,7 @@ SAP AI Core provides access to 40+ models from OpenAI, Anthropic, Google, Amazon
 
 ### Scaleway
 
-To use [Scaleway Generative APIs](https://www.scaleway.com/en/docs/generative-apis/) with Opencode:
+To use [Scaleway Generative APIs](https://www.scaleway.com/en/docs/generative-apis/) with Cyberstrike:
 
 1. Head over to the [Scaleway Console IAM settings](https://console.scaleway.com/iam/api-keys) to generate a new API key.
 
@@ -1700,7 +1700,7 @@ Some useful routing options:
 
 ### ZenMux
 
-1. Head over to the [ZenMux dashboard](https://zenmux.ai/settings/keys), click **Create API Key**, and copy the key.
+1. Head over to the [ZenMux dashboard](https://arsenalmux.ai/settings/keys), click **Create API Key**, and copy the key.
 
 2. Run the `/connect` command and search for ZenMux.
 
@@ -1729,7 +1729,7 @@ Some useful routing options:
    {
      "$schema": "https://cyberstrike.io/config.json",
      "provider": {
-       "zenmux": {
+       "arsenalmux": {
          "models": {
            "somecoolnewmodel": {}
          }

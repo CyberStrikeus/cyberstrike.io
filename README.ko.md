@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/cyberstrike/cyberstrike/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ nix run nixpkgs#cyberstrike           # 또는 github:cyberstrike/cyberstrike �
 
 ### 데스크톱 앱 (BETA)
 
-Cyberstrike 는 데스크톱 앱으로도 제공됩니다. [releases page](https://github.com/cyberstrike/cyberstrike/releases) 에서 직접 다운로드하거나 [cyberstrike.io/download](https://cyberstrike.io/download) 를 이용하세요.
+Cyberstrike 는 데스크톱 앱으로도 제공됩니다. [releases page](https://github.com/CyberStrikeus/cyberstrike.io/releases) 에서 직접 다운로드하거나 [cyberstrike.io/download](https://cyberstrike.io/download) 를 이용하세요.
 
 | 플랫폼                | 다운로드                              |
 | --------------------- | ------------------------------------- |
@@ -123,7 +123,7 @@ Cyberstrike 와 관련된 프로젝트를 진행하면서 이름에 "cyberstrike
 기능 면에서는 Claude Code 와 매우 유사합니다. 주요 차이점은 다음과 같습니다.
 
 - 100% 오픈 소스
-- 특정 제공자에 묶여 있지 않습니다. [Cyberstrike Zen](https://cyberstrike.io/zen) 을 통해 제공하는 모델을 권장하지만, Cyberstrike 는 Claude, OpenAI, Google 또는 로컬 모델과도 사용할 수 있습니다. 모델이 발전하면서 격차는 줄고 가격은 내려가므로 provider-agnostic 인 것이 중요합니다.
+- 특정 제공자에 묶여 있지 않습니다. [Cyberstrike Arsenal](https://cyberstrike.io/arsenal) 을 통해 제공하는 모델을 권장하지만, Cyberstrike 는 Claude, OpenAI, Google 또는 로컬 모델과도 사용할 수 있습니다. 모델이 발전하면서 격차는 줄고 가격은 내려가므로 provider-agnostic 인 것이 중요합니다.
 - 기본으로 제공되는 LSP 지원
 - TUI 에 집중. Cyberstrike 는 neovim 사용자와 [terminal.shop](https://terminal.shop) 제작자가 만들었으며, 터미널에서 가능한 것의 한계를 밀어붙입니다.
 - 클라이언트/서버 아키텍처. 예를 들어 Cyberstrike 를 내 컴퓨터에서 실행하면서 모바일 앱으로 원격 조작할 수 있습니다. 즉, TUI 프런트엔드는 가능한 여러 클라이언트 중 하나일 뿐입니다.

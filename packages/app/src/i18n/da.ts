@@ -118,13 +118,13 @@ export const dict = {
   "provider.connect.apiKey.label": "{{provider}} API-nøgle",
   "provider.connect.apiKey.placeholder": "API-nøgle",
   "provider.connect.apiKey.required": "API-nøgle er påkrævet",
-  "provider.connect.cyberstrikeZen.line1":
-    "Cyberstrike Zen giver dig adgang til et udvalg af pålidelige optimerede modeller til kodningsagenter.",
-  "provider.connect.cyberstrikeZen.line2":
+  "provider.connect.cyberstrikeArsenal.line1":
+    "Cyberstrike Arsenal giver dig adgang til et udvalg af pålidelige optimerede modeller til kodningsagenter.",
+  "provider.connect.cyberstrikeArsenal.line2":
     "Med en enkelt API-nøgle får du adgang til modeller som Claude, GPT, Gemini, GLM og flere.",
-  "provider.connect.cyberstrikeZen.visit.prefix": "Besøg ",
-  "provider.connect.cyberstrikeZen.visit.link": "cyberstrike.io/zen",
-  "provider.connect.cyberstrikeZen.visit.suffix": " for at hente din API-nøgle.",
+  "provider.connect.cyberstrikeArsenal.visit.prefix": "Besøg ",
+  "provider.connect.cyberstrikeArsenal.visit.link": "cyberstrike.io/arsenal",
+  "provider.connect.cyberstrikeArsenal.visit.suffix": " for at hente din API-nøgle.",
   "provider.connect.oauth.code.visit.prefix": "Besøg ",
   "provider.connect.oauth.code.visit.link": "dette link",
   "provider.connect.oauth.code.visit.suffix":

@@ -1,7 +1,6 @@
 ---
 name: code-review
 description: Security-focused code review agent for identifying vulnerabilities in source code
-model: anthropic/claude-sonnet-4-5
 ---
 
 # Security Code Review Agent

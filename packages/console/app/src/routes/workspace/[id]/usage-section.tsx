@@ -1,4 +1,4 @@
-import { Billing } from "@cyberstrike/console-core/billing.js"
+import { Usage } from "@cyberstrike-io/console-core/usage.js"
 import { createAsync, query, useParams } from "@solidjs/router"
 import { createMemo, For, Show, createEffect, createSignal } from "solid-js"
 import { formatDateUTC, formatDateForTable } from "../common"
@@ -12,7 +12,7 @@ const PAGE_SIZE = 50
 async function getUsageInfo(workspaceID: string, page: number) {
   "use server"
   return withActor(async () => {
-    return await Billing.usages(page, PAGE_SIZE)
+    return await Usage.list(page, PAGE_SIZE)
   }, workspaceID)
 }
 

@@ -2,7 +2,7 @@ import z from "zod"
 import path from "path"
 import { Config } from "../config/config"
 import { Instance } from "../project/instance"
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 import { ConfigMarkdown } from "../config/markdown"
 import { Log } from "../util/log"
 import { Global } from "@/global"
@@ -131,5 +131,34 @@ export namespace Skill {
 
   export async function all() {
     return state().then((x) => Object.values(x))
+  }
+
+  /**
+   * Get combined context from multiple skills for an agent
+   */
+  export async function getAgentContext(skillNames: string[]): Promise<string | undefined> {
+    const skills = await state()
+    const contexts: string[] = []
+
+    for (const name of skillNames) {
+      const skill = skills[name]
+      if (!skill) {
+        log.warn("skill not found", { name })
+        continue
+      }
+
+      try {
+        // Parse markdown and extract content (skip frontmatter)
+        const parsed = await ConfigMarkdown.parse(skill.location).catch(() => null)
+        if (parsed?.content) {
+          contexts.push(`## Skill: ${skill.name}\n\n${parsed.content.trim()}`)
+        }
+      } catch (err) {
+        log.error("failed to read skill content", { skill: name, err })
+      }
+    }
+
+    if (contexts.length === 0) return undefined
+    return contexts.join("\n\n---\n\n")
   }
 }

@@ -32,8 +32,27 @@ export namespace Filesystem {
     return !relA || !relA.startsWith("..") || !relB || !relB.startsWith("..")
   }
 
+  /**
+   * Check if child path is contained within parent path.
+   * Uses realpath to resolve symlinks and prevent symlink-based escapes.
+   * Falls back to lexical comparison if realpath fails (e.g., path doesn't exist yet).
+   */
   export function contains(parent: string, child: string) {
-    return !relative(parent, child).startsWith("..")
+    // First do lexical check - fail fast for obvious escapes
+    if (relative(parent, child).startsWith("..")) {
+      return false
+    }
+
+    // Try to resolve symlinks for both paths
+    try {
+      const canonicalParent = realpathSync.native(parent)
+      const canonicalChild = realpathSync.native(child)
+      return !relative(canonicalParent, canonicalChild).startsWith("..")
+    } catch {
+      // If realpath fails (e.g., child doesn't exist yet), fall back to lexical check
+      // This is safe because we already passed the lexical check above
+      return true
+    }
   }
 
   export async function findUp(target: string, start: string, stop?: string) {

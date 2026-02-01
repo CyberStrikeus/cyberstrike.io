@@ -1,6 +1,6 @@
-# OpenTUI Core
+# @cyberstrike/tui-core
 
-OpenTUI Core is a TypeScript library for building terminal user interfaces (TUIs). It is currently in
+Cyberstrike TUI Core is a TypeScript library for building terminal user interfaces (TUIs). It is currently in
 development and is not ready for production use.
 
 ## Documentation
@@ -14,7 +14,7 @@ development and is not ready for production use.
 ## Install
 
 ```bash
-bun install @opentui/core
+bun install @cyberstrike/tui-core
 ```
 
 ## Build
@@ -49,7 +49,7 @@ See [src/zig/bench.zig](src/zig/bench.zig) for available options like `--filter`
 Renderables are hierarchical objects that can be positioned, nested, styled and rendered to the terminal:
 
 ```typescript
-import { createCliRenderer, TextRenderable } from "@opentui/core"
+import { createCliRenderer, TextRenderable } from "@cyberstrike/tui-core"
 
 const renderer = await createCliRenderer()
 

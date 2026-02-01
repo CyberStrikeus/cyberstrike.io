@@ -4,7 +4,6 @@ import { Actor } from "./actor"
 import { Database } from "./drizzle"
 import { Identifier } from "./identifier"
 import { UserTable } from "./schema/user.sql"
-import { BillingTable } from "./schema/billing.sql"
 import { WorkspaceTable } from "./schema/workspace.sql"
 import { Key } from "./key"
 import { eq, sql } from "drizzle-orm"
@@ -29,11 +28,6 @@ export namespace Workspace {
           accountID: account.properties.accountID,
           name: "",
           role: "admin",
-        })
-        await tx.insert(BillingTable).values({
-          workspaceID,
-          id: Identifier.create("billing"),
-          balance: 0,
         })
       })
       await Actor.provide(

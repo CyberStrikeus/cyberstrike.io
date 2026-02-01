@@ -11,7 +11,7 @@
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/cyberstrike/cyberstrike/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
 
 <p align="center">
@@ -58,7 +58,7 @@ nix run nixpkgs#cyberstrike           # eller github:cyberstrike/cyberstrike for
 
 ### Desktop-app (BETA)
 
-Cyberstrike er også tilgjengelig som en desktop-app. Last ned direkte fra [releases-siden](https://github.com/cyberstrike/cyberstrike/releases) eller [cyberstrike.io/download](https://cyberstrike.io/download).
+Cyberstrike er også tilgjengelig som en desktop-app. Last ned direkte fra [releases-siden](https://github.com/CyberStrikeus/cyberstrike.io/releases) eller [cyberstrike.io/download](https://cyberstrike.io/download).
 
 | Plattform             | Nedlasting                            |
 | --------------------- | ------------------------------------- |
@@ -123,7 +123,7 @@ Hvis du jobber med et prosjekt som er relatert til Cyberstrike og bruker "cybers
 Det er veldig likt Claude Code når det gjelder funksjonalitet. Her er de viktigste forskjellene:
 
 - 100% open source
-- Ikke knyttet til en bestemt leverandør. Selv om vi anbefaler modellene vi tilbyr gjennom [Cyberstrike Zen](https://cyberstrike.io/zen); kan Cyberstrike brukes med Claude, OpenAI, Google eller til og med lokale modeller. Etter hvert som modellene utvikler seg vil gapene lukkes og prisene gå ned, så det er viktig å være provider-agnostic.
+- Ikke knyttet til en bestemt leverandør. Selv om vi anbefaler modellene vi tilbyr gjennom [Cyberstrike Arsenal](https://cyberstrike.io/arsenal); kan Cyberstrike brukes med Claude, OpenAI, Google eller til og med lokale modeller. Etter hvert som modellene utvikler seg vil gapene lukkes og prisene gå ned, så det er viktig å være provider-agnostic.
 - LSP-støtte rett ut av boksen
 - Fokus på TUI. Cyberstrike er bygget av neovim-brukere og skaperne av [terminal.shop](https://terminal.shop); vi kommer til å presse grensene for hva som er mulig i terminalen.
 - Klient/server-arkitektur. Dette kan for eksempel la Cyberstrike kjøre på maskinen din, mens du styrer den eksternt fra en mobilapp. Det betyr at TUI-frontend'en bare er en av de mulige klientene.

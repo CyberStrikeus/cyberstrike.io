@@ -1,0 +1,117 @@
+---
+/**
+ * FAQ page
+ */
+import FaqAccordions from "@components/Faq/FaqAccordions.astro";
+import CtaCardBgImage from "@components/Cta/CtaCardBgImage.astro";
+import BaseLayout from "@layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="FAQ - Cyberstrike" description="Frequently asked questions about Cyberstrike AI penetration testing platform.">
+  <section class="pt-32 pb-8">
+    <div class="site-container">
+      <div class="mx-auto max-w-3xl text-center">
+        <h1 class="h1 mb-4">Frequently Asked Questions</h1>
+        <p class="text-base-600 dark:text-base-400 text-lg">
+          Find answers to common questions about Cyberstrike, our AI agents, pricing, and more.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <FaqAccordions />
+
+  <section class="py-16">
+    <div class="site-container">
+      <div class="mx-auto max-w-3xl">
+        <h2 class="h3 mb-8 text-center">More Questions</h2>
+
+        <div class="space-y-6">
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              What AI providers does Cyberstrike support?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Cyberstrike supports all major AI providers including OpenAI (GPT-4), Anthropic (Claude), and local models via Ollama. You bring your own API keys (BYOK model), giving you full control over costs and data.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              Is Cyberstrike legal to use?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Cyberstrike is a legitimate security testing tool designed for authorized penetration testing. You must have proper written authorization before testing any system. Using security tools without authorization is illegal in most jurisdictions.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              What is the difference between Pro and Elite plans?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Pro is designed for individual pentesters working locally. Elite adds multi-server orchestration with a job queue system, allowing you to run agents across up to 5 remote servers simultaneously. Elite also includes the Hacker Browser MCP for advanced web testing.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              Can I use Cyberstrike for bug bounty hunting?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Yes! The Bug Hunter agent is specifically designed for bug bounty hunting. It helps automate reconnaissance, vulnerability scanning, and reporting for programs you're authorized to test.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              Do you store my scan results or target data?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              No. Cyberstrike runs locally on your machine (or your servers in Elite plan). Your scan data, results, and target information never leave your infrastructure unless you explicitly share them. We only store account and billing information.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              What MCP tools are included?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Pro and above include all Kali Linux MCPs (nmap, sqlmap, nikto, etc.), network analysis tools, and the ability to create custom MCP tools. Elite adds the Hacker Browser MCP for automated web interaction and testing.
+            </p>
+          </details>
+
+          <details class="group border-b border-base-200 dark:border-base-700 pb-4">
+            <summary class="flex cursor-pointer items-center justify-between py-2 text-lg font-medium">
+              Can I cancel my subscription anytime?
+              <span class="transition-transform group-open:rotate-180">↓</span>
+            </summary>
+            <p class="mt-4 text-base-600 dark:text-base-400">
+              Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your current billing period. No long-term contracts required.
+            </p>
+          </details>
+        </div>
+
+        <div class="mt-12 text-center">
+          <p class="text-base-600 dark:text-base-400 mb-4">
+            Still have questions?
+          </p>
+          <a
+            href="/contact"
+            class="text-primary-500 hover:text-primary-600 font-medium hover:underline"
+          >
+            Contact our support team →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaCardBgImage />
+</BaseLayout>

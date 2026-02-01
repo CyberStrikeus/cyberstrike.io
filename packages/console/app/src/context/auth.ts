@@ -1,8 +1,8 @@
 import { getRequestEvent } from "solid-js/web"
-import { and, Database, eq, inArray, isNull, sql } from "@cyberstrike/console-core/drizzle/index.js"
-import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
+import { and, Database, eq, inArray, isNull, sql } from "@cyberstrike-io/console-core/drizzle/index.js"
+import { UserTable } from "@cyberstrike-io/console-core/schema/user.sql.js"
 import { redirect } from "@solidjs/router"
-import { Actor } from "@cyberstrike/console-core/actor.js"
+import { Actor } from "@cyberstrike-io/console-core/actor.js"
 
 import { createClient } from "@openauthjs/openauth/client"
 
@@ -12,7 +12,7 @@ export const AuthClient = createClient({
 })
 
 import { useSession } from "@solidjs/start/http"
-import { Resource } from "@cyberstrike/console-resource"
+import { Resource } from "@cyberstrike-io/console-resource"
 
 export interface AuthSession {
   account?: Record<
@@ -27,7 +27,7 @@ export interface AuthSession {
 
 export function useAuthSession() {
   return useSession<AuthSession>({
-    password: Resource.ZEN_SESSION_SECRET.value,
+    password: Resource.ARSENAL_SESSION_SECRET.value,
     name: "auth",
     maxAge: 60 * 60 * 24 * 365,
     cookie: {

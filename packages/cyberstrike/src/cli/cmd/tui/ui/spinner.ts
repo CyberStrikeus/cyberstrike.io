@@ -1,5 +1,5 @@
-import type { ColorInput } from "@cyberstrike/tui-core"
-import { RGBA } from "@cyberstrike/tui-core"
+import type { ColorInput } from "@cyberstrike-io/tui-core"
+import { RGBA } from "@cyberstrike-io/tui-core"
 import type { ColorGenerator } from "cyberstrike-spinner"
 
 interface AdvancedGradientOptions {

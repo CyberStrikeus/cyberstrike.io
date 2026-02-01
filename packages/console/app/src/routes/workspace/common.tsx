@@ -1,11 +1,10 @@
-import { Resource } from "@cyberstrike/console-resource"
-import { Actor } from "@cyberstrike/console-core/actor.js"
-import { action, json, query } from "@solidjs/router"
+import { Resource } from "@cyberstrike-io/console-resource"
+import { Actor } from "@cyberstrike-io/console-core/actor.js"
+import { query } from "@solidjs/router"
 import { withActor } from "~/context/auth.withActor"
-import { Billing } from "@cyberstrike/console-core/billing.js"
-import { and, Database, desc, eq, isNull } from "@cyberstrike/console-core/drizzle/index.js"
-import { WorkspaceTable } from "@cyberstrike/console-core/schema/workspace.sql.js"
-import { UserTable } from "@cyberstrike/console-core/schema/user.sql.js"
+import { and, Database, desc, eq, isNull } from "@cyberstrike-io/console-core/drizzle/index.js"
+import { WorkspaceTable } from "@cyberstrike-io/console-core/schema/workspace.sql.js"
+import { UserTable } from "@cyberstrike-io/console-core/schema/user.sql.js"
 
 export function formatDateForTable(date: Date) {
   const options: Intl.DateTimeFormatOptions = {
@@ -70,51 +69,3 @@ export const querySessionInfo = query(async (workspaceID: string) => {
     }
   }, workspaceID)
 }, "session.get")
-
-export const createCheckoutUrl = action(
-  async (workspaceID: string, amount: number, successUrl: string, cancelUrl: string) => {
-    "use server"
-    return json(
-      await withActor(
-        () =>
-          Billing.generateCheckoutUrl({ amount, successUrl, cancelUrl })
-            .then((data) => ({ error: undefined, data }))
-            .catch((e) => ({
-              error: e.message as string,
-              data: undefined,
-            })),
-        workspaceID,
-      ),
-    )
-  },
-  "checkoutUrl",
-)
-
-export const queryBillingInfo = query(async (workspaceID: string) => {
-  "use server"
-  return withActor(async () => {
-    const billing = await Billing.get()
-    return {
-      customerID: billing.customerID,
-      paymentMethodID: billing.paymentMethodID,
-      paymentMethodType: billing.paymentMethodType,
-      paymentMethodLast4: billing.paymentMethodLast4,
-      balance: billing.balance,
-      reload: billing.reload,
-      reloadAmount: billing.reloadAmount ?? Billing.RELOAD_AMOUNT,
-      reloadAmountMin: Billing.RELOAD_AMOUNT_MIN,
-      reloadTrigger: billing.reloadTrigger ?? Billing.RELOAD_TRIGGER,
-      reloadTriggerMin: Billing.RELOAD_TRIGGER_MIN,
-      monthlyLimit: billing.monthlyLimit,
-      monthlyUsage: billing.monthlyUsage,
-      timeMonthlyUsageUpdated: billing.timeMonthlyUsageUpdated,
-      reloadError: billing.reloadError,
-      timeReloadError: billing.timeReloadError,
-      subscription: billing.subscription,
-      subscriptionID: billing.subscriptionID,
-      subscriptionPlan: billing.subscriptionPlan,
-      timeSubscriptionBooked: billing.timeSubscriptionBooked,
-      timeSubscriptionSelected: billing.timeSubscriptionSelected,
-    }
-  }, workspaceID)
-}, "billing.get")

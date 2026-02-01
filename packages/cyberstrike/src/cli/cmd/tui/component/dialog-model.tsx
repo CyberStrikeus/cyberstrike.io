@@ -8,10 +8,15 @@ import { createDialogProviderOptions, DialogProvider } from "./dialog-provider"
 import { useKeybind } from "../context/keybind"
 import * as fuzzysort from "fuzzysort"
 
+// Only show models from these providers in the model selection menu
+const ALLOWED_PROVIDERS = new Set(["openai", "claude-api", "claude-cli", "ollama", "anthropic"])
+
 export function useConnected() {
   const sync = useSync()
   return createMemo(() =>
-    sync.data.provider.some((x) => x.id !== "cyberstrike" || Object.values(x.models).some((y) => y.cost?.input !== 0)),
+    sync.data.provider
+      .filter((x) => ALLOWED_PROVIDERS.has(x.id))
+      .some((x) => x.id !== "cyberstrike" || Object.values(x.models).some((y) => y.cost?.input !== 0)),
   )
 }
 
@@ -47,6 +52,7 @@ export function DialogModel(props: { providerID?: string }) {
 
     const favoriteOptions = showSections
       ? favorites.flatMap((item) => {
+          if (!ALLOWED_PROVIDERS.has(item.providerID)) return []
           const provider = sync.data.provider.find((x) => x.id === item.providerID)
           if (!provider) return []
           const model = provider.models[item.modelID]
@@ -80,6 +86,7 @@ export function DialogModel(props: { providerID?: string }) {
 
     const recentOptions = showSections
       ? recentList.flatMap((item) => {
+          if (!ALLOWED_PROVIDERS.has(item.providerID)) return []
           const provider = sync.data.provider.find((x) => x.id === item.providerID)
           if (!provider) return []
           const model = provider.models[item.modelID]
@@ -113,6 +120,7 @@ export function DialogModel(props: { providerID?: string }) {
 
     const providerOptions = pipe(
       sync.data.provider,
+      filter((provider) => ALLOWED_PROVIDERS.has(provider.id)),
       sortBy(
         (provider) => provider.id !== "cyberstrike",
         (provider) => provider.name,

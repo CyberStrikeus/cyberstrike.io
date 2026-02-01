@@ -1,8 +1,8 @@
 import { Title } from "@solidjs/meta"
 import { A, createAsync, query } from "@solidjs/router"
 import { createMemo, For, Show } from "solid-js"
-import { Database, desc } from "@cyberstrike/console-core/drizzle/index.js"
-import { BenchmarkTable } from "@cyberstrike/console-core/schema/benchmark.sql.js"
+import { Database, desc } from "@cyberstrike-io/console-core/drizzle/index.js"
+import { BenchmarkTable } from "@cyberstrike-io/console-core/schema/benchmark.sql.js"
 
 interface BenchmarkResult {
   averageScore: number

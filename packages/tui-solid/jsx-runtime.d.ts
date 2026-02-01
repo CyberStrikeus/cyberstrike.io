@@ -1,4 +1,4 @@
-import { Renderable } from "@cyberstrike/tui-core"
+import { Renderable } from "@cyberstrike-io/tui-core"
 import type {
   AsciiFontProps,
   BoxProps,
@@ -7,7 +7,7 @@ import type {
   InputProps,
   LinkProps,
   MarkdownProps,
-  OpenTUIComponents,
+  CyberstrikeTUIComponents,
   ScrollBoxProps,
   SelectProps,
   SpanProps,
@@ -23,7 +23,7 @@ declare namespace JSX {
 
   type ArrayElement = Array<Element>
 
-  interface IntrinsicElements extends ExtendedIntrinsicElements<OpenTUIComponents> {
+  interface IntrinsicElements extends ExtendedIntrinsicElements<CyberstrikeTUIComponents> {
     box: BoxProps
     text: TextProps
     span: SpanProps

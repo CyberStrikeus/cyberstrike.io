@@ -20,12 +20,15 @@ export const Resource = new Proxy(
         }
         // @ts-ignore
         if (value.type === "sst.cloudflare.Kv") {
-          const client = new Cloudflare({
-            apiToken: ResourceBase.CLOUDFLARE_API_TOKEN.value,
-          })
+          // These secrets are only available in dev mode (see infra/console.ts)
+          const apiToken = (ResourceBase as any).CLOUDFLARE_API_TOKEN?.value
+          const accountId = (ResourceBase as any).CLOUDFLARE_DEFAULT_ACCOUNT_ID?.value
+          if (!apiToken || !accountId) {
+            throw new Error("CLOUDFLARE_API_TOKEN and CLOUDFLARE_DEFAULT_ACCOUNT_ID are required for KV operations in dev mode")
+          }
+          const client = new Cloudflare({ apiToken })
           // @ts-ignore
           const namespaceId = value.namespaceId
-          const accountId = ResourceBase.CLOUDFLARE_DEFAULT_ACCOUNT_ID.value
           return {
             get: (k: string | string[]) => {
               const isMulti = Array.isArray(k)

@@ -16569,8 +16569,8 @@
     "id": "cyberstrike",
     "env": ["CYBERSTRIKE_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://cyberstrike.io/zen/v1",
-    "name": "Cyberstrike Zen",
+    "api": "https://cyberstrike.io/arsenal/v1",
+    "name": "Cyberstrike Arsenal",
     "doc": "https://cyberstrike.io/docs/zen",
     "models": {
       "qwen3-coder": {
@@ -16846,10 +16846,10 @@
         "limit": { "context": 400000, "output": 128000 },
         "provider": { "npm": "@ai-sdk/openai" }
       },
-      "big-pickle": {
-        "id": "big-pickle",
-        "name": "Big Pickle",
-        "family": "big-pickle",
+      "hydra": {
+        "id": "hydra",
+        "name": "Hydra",
+        "family": "hydra",
         "attachment": false,
         "reasoning": true,
         "tool_call": true,
@@ -23549,13 +23549,13 @@
       }
     }
   },
-  "zenmux": {
-    "id": "zenmux",
+  "arsenalmux": {
+    "id": "arsenalmux",
     "env": ["ZENMUX_API_KEY"],
     "npm": "@ai-sdk/openai-compatible",
-    "api": "https://zenmux.ai/api/v1",
+    "api": "https://arsenalmux.ai/api/v1",
     "name": "ZenMux",
-    "doc": "https://docs.zenmux.ai",
+    "doc": "https://docs.arsenalmux.ai",
     "models": {
       "stepfun/step-3": {
         "id": "stepfun/step-3",

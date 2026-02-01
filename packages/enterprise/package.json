@@ -1,7 +1,17 @@
 {
-  "name": "@cyberstrike/enterprise",
+  "name": "@cyberstrike-io/enterprise",
+  "description": "Enterprise features and team management for Cyberstrike",
   "version": "1.1.36",
   "private": true,
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/enterprise"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -13,8 +23,8 @@
     "shell-prod": "sst shell --target Teams --stage production"
   },
   "dependencies": {
-    "@cyberstrike/util": "workspace:*",
-    "@cyberstrike/ui": "workspace:*",
+    "@cyberstrike-io/util": "workspace:*",
+    "@cyberstrike-io/ui": "workspace:*",
     "aws4fetch": "^1.0.20",
     "@pierre/diffs": "catalog:",
     "@solidjs/router": "catalog:",

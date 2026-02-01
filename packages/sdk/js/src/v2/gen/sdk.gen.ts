@@ -71,6 +71,9 @@ import type {
   ProjectUpdateErrors,
   ProjectUpdateResponses,
   ProviderAuthResponses,
+  ProviderClaudeCliStatusResponses,
+  ProviderClaudeCliUseErrors,
+  ProviderClaudeCliUseResponses,
   ProviderListResponses,
   ProviderOauthAuthorizeErrors,
   ProviderOauthAuthorizeResponses,
@@ -2014,6 +2017,50 @@ export class Oauth extends HeyApiClient {
   }
 }
 
+export class ClaudeCli extends HeyApiClient {
+  /**
+   * Get Claude Code CLI status
+   *
+   * Check if Claude Code CLI is installed and has valid credentials.
+   */
+  public status<ThrowOnError extends boolean = false>(
+    parameters?: {
+      directory?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "directory" }] }])
+    return (options?.client ?? this.client).get<ProviderClaudeCliStatusResponses, unknown, ThrowOnError>({
+      url: "/provider/claude-cli/status",
+      ...options,
+      ...params,
+    })
+  }
+
+  /**
+   * Use Claude Code CLI credentials
+   *
+   * Configure Anthropic provider to use Claude Code CLI credentials.
+   */
+  public use<ThrowOnError extends boolean = false>(
+    parameters?: {
+      directory?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ in: "query", key: "directory" }] }])
+    return (options?.client ?? this.client).post<
+      ProviderClaudeCliUseResponses,
+      ProviderClaudeCliUseErrors,
+      ThrowOnError
+    >({
+      url: "/provider/claude-cli/use",
+      ...options,
+      ...params,
+    })
+  }
+}
+
 export class Provider extends HeyApiClient {
   /**
    * List providers
@@ -2056,6 +2103,11 @@ export class Provider extends HeyApiClient {
   private _oauth?: Oauth
   get oauth(): Oauth {
     return (this._oauth ??= new Oauth({ client: this.client }))
+  }
+
+  private _claudeCli?: ClaudeCli
+  get claudeCli(): ClaudeCli {
+    return (this._claudeCli ??= new ClaudeCli({ client: this.client }))
   }
 }
 

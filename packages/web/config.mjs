@@ -5,7 +5,7 @@ export default {
   console: stage === "production" ? "https://cyberstrike.io/auth" : `https://${stage}.cyberstrike.io/auth`,
   email: "contact@cyberstrike.io",
   socialCard: "https://social-cards.sst.dev",
-  github: "https://github.com/cyberstrike/cyberstrike",
+  github: "https://github.com/CyberStrikeus/cyberstrike.io",
   discord: "https://cyberstrike.io/discord",
   headerLinks: [
     { name: "Home", url: "/" },

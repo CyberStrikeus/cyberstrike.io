@@ -1,4 +1,4 @@
-import { tool } from "@cyberstrike/plugin"
+import { tool } from "@cyberstrike-io/plugin"
 
 /**
  * Nmap Scan Tool - Network reconnaissance and service enumeration

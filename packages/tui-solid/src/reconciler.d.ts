@@ -1,4 +1,4 @@
-import { BaseRenderable } from "@cyberstrike/tui-core";
+import { BaseRenderable } from "@cyberstrike-io/tui-core";
 import { SlotRenderable } from "./elements";
 export type DomNode = BaseRenderable;
 export declare function createSlotNode(): SlotRenderable;

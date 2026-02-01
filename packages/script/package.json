@@ -1,7 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/package",
-  "name": "@cyberstrike/script",
+  "name": "@cyberstrike-io/script",
+  "version": "1.0.0",
+  "description": "Internal build and development scripts for Cyberstrike",
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/script"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
   "license": "MIT",
+  "private": false,
   "devDependencies": {
     "@types/bun": "catalog:"
   },

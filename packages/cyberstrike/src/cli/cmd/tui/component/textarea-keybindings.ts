@@ -1,5 +1,5 @@
 import { createMemo } from "solid-js"
-import type { KeyBinding } from "@cyberstrike/tui-core"
+import type { KeyBinding } from "@cyberstrike-io/tui-core"
 import { useKeybind } from "../context/keybind"
 import { Keybind } from "@/util/keybind"
 

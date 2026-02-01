@@ -1,6 +1,6 @@
-import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@cyberstrike/tui-solid"
+import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@cyberstrike-io/tui-solid"
 import { Clipboard } from "@tui/util/clipboard"
-import { TextAttributes } from "@cyberstrike/tui-core"
+import { TextAttributes } from "@cyberstrike-io/tui-core"
 import { RouteProvider, useRoute } from "@tui/context/route"
 import { Switch, Match, createEffect, untrack, ErrorBoundary, createSignal, onMount, batch, Show, on } from "solid-js"
 import { Installation } from "@/installation"
@@ -17,6 +17,7 @@ import { DialogThemeList } from "@tui/component/dialog-theme-list"
 import { DialogHelp } from "./ui/dialog-help"
 import { CommandProvider, useCommandDialog } from "@tui/component/dialog-command"
 import { DialogAgent } from "@tui/component/dialog-agent"
+import { DialogAgentSettings } from "@tui/component/dialog-agent-settings"
 import { DialogSessionList } from "@tui/component/dialog-session-list"
 import { KeybindProvider } from "@tui/context/keybind"
 import { ThemeProvider, useTheme } from "@tui/context/theme"
@@ -383,6 +384,18 @@ function App() {
       },
     },
     {
+      title: "Agent settings",
+      value: "agent.settings",
+      category: "Agent",
+      slash: {
+        name: "agent-settings",
+        aliases: ["settings"],
+      },
+      onSelect: () => {
+        dialog.replace(() => <DialogAgentSettings />)
+      },
+    },
+    {
       title: "Toggle MCPs",
       value: "mcp.list",
       category: "Agent",
@@ -590,7 +603,7 @@ function App() {
         DialogAlert.show(
           dialog,
           "Warning",
-          "While openrouter is a convenient way to access LLMs your request will often be routed to subpar providers that do not work well in our testing.\n\nFor reliable access to models check out cyberstrike Zen\nhttps://cyberstrike.io/zen",
+          "While openrouter is a convenient way to access LLMs your request will often be routed to subpar providers that do not work well in our testing.\n\nFor reliable access to models check out Cyberstrike Arsenal\nhttps://cyberstrike.io/arsenal",
         ).then(() => kv.set("openrouter_warning", true))
       })
     }
@@ -710,7 +723,7 @@ function ErrorComponent(props: {
   })
   const [copied, setCopied] = createSignal(false)
 
-  const issueURL = new URL("https://github.com/cyberstrike/cyberstrike.io/issues/new?template=bug-report.yml")
+  const issueURL = new URL("https://github.com/CyberStrikeus/cyberstrike.io.io/issues/new?template=bug-report.yml")
 
   // Choose safe fallback colors per mode since theme context may not be available
   const isLight = props.mode === "light"

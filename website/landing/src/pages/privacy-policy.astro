@@ -1,0 +1,90 @@
+---
+/**
+ * Privacy Policy page
+ */
+import BaseLayout from "@layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Privacy Policy - Cyberstrike" description="Cyberstrike privacy policy and data protection information.">
+  <section class="pt-32 pb-16">
+    <div class="site-container">
+      <div class="mx-auto max-w-3xl">
+        <h1 class="h1 mb-8">Privacy Policy</h1>
+        <p class="text-base-500 dark:text-base-400 mb-8">Last updated: January 2026</p>
+
+        <div class="prose dark:prose-invert max-w-none space-y-8">
+          <section>
+            <h2 class="h3 mb-4">1. Introduction</h2>
+            <p class="text-base-600 dark:text-base-300">
+              Cyberstrike ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our penetration testing platform and related services.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">2. Information We Collect</h2>
+            <p class="text-base-600 dark:text-base-300 mb-4">We may collect the following types of information:</p>
+            <ul class="list-disc pl-6 text-base-600 dark:text-base-300 space-y-2">
+              <li><strong>Account Information:</strong> Name, email address, company name, and billing information when you register for our services.</li>
+              <li><strong>Usage Data:</strong> Information about how you use our platform, including scan configurations, agent interactions, and feature usage.</li>
+              <li><strong>Technical Data:</strong> IP address, browser type, device information, and log data.</li>
+              <li><strong>API Keys:</strong> Your own API keys that you provide for AI services (stored securely, never shared).</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">3. How We Use Your Information</h2>
+            <p class="text-base-600 dark:text-base-300 mb-4">We use collected information to:</p>
+            <ul class="list-disc pl-6 text-base-600 dark:text-base-300 space-y-2">
+              <li>Provide, maintain, and improve our services</li>
+              <li>Process transactions and send related information</li>
+              <li>Send technical notices and support messages</li>
+              <li>Respond to your comments and questions</li>
+              <li>Analyze usage patterns to improve user experience</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">4. Data Security</h2>
+            <p class="text-base-600 dark:text-base-300">
+              We implement industry-standard security measures to protect your data. All data transmission is encrypted using TLS. API keys and sensitive credentials are encrypted at rest. We do not store scan results on our servers unless explicitly requested.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">5. Data Retention</h2>
+            <p class="text-base-600 dark:text-base-300">
+              We retain your account information for as long as your account is active. Usage logs are retained for 90 days. You may request deletion of your data at any time by contacting us.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">6. Third-Party Services</h2>
+            <p class="text-base-600 dark:text-base-300">
+              Our platform may integrate with third-party AI providers (OpenAI, Anthropic, etc.) using your own API keys. We do not share your data with these providers beyond what is necessary for the AI features you use. Please review their respective privacy policies.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">7. Your Rights</h2>
+            <p class="text-base-600 dark:text-base-300 mb-4">You have the right to:</p>
+            <ul class="list-disc pl-6 text-base-600 dark:text-base-300 space-y-2">
+              <li>Access your personal data</li>
+              <li>Correct inaccurate data</li>
+              <li>Request deletion of your data</li>
+              <li>Export your data in a portable format</li>
+              <li>Opt-out of marketing communications</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 class="h3 mb-4">8. Contact Us</h2>
+            <p class="text-base-600 dark:text-base-300">
+              If you have questions about this Privacy Policy, please contact us at:<br/>
+              <a href="mailto:privacy@cyberstrike.io" class="text-primary-500 hover:underline">privacy@cyberstrike.io</a>
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

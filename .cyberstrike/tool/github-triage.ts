@@ -1,6 +1,6 @@
 /// <reference path="../env.d.ts" />
 // import { Octokit } from "@octokit/rest"
-import { tool } from "@cyberstrike/plugin"
+import { tool } from "@cyberstrike-io/plugin"
 import DESCRIPTION from "./github-triage.txt"
 
 function getIssueNumber(): number {
@@ -33,14 +33,14 @@ export default tool({
       .describe("The username of the assignee")
       .default("rekram1-node"),
     labels: tool.schema
-      .array(tool.schema.enum(["nix", "opentui", "perf", "desktop", "zen", "docs", "windows"]))
+      .array(tool.schema.enum(["nix", "tui", "perf", "desktop", "arsenal", "docs", "windows"]))
       .describe("The labels(s) to add to the issue")
       .default([]),
   },
   async execute(args) {
     const issue = getIssueNumber()
     // const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN })
-    const owner = "anomalyco"
+    const owner = "cyberstrike"
     const repo = "cyberstrike"
 
     const results: string[] = []
@@ -49,12 +49,12 @@ export default tool({
       throw new Error("Only desktop issues should be assigned to adamdotdevin")
     }
 
-    if (args.assignee === "fwang" && !args.labels.includes("zen")) {
+    if (args.assignee === "fwang" && !args.labels.includes("arsenal")) {
       throw new Error("Only zen issues should be assigned to fwang")
     }
 
-    if (args.assignee === "kommander" && !args.labels.includes("opentui")) {
-      throw new Error("Only opentui issues should be assigned to kommander")
+    if (args.assignee === "kommander" && !args.labels.includes("tui")) {
+      throw new Error("Only tui issues should be assigned to kommander")
     }
 
     // await octokit.rest.issues.addAssignees({

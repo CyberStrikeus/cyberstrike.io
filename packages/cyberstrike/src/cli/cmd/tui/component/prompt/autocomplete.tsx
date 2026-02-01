@@ -1,4 +1,4 @@
-import type { BoxRenderable, TextareaRenderable, KeyEvent, ScrollBoxRenderable } from "@cyberstrike/tui-core"
+import type { BoxRenderable, TextareaRenderable, KeyEvent, ScrollBoxRenderable } from "@cyberstrike-io/tui-core"
 import fuzzysort from "fuzzysort"
 import { firstBy } from "remeda"
 import { createMemo, createResource, createEffect, onMount, onCleanup, Index, Show, createSignal } from "solid-js"
@@ -8,7 +8,7 @@ import { useSync } from "@tui/context/sync"
 import { useTheme, selectedForeground } from "@tui/context/theme"
 import { SplitBorder } from "@tui/component/border"
 import { useCommandDialog } from "@tui/component/dialog-command"
-import { useTerminalDimensions } from "@cyberstrike/tui-solid"
+import { useTerminalDimensions } from "@cyberstrike-io/tui-solid"
 import { Locale } from "@/util/locale"
 import type { PromptInfo } from "./history"
 import { useFrecency } from "./frecency"
@@ -341,6 +341,23 @@ export function Autocomplete(props: {
       )
   })
 
+  // Fetch MCP tools for the "/" menu
+  const [mcpTools] = createResource(
+    () => store.visible === "/",
+    async (visible) => {
+      if (!visible) return []
+      try {
+        const result = await sdk.client.tool.ids()
+        if (result.error || !result.data) return []
+        // Filter to only show MCP tools (they have underscore in name like kali_search)
+        return result.data.filter((id) => id.includes("_"))
+      } catch {
+        return []
+      }
+    },
+    { initialValue: [] },
+  )
+
   const commands = createMemo((): AutocompleteOption[] => {
     const results: AutocompleteOption[] = [...command.slashes()]
 
@@ -350,6 +367,27 @@ export function Autocomplete(props: {
         description: serverCommand.description,
         onSelect: () => {
           const newText = "/" + serverCommand.name + " "
+          const cursor = props.input().logicalCursor
+          props.input().deleteRange(0, 0, cursor.row, cursor.col)
+          props.input().insertText(newText)
+          props.input().cursorOffset = Bun.stringWidth(newText)
+        },
+      })
+    }
+
+    // Add MCP tools to the menu
+    const tools = mcpTools() || []
+    for (const toolId of tools) {
+      // Extract MCP name and tool name from id (e.g., "kali_search" -> mcp: "kali", tool: "search")
+      const parts = toolId.split("_")
+      const mcpName = parts[0]
+      const toolName = parts.slice(1).join("_")
+      results.push({
+        display: `tool:${toolId}`,
+        description: `Use ${toolName} from ${mcpName} MCP`,
+        onSelect: () => {
+          // Insert a message asking to use this tool
+          const newText = `Use the ${toolId} tool `
           const cursor = props.input().logicalCursor
           props.input().deleteRange(0, 0, cursor.row, cursor.col)
           props.input().insertText(newText)

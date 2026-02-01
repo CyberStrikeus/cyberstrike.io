@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# whykido - AI-powered penetration testing agent
-# Run with bun from the packages/whykido directory
+# cyberstrike - AI-powered penetration testing agent
+# https://cyberstrike.io
 
 # Resolve symlinks to get the actual script location
 SOURCE="${BASH_SOURCE[0]}"
@@ -23,5 +23,5 @@ else
     exit 1
 fi
 
-# Run whykido with bun
+# Run cyberstrike with bun
 cd "$PACKAGE_DIR" && exec "$BUN_CMD" run --conditions=browser ./src/index.ts "$@"

@@ -1,8 +1,8 @@
-import { TextareaRenderable, TextAttributes } from "@cyberstrike/tui-core"
+import { TextareaRenderable, TextAttributes } from "@cyberstrike-io/tui-core"
 import { useTheme } from "../context/theme"
 import { useDialog, type DialogContext } from "./dialog"
 import { onMount, type JSX } from "solid-js"
-import { useKeyboard } from "@cyberstrike/tui-solid"
+import { useKeyboard } from "@cyberstrike-io/tui-solid"
 
 export type DialogPromptProps = {
   title: string

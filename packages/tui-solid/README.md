@@ -1,11 +1,11 @@
-# @opentui/solid
+# @cyberstrike/tui-solid
 
-Solid.js support for [OpenTUI](https://github.com/anomalyco/opentui).
+Solid.js support for [Cyberstrike TUI](https://github.com/CyberStrikeus/cyberstrike.io).
 
 ## Installation
 
 ```bash
-bun install solid-js @opentui/solid
+bun install solid-js @cyberstrike/tui-solid
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ bun install solid-js @opentui/solid
 {
   "compilerOptions": {
     "jsx": "preserve",
-    "jsxImportSource": "@opentui/solid"
+    "jsxImportSource": "@cyberstrike/tui-solid"
   }
 }
 ```
@@ -24,23 +24,23 @@ bun install solid-js @opentui/solid
 2. Add preload script to bunfig.toml:
 
 ```toml
-preload = ["@opentui/solid/preload"]
+preload = ["@cyberstrike/tui-solid/preload"]
 ```
 
 3. Add render function to index.tsx:
 
 ```tsx
-import { render } from "@opentui/solid"
+import { render } from "@cyberstrike/tui-solid"
 
 render(() => <text>Hello, World!</text>)
 ```
 
 4. Run with `bun index.tsx`.
 
-5. To build use [Bun.build](https://bun.com/docs/bundler) ([source](https://github.com/anomalyco/opentui/issues/122)):
+5. To build use [Bun.build](https://bun.com/docs/bundler):
 
 ```ts
-import solidPlugin from "@opentui/solid/bun-plugin"
+import solidPlugin from "@cyberstrike/tui-solid/bun-plugin"
 
 await Bun.build({
   entrypoints: ["./index.tsx"],
@@ -76,7 +76,7 @@ await Bun.build({
 
 ### Components
 
-OpenTUI Solid exposes intrinsic JSX elements that map to OpenTUI renderables:
+Cyberstrike TUI Solid exposes intrinsic JSX elements that map to TUI renderables:
 
 - **Layout & Display:** `text`, `box`, `scrollbox`, `ascii_font`
 - **Input:** `input`, `textarea`, `select`, `tab_select`
@@ -90,7 +90,7 @@ OpenTUI Solid exposes intrinsic JSX elements that map to OpenTUI renderables:
 Render a Solid component tree into a CLI renderer. If `rendererOrConfig` is omitted, a renderer is created with default options.
 
 ```tsx
-import { render } from "@opentui/solid"
+import { render } from "@cyberstrike/tui-solid"
 
 render(() => <App />)
 ```
@@ -105,7 +105,7 @@ render(() => <App />)
 Create a test renderer for snapshots and interaction tests.
 
 ```tsx
-import { testRender } from "@opentui/solid"
+import { testRender } from "@cyberstrike/tui-solid"
 
 const testSetup = await testRender(() => <App />, { width: 40, height: 10 })
 ```
@@ -115,7 +115,7 @@ const testSetup = await testRender(() => <App />, { width: 40, height: 10 })
 Register custom renderables as JSX intrinsic elements.
 
 ```tsx
-import { extend } from "@opentui/solid"
+import { extend } from "@cyberstrike/tui-solid"
 
 extend({ customBox: CustomBoxRenderable })
 ```
@@ -139,7 +139,7 @@ Returns the current component catalogue that powers JSX tag lookup.
 Render children into a different mount node, useful for overlays and tooltips.
 
 ```tsx
-import { Portal } from "@opentui/solid"
+import { Portal } from "@cyberstrike/tui-solid"
 ;<Portal mount={renderer.root}>
   <box border>Overlay</box>
 </Portal>
@@ -150,7 +150,7 @@ import { Portal } from "@opentui/solid"
 Render arbitrary intrinsic elements or components dynamically.
 
 ```tsx
-import { Dynamic } from "@opentui/solid"
+import { Dynamic } from "@cyberstrike/tui-solid"
 ;<Dynamic component={isMultiline() ? "textarea" : "input"} />
 ```
 

@@ -1,4 +1,4 @@
-import { SyntaxStyle, RGBA, type TerminalColors } from "@cyberstrike/tui-core"
+import { SyntaxStyle, RGBA, type TerminalColors } from "@cyberstrike-io/tui-core"
 import path from "path"
 import { createEffect, createMemo, onMount } from "solid-js"
 import { useSync } from "@tui/context/sync"
@@ -37,7 +37,7 @@ import vesper from "./theme/vesper.json" with { type: "json" }
 import zenburn from "./theme/zenburn.json" with { type: "json" }
 import carbonfox from "./theme/carbonfox.json" with { type: "json" }
 import { useKV } from "./kv"
-import { useRenderer } from "@cyberstrike/tui-solid"
+import { useRenderer } from "@cyberstrike-io/tui-solid"
 import { createStore, produce } from "solid-js/store"
 import { Global } from "@/global"
 import { Filesystem } from "@/util/filesystem"

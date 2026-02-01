@@ -1798,8 +1798,8 @@ test("custom model inherits api.url from models.dev provider", async () => {
             openrouter: {
               models: {
                 "prime-intellect/intellect-3": {},
-                "deepseek/deepseek-r1-0528": {
-                  name: "DeepSeek R1",
+                "custom-vendor/custom-test-model": {
+                  name: "Custom Test Model",
                 },
               },
             },
@@ -1823,10 +1823,10 @@ test("custom model inherits api.url from models.dev provider", async () => {
       expect(intellect.api.url).toBe("https://openrouter.ai/api/v1")
 
       // Another new model should also inherit api.url
-      const deepseek = providers["openrouter"].models["deepseek/deepseek-r1-0528"]
-      expect(deepseek).toBeDefined()
-      expect(deepseek.api.url).toBe("https://openrouter.ai/api/v1")
-      expect(deepseek.name).toBe("DeepSeek R1")
+      const customModel = providers["openrouter"].models["custom-vendor/custom-test-model"]
+      expect(customModel).toBeDefined()
+      expect(customModel.api.url).toBe("https://openrouter.ai/api/v1")
+      expect(customModel.name).toBe("Custom Test Model")
     },
   })
 })

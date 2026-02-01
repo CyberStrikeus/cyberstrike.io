@@ -1,4 +1,4 @@
-import { BaseRenderable, TextNodeRenderable, Yoga } from "@cyberstrike/tui-core";
+import { BaseRenderable, TextNodeRenderable, Yoga } from "@cyberstrike-io/tui-core";
 declare class SlotBaseRenderable extends BaseRenderable {
     constructor(id: string);
     add(obj: BaseRenderable | unknown, index?: number): number;

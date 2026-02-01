@@ -2162,7 +2162,11 @@ export type WellKnownAuth = {
   token: string
 }
 
-export type Auth = OAuth | ApiAuth | WellKnownAuth
+export type ClaudeCliAuth = {
+  type: "claude-cli"
+}
+
+export type Auth = OAuth | ApiAuth | WellKnownAuth | ClaudeCliAuth
 
 export type GlobalHealthData = {
   body?: never
@@ -4014,6 +4018,56 @@ export type ProviderOauthCallbackResponses = {
 }
 
 export type ProviderOauthCallbackResponse = ProviderOauthCallbackResponses[keyof ProviderOauthCallbackResponses]
+
+export type ProviderClaudeCliStatusData = {
+  body?: never
+  path?: never
+  query?: {
+    directory?: string
+  }
+  url: "/provider/claude-cli/status"
+}
+
+export type ProviderClaudeCliStatusResponses = {
+  /**
+   * Claude CLI status
+   */
+  200: {
+    installed: boolean
+    hasCredentials: boolean
+    isValid: boolean
+    expiresAt?: string
+  }
+}
+
+export type ProviderClaudeCliStatusResponse = ProviderClaudeCliStatusResponses[keyof ProviderClaudeCliStatusResponses]
+
+export type ProviderClaudeCliUseData = {
+  body?: never
+  path?: never
+  query?: {
+    directory?: string
+  }
+  url: "/provider/claude-cli/use"
+}
+
+export type ProviderClaudeCliUseErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type ProviderClaudeCliUseError = ProviderClaudeCliUseErrors[keyof ProviderClaudeCliUseErrors]
+
+export type ProviderClaudeCliUseResponses = {
+  /**
+   * Successfully configured to use Claude CLI credentials
+   */
+  200: boolean
+}
+
+export type ProviderClaudeCliUseResponse = ProviderClaudeCliUseResponses[keyof ProviderClaudeCliUseResponses]
 
 export type FindTextData = {
   body?: never

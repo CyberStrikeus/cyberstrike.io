@@ -1,4 +1,4 @@
-import { RGBA } from "@cyberstrike/tui-core"
+import { RGBA } from "@cyberstrike-io/tui-core"
 import { createSignal, onMount, onCleanup } from "solid-js"
 import { useTheme } from "@tui/context/theme"
 
@@ -52,8 +52,8 @@ export function StatusBar(props: StatusBarProps) {
   return (
     <box
       flexDirection="row"
-      paddingX={2}
-      paddingY={0}
+      paddingLeft={2}
+      paddingRight={2}
       borderStyle="single"
       borderColor={theme.border}
       justifyContent="space-between"

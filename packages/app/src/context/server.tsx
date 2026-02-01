@@ -1,5 +1,5 @@
-import { createCyberstrikeClient } from "@cyberstrike/sdk/v2/client"
-import { createSimpleContext } from "@cyberstrike/ui/context"
+import { createCyberstrikeClient } from "@cyberstrike-io/sdk/v2/client"
+import { createSimpleContext } from "@cyberstrike-io/ui/context"
 import { batch, createEffect, createMemo, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import { usePlatform } from "@/context/platform"

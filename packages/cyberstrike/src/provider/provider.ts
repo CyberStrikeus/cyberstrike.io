@@ -7,7 +7,7 @@ import { Log } from "../util/log"
 import { BunProc } from "../bun"
 import { Plugin } from "../plugin"
 import { ModelsDev } from "./models"
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 import { Auth } from "../auth"
 import { Env } from "../env"
 import { Instance } from "../project/instance"
@@ -37,6 +37,8 @@ import { createPerplexity } from "@ai-sdk/perplexity"
 import { createVercel } from "@ai-sdk/vercel"
 import { createGitLab } from "@gitlab/gitlab-ai-provider"
 import { ProviderTransform } from "./transform"
+import { createClaudeCliProvider, isClaudeCliProviderAvailable } from "./claude-cli-provider"
+import { getValidClaudeCliToken, hasValidClaudeCliCredentials } from "../auth/cli-credentials"
 
 export namespace Provider {
   const log = Log.create({ service: "provider" })
@@ -74,8 +76,9 @@ export namespace Provider {
     "@ai-sdk/perplexity": createPerplexity,
     "@ai-sdk/vercel": createVercel,
     "@gitlab/gitlab-ai-provider": createGitLab,
-    // @ts-ignore (TODO: kill this code so we dont have to maintain it)
-    "@ai-sdk/github-copilot": createGitHubCopilotOpenAICompatible,
+    "@ai-sdk/github-copilot": createGitHubCopilotOpenAICompatible as unknown as typeof createOpenAICompatible,
+    // Claude CLI backend - uses local Claude Code CLI installation
+    "@cyberstrike-io/claude-cli": createClaudeCliProvider,
   }
 
   type CustomModelLoader = (sdk: any, modelID: string, options?: Record<string, any>) => Promise<any>
@@ -396,7 +399,7 @@ export namespace Provider {
         },
       }
     },
-    zenmux: async () => {
+    arsenalmux: async () => {
       return {
         autoload: false,
         options: {
@@ -504,6 +507,38 @@ export namespace Provider {
             "X-Cerebras-3rd-Party-Integration": "cyberstrike",
           },
         },
+      }
+    },
+    "claude-api": async () => {
+      // Check if we have valid Claude CLI credentials
+      if (!hasValidClaudeCliCredentials()) {
+        return { autoload: false }
+      }
+
+      const token = await getValidClaudeCliToken()
+      if (!token) {
+        return { autoload: false }
+      }
+
+      return {
+        autoload: true,
+        options: {
+          apiKey: token,
+          headers: {
+            "anthropic-beta":
+              "claude-code-20250219,interleaved-thinking-2025-05-14,fine-grained-tool-streaming-2025-05-14",
+          },
+        },
+      }
+    },
+    ollama: async () => {
+      // Ollama uses OpenAI-compatible API
+      return {
+        autoload: false,
+        async getModel(sdk: any, modelID: string, _options?: Record<string, any>) {
+          return sdk.chat(modelID)
+        },
+        options: {},
       }
     },
   }
@@ -662,8 +697,8 @@ export namespace Provider {
   }
 
   export function fromModelsDevProvider(provider: ModelsDev.Provider): Info {
-    // Rebrand Cyberstrike Zen to Cyberstrike Zen
-    const name = provider.name === "Cyberstrike Zen" ? "Cyberstrike Zen" : provider.name
+    // Rebrand to Cyberstrike Arsenal
+    const name = provider.name === "Cyberstrike Arsenal" ? "Cyberstrike Arsenal" : provider.name
     return {
       id: provider.id,
       source: "custom",
@@ -833,6 +868,296 @@ export namespace Provider {
       }
     }
 
+    // Add claude-cli provider if Claude Code CLI is installed
+    if (!disabled.has("claude-cli") && isClaudeCliProviderAvailable()) {
+      const claudeCliModels: Record<string, Model> = {
+        opus: {
+          id: "opus",
+          providerID: "claude-cli",
+          name: "Claude Opus 4.5",
+          family: "claude",
+          api: {
+            id: "opus",
+            url: "local",
+            npm: "@cyberstrike-io/claude-cli",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 200000, output: 32000 },
+          release_date: "2025-01-01",
+          capabilities: {
+            temperature: true,
+            reasoning: true,
+            attachment: true,
+            toolcall: true,
+            input: { text: true, audio: false, image: true, video: false, pdf: true },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: true,
+          },
+        },
+        sonnet: {
+          id: "sonnet",
+          providerID: "claude-cli",
+          name: "Claude Sonnet 4.5",
+          family: "claude",
+          api: {
+            id: "sonnet",
+            url: "local",
+            npm: "@cyberstrike-io/claude-cli",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 200000, output: 64000 },
+          release_date: "2025-01-01",
+          capabilities: {
+            temperature: true,
+            reasoning: true,
+            attachment: true,
+            toolcall: true,
+            input: { text: true, audio: false, image: true, video: false, pdf: true },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: true,
+          },
+        },
+        haiku: {
+          id: "haiku",
+          providerID: "claude-cli",
+          name: "Claude Haiku 4.5",
+          family: "claude",
+          api: {
+            id: "haiku",
+            url: "local",
+            npm: "@cyberstrike-io/claude-cli",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 200000, output: 8192 },
+          release_date: "2025-01-01",
+          capabilities: {
+            temperature: true,
+            reasoning: true,
+            attachment: true,
+            toolcall: true,
+            input: { text: true, audio: false, image: true, video: false, pdf: true },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: false,
+          },
+        },
+      }
+
+      providers["claude-cli"] = {
+        id: "claude-cli",
+        name: "Claude Code CLI (Subprocess)",
+        source: "env",
+        env: [],
+        options: {},
+        models: claudeCliModels,
+      }
+      log.info("claude-cli provider available")
+
+      // Also add claude-api provider if we have valid credentials
+      if (hasValidClaudeCliCredentials()) {
+        const claudeApiModels: Record<string, Model> = {
+          "claude-opus-4-5-20250514": {
+            id: "claude-opus-4-5-20250514",
+            providerID: "claude-api",
+            name: "Claude Opus 4.5",
+            family: "claude",
+            api: {
+              id: "claude-opus-4-5-20250514",
+              url: "https://api.anthropic.com/v1",
+              npm: "@ai-sdk/anthropic",
+            },
+            status: "active",
+            headers: {},
+            options: {},
+            cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+            limit: { context: 200000, output: 32000 },
+            release_date: "2025-01-01",
+            capabilities: {
+              temperature: true,
+              reasoning: true,
+              attachment: true,
+              toolcall: true,
+              input: { text: true, audio: false, image: true, video: false, pdf: true },
+              output: { text: true, audio: false, image: false, video: false, pdf: false },
+              interleaved: true,
+            },
+          },
+          "claude-sonnet-4-5-20250514": {
+            id: "claude-sonnet-4-5-20250514",
+            providerID: "claude-api",
+            name: "Claude Sonnet 4.5",
+            family: "claude",
+            api: {
+              id: "claude-sonnet-4-5-20250514",
+              url: "https://api.anthropic.com/v1",
+              npm: "@ai-sdk/anthropic",
+            },
+            status: "active",
+            headers: {},
+            options: {},
+            cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+            limit: { context: 200000, output: 64000 },
+            release_date: "2025-01-01",
+            capabilities: {
+              temperature: true,
+              reasoning: true,
+              attachment: true,
+              toolcall: true,
+              input: { text: true, audio: false, image: true, video: false, pdf: true },
+              output: { text: true, audio: false, image: false, video: false, pdf: false },
+              interleaved: true,
+            },
+          },
+          "claude-haiku-4-5-20250514": {
+            id: "claude-haiku-4-5-20250514",
+            providerID: "claude-api",
+            name: "Claude Haiku 4.5",
+            family: "claude",
+            api: {
+              id: "claude-haiku-4-5-20250514",
+              url: "https://api.anthropic.com/v1",
+              npm: "@ai-sdk/anthropic",
+            },
+            status: "active",
+            headers: {},
+            options: {},
+            cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+            limit: { context: 200000, output: 8192 },
+            release_date: "2025-01-01",
+            capabilities: {
+              temperature: true,
+              reasoning: true,
+              attachment: true,
+              toolcall: true,
+              input: { text: true, audio: false, image: true, video: false, pdf: true },
+              output: { text: true, audio: false, image: false, video: false, pdf: false },
+              interleaved: false,
+            },
+          },
+        }
+
+        providers["claude-api"] = {
+          id: "claude-api",
+          name: "Claude Code CLI (API)",
+          source: "env",
+          env: [],
+          options: {},
+          models: claudeApiModels,
+        }
+        log.info("claude-api provider available")
+      }
+    }
+
+    // Add Ollama provider if configured
+    const ollamaAuth = await Auth.get("ollama")
+    if (ollamaAuth && !disabled.has("ollama")) {
+      const ollamaConfig = configProviders.find(([id]) => id === "ollama")?.[1]
+      const baseURL = ollamaConfig?.options?.baseURL || "http://localhost:11434/v1"
+
+      // Default Ollama models - users can pull more with 'ollama pull <model>'
+      const ollamaModels: Record<string, Model> = {
+        "llama3.2": {
+          id: "llama3.2",
+          providerID: "ollama",
+          name: "Llama 3.2",
+          family: "llama",
+          api: {
+            id: "llama3.2",
+            url: baseURL,
+            npm: "@ai-sdk/openai-compatible",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 128000, output: 8192 },
+          release_date: "2024-09-01",
+          capabilities: {
+            temperature: true,
+            reasoning: false,
+            attachment: false,
+            toolcall: true,
+            input: { text: true, audio: false, image: false, video: false, pdf: false },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: false,
+          },
+        },
+        "codellama": {
+          id: "codellama",
+          providerID: "ollama",
+          name: "Code Llama",
+          family: "llama",
+          api: {
+            id: "codellama",
+            url: baseURL,
+            npm: "@ai-sdk/openai-compatible",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 16000, output: 4096 },
+          release_date: "2023-08-01",
+          capabilities: {
+            temperature: true,
+            reasoning: false,
+            attachment: false,
+            toolcall: false,
+            input: { text: true, audio: false, image: false, video: false, pdf: false },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: false,
+          },
+        },
+        "qwen2.5-coder": {
+          id: "qwen2.5-coder",
+          providerID: "ollama",
+          name: "Qwen 2.5 Coder",
+          family: "qwen",
+          api: {
+            id: "qwen2.5-coder",
+            url: baseURL,
+            npm: "@ai-sdk/openai-compatible",
+          },
+          status: "active",
+          headers: {},
+          options: {},
+          cost: { input: 0, output: 0, cache: { read: 0, write: 0 } },
+          limit: { context: 128000, output: 8192 },
+          release_date: "2024-11-01",
+          capabilities: {
+            temperature: true,
+            reasoning: false,
+            attachment: false,
+            toolcall: true,
+            input: { text: true, audio: false, image: false, video: false, pdf: false },
+            output: { text: true, audio: false, image: false, video: false, pdf: false },
+            interleaved: false,
+          },
+        },
+      }
+
+      providers["ollama"] = {
+        id: "ollama",
+        name: "Local Llama (Ollama)",
+        source: "api",
+        env: [],
+        options: {
+          baseURL,
+          apiKey: ollamaAuth.type === "api" ? ollamaAuth.key : undefined,
+        },
+        models: ollamaModels,
+      }
+      log.info("ollama provider available", { baseURL })
+    }
+
     for (const plugin of await Plugin.list()) {
       if (!plugin.auth) continue
       const providerID = plugin.auth.provider
@@ -913,10 +1238,46 @@ export namespace Provider {
 
       const configProvider = config.provider?.[providerID]
 
+      // Chinese-origin model prefixes to filter out from OpenRouter
+      const CHINESE_MODEL_PREFIXES = [
+        "qwen",
+        "deepseek",
+        "baichuan",
+        "yi-",
+        "zhipu",
+        "glm",
+        "chatglm",
+        "internlm",
+        "alibaba",
+        "01-ai",
+        "moonshotai",
+        "kimi",
+        "thudm",
+      ]
+
+      // Free models that are listed but have no active endpoints on OpenRouter
+      const BROKEN_FREE_MODELS = [
+        "mistralai/mistral-nemo:free",
+        "google/gemma-2-9b-it:free",
+      ]
+
       for (const [modelID, model] of Object.entries(provider.models)) {
         model.api.id = model.api.id ?? model.id ?? modelID
         if (modelID === "gpt-5-chat-latest" || (providerID === "openrouter" && modelID === "openai/gpt-5-chat"))
           delete provider.models[modelID]
+        // Filter out Chinese-origin models from OpenRouter
+        if (
+          providerID === "openrouter" &&
+          CHINESE_MODEL_PREFIXES.some((prefix) => modelID.toLowerCase().includes(prefix))
+        ) {
+          delete provider.models[modelID]
+          continue
+        }
+        // Filter out broken free models from OpenRouter
+        if (providerID === "openrouter" && BROKEN_FREE_MODELS.includes(modelID)) {
+          delete provider.models[modelID]
+          continue
+        }
         if (model.status === "alpha" && !Flag.CYBERSTRIKE_ENABLE_EXPERIMENTAL_MODELS) delete provider.models[modelID]
         if (model.status === "deprecated") delete provider.models[modelID]
         if (
@@ -1169,7 +1530,7 @@ export namespace Provider {
     return undefined
   }
 
-  const priority = ["gpt-5", "claude-sonnet-4", "big-pickle", "gemini-3-pro"]
+  const priority = ["gpt-5", "claude-sonnet-4", "hydra", "gemini-3-pro"]
   export function sort(models: Model[]) {
     return sortBy(
       models,
@@ -1186,7 +1547,19 @@ export namespace Provider {
     const provider = await list()
       .then((val) => Object.values(val))
       .then((x) => x.find((p) => !cfg.provider || Object.keys(cfg.provider).includes(p.id)))
-    if (!provider) throw new Error("no providers found")
+    if (!provider) {
+      throw new Error(
+        "No AI providers configured.\n\n" +
+          "Get started with free AI models:\n" +
+          "  1. Create a free OpenRouter account: https://openrouter.ai/keys\n" +
+          "  2. Run: cyberstrike auth login\n" +
+          "  3. Select OpenRouter and paste your API key\n\n" +
+          "Free models available:\n" +
+          "  • meta-llama/llama-4-scout:free\n" +
+          "  • google/gemini-2.0-flash-exp:free\n" +
+          "  • mistralai/mistral-small-3.2-24b-instruct:free",
+      )
+    }
     const [model] = sort(Object.values(provider.models))
     if (!model) throw new Error("no models found")
     return {

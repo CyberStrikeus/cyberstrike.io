@@ -1,17 +1,21 @@
 {
-  "name": "@cyberstrike/tui-solid",
+  "name": "@cyberstrike-io/tui-solid",
   "module": "index.js",
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
   "version": "0.1.75",
   "description": "SolidJS renderer for CyberstrikeTUI",
-  "license": "MIT",
+  "author": "Cyberstrike Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/AUMLabs-net/cyberstrike.io",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
     "directory": "packages/tui-solid"
   },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
+  "license": "MIT",
   "exports": {
     ".": {
       "types": "./index.d.ts",
@@ -31,7 +35,7 @@
   "dependencies": {
     "@babel/core": "7.28.0",
     "@babel/preset-typescript": "7.27.1",
-    "@cyberstrike/tui-core": "workspace:*",
+    "@cyberstrike-io/tui-core": "workspace:*",
     "babel-plugin-module-resolver": "5.0.2",
     "babel-preset-solid": "1.9.9",
     "s-js": "^0.4.9"

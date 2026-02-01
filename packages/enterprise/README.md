@@ -1,32 +1,42 @@
-# SolidStart
+# @cyberstrike/enterprise
 
-Everything you need to build a Solid project, powered by [`solid-start`](https://start.solidjs.com);
+Enterprise features and team management for Cyberstrike.
 
-## Creating a project
+## Overview
 
-```bash
-# create a new project in the current directory
-npm init solid@latest
+This package provides enterprise-grade features including:
 
-# create a new project in my-app
-npm init solid@latest my-app
-```
+- Team workspaces and collaboration
+- User management and access control
+- Usage analytics and reporting
+- SSO integration
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Development
 
 ```bash
-npm run dev
+# Install dependencies (from repo root)
+bun install
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Start dev server
+bun run dev
+
+# Type check
+bun run typecheck
+
+# Build for production
+bun run build
+
+# Build for Cloudflare
+bun run build:cloudflare
 ```
 
-## Building
+## Tech Stack
 
-Solid apps are built with _presets_, which optimise your project for deployment to different environments.
+- **Framework**: SolidStart
+- **Backend**: Hono on Cloudflare Workers
+- **Styling**: TailwindCSS
+- **Infrastructure**: SST
 
-By default, `npm run build` will generate a Node app that you can run with `npm start`. To use a different preset, add it to the `devDependencies` in `package.json` and specify in your `app.config.js`.
+## License
 
-## This project was created with the [Solid CLI](https://github.com/solidjs-community/solid-cli)
+MIT

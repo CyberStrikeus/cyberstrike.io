@@ -1,4 +1,4 @@
-import { createCyberstrikeClient, createCyberstrikeServer } from "@cyberstrike/sdk"
+import { createCyberstrikeClient, createCyberstrikeServer } from "@cyberstrike-io/sdk"
 
 const server = await createCyberstrikeServer()
 const client = createCyberstrikeClient({ baseUrl: server.url })
