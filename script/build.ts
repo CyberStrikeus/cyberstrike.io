@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import solidPlugin from "../node_modules/@cyberstrike/tui-solid/scripts/solid-plugin"
+import solidPlugin from "../node_modules/@cyberstrike-io/tui-solid/scripts/solid-plugin"
 import path from "path"
 import fs from "fs"
 import { $ } from "bun"
@@ -13,7 +13,7 @@ const dir = path.resolve(__dirname, "..")
 process.chdir(dir)
 
 import pkg from "../package.json"
-import { Script } from "@cyberstrike/script"
+import { Script } from "@cyberstrike-io/script"
 
 // Fetch and generate models.dev snapshot
 const modelsData = process.env.MODELS_DEV_API_JSON
@@ -113,7 +113,7 @@ await $`rm -rf dist`
 
 const binaries: Record<string, string> = {}
 if (!skipInstall) {
-  await $`bun install --os="*" --cpu="*" @cyberstrike/tui-core@${pkg.dependencies["@cyberstrike/tui-core"]}`
+  await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${pkg.dependencies["@cyberstrike-io/tui-core"]}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${pkg.dependencies["@parcel/watcher"]}`
 }
 for (const item of targets) {
@@ -130,7 +130,7 @@ for (const item of targets) {
   console.log(`building ${name}`)
   await $`mkdir -p dist/${name}/bin`
 
-  const parserWorker = fs.realpathSync(path.resolve(dir, "./node_modules/@cyberstrike/tui-core/parser.worker.js"))
+  const parserWorker = fs.realpathSync(path.resolve(dir, "./node_modules/@cyberstrike-io/tui-core/parser.worker.js"))
   const workerPath = "./src/cli/cmd/tui/worker.ts"
 
   // Use platform-specific bunfs root path based on target OS

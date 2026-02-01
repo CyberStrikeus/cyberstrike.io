@@ -1,27 +1,2 @@
-#!/usr/bin/env bash
-
-# cyberstrike - AI-powered penetration testing agent
-# https://cyberstrike.io
-
-# Resolve symlinks to get the actual script location
-SOURCE="${BASH_SOURCE[0]}"
-while [ -L "$SOURCE" ]; do
-    DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-    SOURCE="$(readlink "$SOURCE")"
-    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
-done
-SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
-PACKAGE_DIR="$(dirname "$SCRIPT_DIR")"
-
-# Check if bun is available
-if command -v bun &> /dev/null; then
-    BUN_CMD="bun"
-elif [ -f "$HOME/.bun/bin/bun" ]; then
-    BUN_CMD="$HOME/.bun/bin/bun"
-else
-    echo "Error: bun is not installed. Install with: curl -fsSL https://bun.sh/install | bash"
-    exit 1
-fi
-
-# Run cyberstrike with bun
-cd "$PACKAGE_DIR" && exec "$BUN_CMD" run --conditions=browser ./src/index.ts "$@"
+#\!/bin/sh
+echo "Run: npm run postinstall to download binary"

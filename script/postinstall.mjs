@@ -1,125 +1,84 @@
 #!/usr/bin/env node
 
-import fs from "fs"
-import path from "path"
-import os from "os"
-import { fileURLToPath } from "url"
-import { createRequire } from "module"
+import { execSync } from "child_process";
+import { existsSync, mkdirSync, chmodSync, unlinkSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const require = createRequire(import.meta.url)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const binDir = join(__dirname, "..", "bin");
+const binPath = join(binDir, process.platform === "win32" ? "cyberstrike.exe" : "cyberstrike");
 
-function detectPlatformAndArch() {
-  // Map platform names
-  let platform
-  switch (os.platform()) {
-    case "darwin":
-      platform = "darwin"
-      break
-    case "linux":
-      platform = "linux"
-      break
-    case "win32":
-      platform = "windows"
-      break
-    default:
-      platform = os.platform()
-      break
+const VERSION = "1.0.0";
+const REPO = "CyberStrikeus/cyberstrike.io";
+
+function getPlatformInfo() {
+  const platform = process.platform;
+  const arch = process.arch;
+
+  const platformMap = {
+    darwin: "darwin",
+    linux: "linux",
+    win32: "windows",
+  };
+
+  const archMap = {
+    x64: "x64",
+    arm64: "arm64",
+  };
+
+  const os = platformMap[platform];
+  const cpu = archMap[arch];
+
+  if (!os || !cpu) {
+    throw new Error(`Unsupported platform: ${platform}-${arch}`);
   }
 
-  // Map architecture names
-  let arch
-  switch (os.arch()) {
-    case "x64":
-      arch = "x64"
-      break
-    case "arm64":
-      arch = "arm64"
-      break
-    case "arm":
-      arch = "arm"
-      break
-    default:
-      arch = os.arch()
-      break
-  }
-
-  return { platform, arch }
-}
-
-function findBinary() {
-  const { platform, arch } = detectPlatformAndArch()
-  const packageName = `cyberstrike-${platform}-${arch}`
-  const binaryName = platform === "windows" ? "cyberstrike.exe" : "cyberstrike"
-
-  try {
-    // Use require.resolve to find the package
-    const packageJsonPath = require.resolve(`${packageName}/package.json`)
-    const packageDir = path.dirname(packageJsonPath)
-    const binaryPath = path.join(packageDir, "bin", binaryName)
-
-    if (!fs.existsSync(binaryPath)) {
-      throw new Error(`Binary not found at ${binaryPath}`)
-    }
-
-    return { binaryPath, binaryName }
-  } catch (error) {
-    throw new Error(`Could not find package ${packageName}: ${error.message}`)
-  }
-}
-
-function prepareBinDirectory(binaryName) {
-  const binDir = path.join(__dirname, "bin")
-  const targetPath = path.join(binDir, binaryName)
-
-  // Ensure bin directory exists
-  if (!fs.existsSync(binDir)) {
-    fs.mkdirSync(binDir, { recursive: true })
-  }
-
-  // Remove existing binary/symlink if it exists
-  if (fs.existsSync(targetPath)) {
-    fs.unlinkSync(targetPath)
-  }
-
-  return { binDir, targetPath }
-}
-
-function symlinkBinary(sourcePath, binaryName) {
-  const { targetPath } = prepareBinDirectory(binaryName)
-
-  fs.symlinkSync(sourcePath, targetPath)
-  console.log(`cyberstrike binary symlinked: ${targetPath} -> ${sourcePath}`)
-
-  // Verify the file exists after operation
-  if (!fs.existsSync(targetPath)) {
-    throw new Error(`Failed to symlink binary to ${targetPath}`)
-  }
+  return { os, cpu, ext: platform === "win32" ? "zip" : "tar.gz" };
 }
 
 async function main() {
+  // Skip if binary already exists
+  if (existsSync(binPath)) {
+    console.log("cyberstrike binary already exists");
+    return;
+  }
+
+  const { os, cpu, ext } = getPlatformInfo();
+  const assetName = `cyberstrike-${os}-${cpu}.${ext}`;
+  const downloadUrl = `https://github.com/${REPO}/releases/download/v${VERSION}/${assetName}`;
+
+  console.log(`Downloading cyberstrike for ${os}-${cpu}...`);
+
+  if (!existsSync(binDir)) {
+    mkdirSync(binDir, { recursive: true });
+  }
+
+  const tempFile = join(binDir, assetName);
+
   try {
-    if (os.platform() === "win32") {
-      // On Windows, the .exe is already included in the package and bin field points to it
-      // No postinstall setup needed
-      console.log("Windows detected: binary setup not needed (using packaged .exe)")
-      return
+    // Use curl/wget for download
+    if (process.platform === "win32") {
+      execSync(`powershell -Command "Invoke-WebRequest -Uri '${downloadUrl}' -OutFile '${tempFile}'"`, { stdio: "inherit" });
+      execSync(`powershell -Command "Expand-Archive -Path '${tempFile}' -DestinationPath '${binDir}' -Force"`, { stdio: "inherit" });
+    } else {
+      execSync(`curl -fsSL "${downloadUrl}" -o "${tempFile}"`, { stdio: "inherit" });
+      execSync(`tar -xzf "${tempFile}" -C "${binDir}"`, { stdio: "inherit" });
     }
 
-    // On non-Windows platforms, just verify the binary package exists
-    // Don't replace the wrapper script - it handles binary execution
-    const { binaryPath } = findBinary()
-    console.log(`Platform binary verified at: ${binaryPath}`)
-    console.log("Wrapper script will handle binary execution")
+    unlinkSync(tempFile);
+
+    if (process.platform !== "win32") {
+      chmodSync(binPath, 0o755);
+    }
+
+    console.log("cyberstrike installed successfully!");
   } catch (error) {
-    console.error("Failed to setup cyberstrike binary:", error.message)
-    process.exit(1)
+    console.error("Failed to install cyberstrike:", error.message);
+    console.log("\nYou can install manually:");
+    console.log("  curl -fsSL https://cyberstrike.io/install.sh | bash");
+    process.exit(0); // Don't fail npm install
   }
 }
 
-try {
-  main()
-} catch (error) {
-  console.error("Postinstall script error:", error.message)
-  process.exit(0)
-}
+main();

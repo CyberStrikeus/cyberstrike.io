@@ -1,4 +1,4 @@
-import { RGBA } from "@cyberstrike/tui-core"
+import { RGBA } from "@cyberstrike-io/tui-core"
 import { createSignal, onMount, onCleanup } from "solid-js"
 import { useTheme } from "@tui/context/theme"
 

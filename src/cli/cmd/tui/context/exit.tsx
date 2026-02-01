@@ -1,4 +1,4 @@
-import { useRenderer } from "@cyberstrike/tui-solid"
+import { useRenderer } from "@cyberstrike-io/tui-solid"
 import { createSimpleContext } from "./helper"
 import { FormatError, FormatUnknownError } from "@/cli/error"
 

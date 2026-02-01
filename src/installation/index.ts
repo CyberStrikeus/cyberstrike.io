@@ -2,7 +2,7 @@ import { BusEvent } from "@/bus/bus-event"
 import path from "path"
 import { $ } from "bun"
 import z from "zod"
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 import { Log } from "../util/log"
 import { iife } from "@/util/iife"
 import { Flag } from "../flag/flag"
@@ -138,13 +138,13 @@ export namespace Installation {
         })
         break
       case "npm":
-        cmd = $`npm install -g @cyberstrike/cli@${target}`
+        cmd = $`npm install -g @cyberstrike-io/cli@${target}`
         break
       case "pnpm":
-        cmd = $`pnpm install -g @cyberstrike/cli@${target}`
+        cmd = $`pnpm install -g @cyberstrike-io/cli@${target}`
         break
       case "bun":
-        cmd = $`bun install -g @cyberstrike/cli@${target}`
+        cmd = $`bun install -g @cyberstrike-io/cli@${target}`
         break
       case "brew": {
         const formula = await getBrewFormula()

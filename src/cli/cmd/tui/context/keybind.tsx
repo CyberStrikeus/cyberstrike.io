@@ -2,10 +2,10 @@ import { createMemo } from "solid-js"
 import { useSync } from "@tui/context/sync"
 import { Keybind } from "@/util/keybind"
 import { pipe, mapValues } from "remeda"
-import type { KeybindsConfig } from "@cyberstrike/sdk/v2"
-import type { ParsedKey, Renderable } from "@cyberstrike/tui-core"
+import type { KeybindsConfig } from "@cyberstrike-io/sdk/v2"
+import type { ParsedKey, Renderable } from "@cyberstrike-io/tui-core"
 import { createStore } from "solid-js/store"
-import { useKeyboard, useRenderer } from "@cyberstrike/tui-solid"
+import { useKeyboard, useRenderer } from "@cyberstrike-io/tui-solid"
 import { createSimpleContext } from "./helper"
 
 export const { use: useKeybind, provider: KeybindProvider } = createSimpleContext({

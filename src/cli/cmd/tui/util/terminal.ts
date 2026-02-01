@@ -1,4 +1,4 @@
-import { RGBA } from "@cyberstrike/tui-core"
+import { RGBA } from "@cyberstrike-io/tui-core"
 
 export namespace Terminal {
   export type Colors = Awaited<ReturnType<typeof colors>>

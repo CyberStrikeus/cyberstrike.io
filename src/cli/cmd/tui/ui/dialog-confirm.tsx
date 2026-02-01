@@ -1,9 +1,9 @@
-import { TextAttributes } from "@cyberstrike/tui-core"
+import { TextAttributes } from "@cyberstrike-io/tui-core"
 import { useTheme } from "../context/theme"
 import { useDialog, type DialogContext } from "./dialog"
 import { createStore } from "solid-js/store"
 import { For } from "solid-js"
-import { useKeyboard } from "@cyberstrike/tui-solid"
+import { useKeyboard } from "@cyberstrike-io/tui-solid"
 import { Locale } from "@/util/locale"
 
 export type DialogConfirmProps = {

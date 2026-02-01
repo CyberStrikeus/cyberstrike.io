@@ -1,6 +1,6 @@
 import z from "zod"
 import { EOL } from "os"
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 
 export namespace UI {
   // CYBER (left) + STRIKE (right) parts for gradient coloring

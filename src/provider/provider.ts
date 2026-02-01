@@ -7,7 +7,7 @@ import { Log } from "../util/log"
 import { BunProc } from "../bun"
 import { Plugin } from "../plugin"
 import { ModelsDev } from "./models"
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 import { Auth } from "../auth"
 import { Env } from "../env"
 import { Instance } from "../project/instance"
@@ -78,7 +78,7 @@ export namespace Provider {
     "@gitlab/gitlab-ai-provider": createGitLab,
     "@ai-sdk/github-copilot": createGitHubCopilotOpenAICompatible as unknown as typeof createOpenAICompatible,
     // Claude CLI backend - uses local Claude Code CLI installation
-    "@cyberstrike/claude-cli": createClaudeCliProvider,
+    "@cyberstrike-io/claude-cli": createClaudeCliProvider,
   }
 
   type CustomModelLoader = (sdk: any, modelID: string, options?: Record<string, any>) => Promise<any>
@@ -879,7 +879,7 @@ export namespace Provider {
           api: {
             id: "opus",
             url: "local",
-            npm: "@cyberstrike/claude-cli",
+            npm: "@cyberstrike-io/claude-cli",
           },
           status: "active",
           headers: {},
@@ -905,7 +905,7 @@ export namespace Provider {
           api: {
             id: "sonnet",
             url: "local",
-            npm: "@cyberstrike/claude-cli",
+            npm: "@cyberstrike-io/claude-cli",
           },
           status: "active",
           headers: {},
@@ -931,7 +931,7 @@ export namespace Provider {
           api: {
             id: "haiku",
             url: "local",
-            npm: "@cyberstrike/claude-cli",
+            npm: "@cyberstrike-io/claude-cli",
           },
           status: "active",
           headers: {},

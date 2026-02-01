@@ -1,4 +1,4 @@
-import { NamedError } from "@cyberstrike/util/error"
+import { NamedError } from "@cyberstrike-io/util/error"
 import matter from "gray-matter"
 import { z } from "zod"
 

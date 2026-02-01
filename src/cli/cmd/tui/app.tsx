@@ -1,6 +1,6 @@
-import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@cyberstrike/tui-solid"
+import { render, useKeyboard, useRenderer, useTerminalDimensions } from "@cyberstrike-io/tui-solid"
 import { Clipboard } from "@tui/util/clipboard"
-import { TextAttributes } from "@cyberstrike/tui-core"
+import { TextAttributes } from "@cyberstrike-io/tui-core"
 import { RouteProvider, useRoute } from "@tui/context/route"
 import { Switch, Match, createEffect, untrack, ErrorBoundary, createSignal, onMount, batch, Show, on } from "solid-js"
 import { Installation } from "@/installation"
