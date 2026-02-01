@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "child_process";
-import { existsSync, mkdirSync, chmodSync, unlinkSync } from "fs";
+import { existsSync, mkdirSync, chmodSync, unlinkSync, statSync, readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -37,11 +37,34 @@ function getPlatformInfo() {
   return { os, cpu, ext: platform === "win32" ? "zip" : "tar.gz" };
 }
 
+function isRealBinary(path) {
+  try {
+    const stats = statSync(path);
+    // Real binary is > 1MB, placeholder is < 1KB
+    if (stats.size < 10000) {
+      return false;
+    }
+    // Also check if it's not a shell script placeholder
+    const content = readFileSync(path, 'utf8').slice(0, 100);
+    if (content.includes('Run: npm run postinstall') || content.includes('#!/bin/sh')) {
+      return false;
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function main() {
-  // Skip if binary already exists
-  if (existsSync(binPath)) {
+  // Skip only if REAL binary exists (not placeholder)
+  if (existsSync(binPath) && isRealBinary(binPath)) {
     console.log("cyberstrike binary already exists");
     return;
+  }
+
+  // Remove placeholder if exists
+  if (existsSync(binPath)) {
+    unlinkSync(binPath);
   }
 
   const { os, cpu, ext } = getPlatformInfo();
