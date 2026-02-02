@@ -258,13 +258,13 @@ Configure per-tool, per-pattern permissions
 
 ```bash
 # npm
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 
 # Homebrew
 brew install cyberstrike
 
 # Bun
-bun install -g cyberstrike
+bun install -g @cyberstrike-io/cli
 ```
 
 ---
@@ -275,7 +275,7 @@ bun install -g cyberstrike
 
 ```bash
 # 1. Install
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 
 # 2. Authenticate
 cyberstrike auth login
@@ -353,7 +353,7 @@ cyberstrike --agent web-application
 ## Start Your Security Journey
 
 ```bash
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 cyberstrike auth login
 cyberstrike
 ```

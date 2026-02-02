@@ -8,16 +8,8 @@ sidebar:
 
 Cyberstrike is an AI-powered penetration testing agent that automates security assessments. This guide covers installation, authentication, and running your first scan.
 
-{/* TODO: GIF - First run and authentication */}
-<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
-  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: g01-first-run.gif</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">İlk çalıştırma ve kimlik doğrulama akışı (15s)</p>
-</div>
-
-{/* TODO: Screenshot - Terminal installation */}
-<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
-  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s01-installation.png</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Terminal kurulum ekranı</p>
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/gifs/g01-first-run.gif" alt="Cyberstrike installation and first run" className="w-full" />
 </div>
 
 ## System Requirements
@@ -42,7 +34,7 @@ Choose your preferred installation method based on your operating system and pac
 2. Run the installation command:
 
 ```bash
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 ```
 
 3. Verify the installation:
@@ -50,6 +42,10 @@ npm install -g cyberstrike
 ```bash
 cyberstrike --version
 ```
+
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s01-installation.png" alt="Cyberstrike TUI after installation" className="w-full" />
+</div>
 
 ### Bun
 
@@ -59,11 +55,15 @@ cyberstrike --version
 curl -fsSL https://bun.sh/install | bash
 ```
 
-2. Install Cyberstrike:
+2. Install Cyberstrike with the `--trust` flag (required for postinstall):
 
 ```bash
-bun install -g cyberstrike
+bun install -g @cyberstrike-io/cli --trust
 ```
+
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s02-tools-overview.jpg" alt="Cyberstrike tools and agent overview" className="w-full" />
+</div>
 
 ### Homebrew (macOS)
 
@@ -79,6 +79,10 @@ brew tap CyberStrikeus/tap
 brew install cyberstrike
 ```
 
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s03-osint-tools.jpg" alt="Cyberstrike OSINT and reconnaissance tools" className="w-full" />
+</div>
+
 ### curl (Linux/macOS)
 
 Run the installation script:
@@ -93,14 +97,15 @@ curl -fsSL https://cyberstrike.io/install.sh | bash
 
 ### Docker
 
-Pull and run the official Docker image:
-
-```bash
-docker pull cyberstrike/cyberstrike:latest
-docker run -it cyberstrike/cyberstrike
-```
+<Aside variant="caution">
+  Docker image is coming soon. For now, use npm, Bun, or Homebrew installation.
+</Aside>
 
 ## Authenticating with an AI Provider
+
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/gifs/g02-auth-login.gif" alt="Cyberstrike auth login flow" className="w-full" />
+</div>
 
 Cyberstrike requires an AI provider to function. The following providers are supported:
 
@@ -114,10 +119,8 @@ Cyberstrike requires an AI provider to function. The following providers are sup
 
 ### Setting Up Authentication
 
-{/* TODO: Screenshot - Auth login flow */}
-<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
-  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s02-auth.png</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Auth login akışı</p>
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s02-auth.jpg" alt="Cyberstrike model selection dialog" className="w-full" />
 </div>
 
 1. Run the authentication command:
@@ -182,10 +185,8 @@ The terminal user interface (TUI) appears with:
 - Response area in the center
 - Status bar showing model and token usage
 
-{/* TODO: Screenshot - TUI main interface */}
-<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
-  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s03-tui-main.png</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">TUI ana arayüz görünümü</p>
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s03-tui-main.jpg" alt="Cyberstrike TUI main interface" className="w-full" />
 </div>
 
 ### Executing a Quick Scan
@@ -216,22 +217,22 @@ cyberstrike --agent bug-hunter
 
 ## Basic Configuration
 
-Create a project configuration file for consistent settings:
-
-```bash
-cyberstrike init
-```
-
-This creates `cyberstrike.json` in your current directory:
+Create a `cyberstrike.json` file in your project directory to set default options:
 
 ```json title="cyberstrike.json"
 {
-  "$schema": "https://cyberstrike.io/schema.json",
-  "provider": "anthropic",
-  "model": "claude-sonnet-4-20250514",
-  "agent": "web-application"
+  "$schema": "https://cyberstrike.io/config.json",
+  "model": "anthropic/claude-sonnet-4-20250514",
+  "default_agent": "web-application"
 }
 ```
+
+When you run `cyberstrike` in this directory, it automatically loads these settings. The example above:
+
+- Uses Claude Sonnet as the default AI model
+- Starts with the web-application security agent
+
+This eliminates the need to specify `--model` and `--agent` flags every time.
 
 ### Configuration Hierarchy
 
@@ -242,6 +243,8 @@ Cyberstrike loads configuration from multiple sources in this order:
 3. Project config (`cyberstrike.json`)
 4. User config (`~/.cyberstrike/config.json`)
 5. Default values (lowest priority)
+
+For detailed configuration options, see the [Configuration Reference](/docs/configuration).
 
 ## Keyboard Shortcuts
 
