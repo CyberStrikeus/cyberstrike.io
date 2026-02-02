@@ -1,0 +1,319 @@
+---
+title: AWS Bedrock
+description: Configure AWS Bedrock for enterprise Cyberstrike deployments
+sidebar:
+  order: 5
+  label: AWS Bedrock
+---
+
+AWS Bedrock provides enterprise-grade access to Claude and other models within your AWS infrastructure.
+
+{/* TODO: Screenshot - AWS Bedrock configuration */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: bedrock-config.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">AWS Bedrock model configuration</p>
+</div>
+
+## Overview
+
+AWS Bedrock advantages:
+
+- Data stays within your AWS account
+- Integration with AWS security services
+- VPC endpoints for private access
+- IAM-based access control
+- Compliance certifications (SOC, HIPAA, FedRAMP)
+
+## Available Models
+
+| Model | Model ID |
+|-------|----------|
+| Claude Sonnet 4 | anthropic.claude-sonnet-4-20250514-v1:0 |
+| Claude Opus 4 | anthropic.claude-opus-4-20250514-v1:0 |
+| Claude 3.5 Haiku | anthropic.claude-3-5-haiku-20241022-v1:0 |
+
+## Prerequisites
+
+### Enable Model Access
+
+1. Open AWS Console → Bedrock
+2. Go to Model access
+3. Request access to Claude models
+4. Wait for approval (usually instant)
+
+### IAM Permissions
+
+Create an IAM policy:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "bedrock:InvokeModel",
+        "bedrock:InvokeModelWithResponseStream"
+      ],
+      "Resource": "arn:aws:bedrock:*::foundation-model/anthropic.*"
+    }
+  ]
+}
+```
+
+## Authentication
+
+### AWS CLI Configuration
+
+```bash
+aws configure
+# Enter Access Key ID
+# Enter Secret Access Key
+# Enter default region (e.g., us-east-1)
+```
+
+### Environment Variables
+
+```bash
+export AWS_ACCESS_KEY_ID="AKIA..."
+export AWS_SECRET_ACCESS_KEY="..."
+export AWS_REGION="us-east-1"
+```
+
+### IAM Role (EC2/ECS/Lambda)
+
+When running on AWS infrastructure, use IAM roles:
+
+```json title="~/.cyberstrike/config.json"
+{
+  "provider": {
+    "bedrock": {
+      "options": {
+        "region": "us-east-1"
+      }
+    }
+  }
+}
+```
+
+### AWS SSO
+
+```bash
+aws sso login --profile your-profile
+export AWS_PROFILE="your-profile"
+```
+
+## Configuration
+
+### Basic Setup
+
+```json title="~/.cyberstrike/config.json"
+{
+  "provider": {
+    "bedrock": {
+      "options": {
+        "region": "us-east-1"
+      }
+    }
+  },
+  "model": "bedrock/anthropic.claude-sonnet-4-20250514-v1:0"
+}
+```
+
+### Cross-Region Inference
+
+Enable cross-region inference for higher limits:
+
+```json
+{
+  "provider": {
+    "bedrock": {
+      "options": {
+        "region": "us-east-1",
+        "crossRegionInference": true
+      }
+    }
+  }
+}
+```
+
+### VPC Endpoint
+
+For private network access:
+
+```json
+{
+  "provider": {
+    "bedrock": {
+      "options": {
+        "region": "us-east-1",
+        "endpointUrl": "https://vpce-xxx.bedrock.us-east-1.vpce.amazonaws.com"
+      }
+    }
+  }
+}
+```
+
+## Usage
+
+### Command Line
+
+```bash
+cyberstrike --model bedrock/anthropic.claude-sonnet-4-20250514-v1:0
+```
+
+### In-Session
+
+```
+/model
+# Select Bedrock model
+```
+
+## Provisioned Throughput
+
+For consistent performance:
+
+### Create Provisioned Capacity
+
+```bash
+aws bedrock create-provisioned-model-throughput \
+  --model-id anthropic.claude-sonnet-4-20250514-v1:0 \
+  --provisioned-model-name my-claude \
+  --model-units 1
+```
+
+### Use Provisioned Model
+
+```json
+{
+  "model": "bedrock/arn:aws:bedrock:us-east-1:123456789:provisioned-model/my-claude"
+}
+```
+
+## Guardrails
+
+Apply AWS Bedrock Guardrails:
+
+```json
+{
+  "provider": {
+    "bedrock": {
+      "options": {
+        "guardrailId": "abc123",
+        "guardrailVersion": "1"
+      }
+    }
+  }
+}
+```
+
+Create guardrails in AWS Console to:
+
+- Filter sensitive topics
+- Block specific content
+- Apply word filters
+- Control PII handling
+
+## Monitoring
+
+### CloudWatch Metrics
+
+Enable detailed monitoring:
+
+- `Invocations` - Number of requests
+- `InvocationLatency` - Response time
+- `InputTokenCount` - Tokens processed
+- `OutputTokenCount` - Tokens generated
+
+### CloudTrail Logging
+
+All Bedrock API calls are logged to CloudTrail for audit.
+
+## Cost Management
+
+### Pricing Tiers
+
+| Model | Input (1K tokens) | Output (1K tokens) |
+|-------|-------------------|---------------------|
+| Claude Sonnet 4 | $0.003 | $0.015 |
+| Claude Opus 4 | $0.015 | $0.075 |
+| Claude 3.5 Haiku | $0.00025 | $0.00125 |
+
+### Budget Alerts
+
+Set up AWS Budget alerts:
+
+```bash
+aws budgets create-budget \
+  --account-id 123456789 \
+  --budget file://bedrock-budget.json
+```
+
+## Best Practices
+
+### Security
+
+1. Use IAM roles instead of access keys
+2. Enable VPC endpoints for private access
+3. Apply guardrails for content filtering
+4. Enable CloudTrail logging
+5. Use least-privilege IAM policies
+
+### Performance
+
+1. Choose region closest to your location
+2. Enable cross-region inference
+3. Consider provisioned throughput for production
+4. Monitor latency with CloudWatch
+
+### Compliance
+
+1. Enable AWS Config rules
+2. Use AWS Organizations SCPs
+3. Enable AWS Artifact for compliance reports
+4. Document data handling procedures
+
+## Troubleshooting
+
+### Access Denied
+
+```
+Error: Access Denied
+```
+
+Verify:
+- Model access is enabled
+- IAM permissions are correct
+- Region is correct
+
+### Model Not Found
+
+```
+Error: Model not found
+```
+
+Check:
+- Model ID is correct
+- Model is available in region
+- Cross-region inference if needed
+
+### Throttling
+
+```
+Error: ThrottlingException
+```
+
+Solutions:
+- Request limit increase
+- Enable cross-region inference
+- Use provisioned throughput
+
+<Aside variant="tip">
+  Use AWS Bedrock for production deployments requiring compliance certifications and VPC isolation.
+</Aside>
+
+## Related Documentation
+
+- [Providers Overview](/docs/providers) - All providers
+- [Anthropic](/docs/providers/anthropic) - Direct API comparison
+- [Configuration](/docs/configuration) - Full options

@@ -1,0 +1,484 @@
+---
+title: MCP Commands
+description: Manage MCP servers from the command line
+sidebar:
+  order: 4
+  label: MCP Commands
+---
+
+The `cyberstrike mcp` commands manage Model Context Protocol servers and their configurations.
+
+{/* TODO: Screenshot - MCP command interface */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: mcp-commands.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">MCP command interface</p>
+</div>
+
+## List Servers
+
+### Show All Servers
+
+```bash
+cyberstrike mcp list
+```
+
+Output:
+
+```
+MCP Servers
+━━━━━━━━━━━
+
+Name            Type     Status      Tools
+────────────────────────────────────────────
+kali            local    connected   15
+filesystem      local    connected   3
+github          remote   connected   8
+custom-tools    local    stopped     -
+```
+
+### JSON Output
+
+```bash
+cyberstrike mcp list --json
+```
+
+### Show Tools
+
+```bash
+cyberstrike mcp list --tools
+```
+
+Shows all tools from all servers.
+
+## Server Status
+
+### Check Specific Server
+
+```bash
+cyberstrike mcp status kali
+```
+
+Output:
+
+```
+Server: kali
+━━━━━━━━━━━━
+
+Status: Connected
+Type: Local (stdio)
+Uptime: 2h 15m
+Tools: 15
+Resources: 3
+Memory: 45MB
+```
+
+### Health Check
+
+```bash
+cyberstrike mcp health
+```
+
+Tests all server connections.
+
+## Start Server
+
+### Start Specific Server
+
+```bash
+cyberstrike mcp start kali
+```
+
+### Start All Servers
+
+```bash
+cyberstrike mcp start --all
+```
+
+### Start with Debug
+
+```bash
+cyberstrike mcp start kali --debug
+```
+
+## Stop Server
+
+### Stop Specific Server
+
+```bash
+cyberstrike mcp stop kali
+```
+
+### Stop All Servers
+
+```bash
+cyberstrike mcp stop --all
+```
+
+### Force Stop
+
+```bash
+cyberstrike mcp stop kali --force
+```
+
+## Restart Server
+
+### Restart Specific Server
+
+```bash
+cyberstrike mcp restart kali
+```
+
+### Restart All
+
+```bash
+cyberstrike mcp restart --all
+```
+
+## Add Server
+
+### Interactive Add
+
+```bash
+cyberstrike mcp add
+```
+
+Prompts for server configuration.
+
+### Add Local Server
+
+```bash
+cyberstrike mcp add my-tools --command "node server.js"
+```
+
+### Add Remote Server
+
+```bash
+cyberstrike mcp add remote-tools --url "https://mcp.example.com/sse"
+```
+
+### With Options
+
+```bash
+cyberstrike mcp add kali \
+  --command "npx @cyberstrike/mcp-kali" \
+  --env "DEBUG=true" \
+  --auto-start
+```
+
+## Remove Server
+
+### Remove Server
+
+```bash
+cyberstrike mcp remove my-tools
+```
+
+### Remove with Confirmation
+
+```bash
+cyberstrike mcp remove my-tools --yes
+```
+
+## Configure Server
+
+### Edit Configuration
+
+```bash
+cyberstrike mcp config kali
+```
+
+Opens configuration in editor.
+
+### Set Option
+
+```bash
+cyberstrike mcp config kali --set timeout=60000
+```
+
+### Get Option
+
+```bash
+cyberstrike mcp config kali --get timeout
+```
+
+### List Options
+
+```bash
+cyberstrike mcp config kali --list
+```
+
+## Tools
+
+### List Server Tools
+
+```bash
+cyberstrike mcp tools kali
+```
+
+Output:
+
+```
+Tools from 'kali'
+━━━━━━━━━━━━━━━━━
+
+Name            Description
+────────────────────────────
+nmap            Network scanner
+nuclei          Vulnerability scanner
+sqlmap          SQL injection tool
+ffuf            Web fuzzer
+hydra           Password cracker
+...
+```
+
+### Tool Details
+
+```bash
+cyberstrike mcp tools kali nmap
+```
+
+Output:
+
+```
+Tool: nmap
+━━━━━━━━━━
+
+Description: Network scanner for port discovery and service detection
+Server: kali
+
+Parameters:
+  target (required): Target host or network
+  ports (optional): Port specification
+  flags (optional): Additional nmap flags
+
+Example:
+  nmap --target 192.168.1.1 --ports "1-1000"
+```
+
+### Search Tools
+
+```bash
+cyberstrike mcp tools --search "vulnerability"
+```
+
+## Authentication
+
+### Login to Remote Server
+
+```bash
+cyberstrike mcp auth github-mcp
+```
+
+Opens browser for OAuth if required.
+
+### Logout
+
+```bash
+cyberstrike mcp auth github-mcp --logout
+```
+
+### Refresh Token
+
+```bash
+cyberstrike mcp auth github-mcp --refresh
+```
+
+## Logs
+
+### View Server Logs
+
+```bash
+cyberstrike mcp logs kali
+```
+
+### Follow Logs
+
+```bash
+cyberstrike mcp logs kali --follow
+```
+
+### Last N Lines
+
+```bash
+cyberstrike mcp logs kali --lines 100
+```
+
+### Filter Logs
+
+```bash
+cyberstrike mcp logs kali --filter "error"
+```
+
+## Debug
+
+### Enable Debug Mode
+
+```bash
+cyberstrike mcp debug kali --enable
+```
+
+### Test Tool
+
+```bash
+cyberstrike mcp debug kali --test nmap --args '{"target": "localhost"}'
+```
+
+### Trace Requests
+
+```bash
+cyberstrike mcp debug kali --trace
+```
+
+## Import/Export
+
+### Export Configuration
+
+```bash
+cyberstrike mcp export > mcp-config.json
+```
+
+### Import Configuration
+
+```bash
+cyberstrike mcp import mcp-config.json
+```
+
+### Share Configuration
+
+```bash
+cyberstrike mcp export kali > kali-config.json
+```
+
+## Installation
+
+### Install from Registry
+
+```bash
+cyberstrike mcp install @cyberstrike/mcp-kali
+```
+
+### Install from URL
+
+```bash
+cyberstrike mcp install https://github.com/user/mcp-server.git
+```
+
+### Uninstall
+
+```bash
+cyberstrike mcp uninstall @cyberstrike/mcp-kali
+```
+
+## Update
+
+### Update Server
+
+```bash
+cyberstrike mcp update kali
+```
+
+### Update All
+
+```bash
+cyberstrike mcp update --all
+```
+
+### Check for Updates
+
+```bash
+cyberstrike mcp update --check
+```
+
+## Troubleshooting
+
+### Connection Failed
+
+```
+Error: Failed to connect to MCP server: kali
+```
+
+Solutions:
+
+```bash
+# Check server status
+cyberstrike mcp status kali
+
+# View logs
+cyberstrike mcp logs kali
+
+# Restart server
+cyberstrike mcp restart kali
+```
+
+### Tool Not Found
+
+```
+Error: Tool 'nmap' not found
+```
+
+Verify:
+
+```bash
+# List available tools
+cyberstrike mcp tools kali
+
+# Check server is connected
+cyberstrike mcp status kali
+```
+
+### Timeout
+
+```
+Error: MCP server connection timeout
+```
+
+```bash
+# Increase timeout
+cyberstrike mcp config kali --set timeout=120000
+
+# Check server health
+cyberstrike mcp health kali
+```
+
+## Examples
+
+### Set Up Kali Tools
+
+```bash
+# Install
+cyberstrike mcp install @cyberstrike/mcp-kali
+
+# Configure
+cyberstrike mcp config kali --set auto-start=true
+
+# Start
+cyberstrike mcp start kali
+
+# Verify
+cyberstrike mcp tools kali
+```
+
+### Add Custom Server
+
+```bash
+# Add server
+cyberstrike mcp add my-scanner \
+  --command "python scanner_server.py" \
+  --cwd "/opt/scanner"
+
+# Start
+cyberstrike mcp start my-scanner
+
+# Test
+cyberstrike mcp debug my-scanner --test scan --args '{"target": "localhost"}'
+```
+
+<Aside variant="tip">
+  Use `cyberstrike mcp list --tools` to discover all available tools across servers.
+</Aside>
+
+## Related Documentation
+
+- [MCP Overview](/docs/mcp) - MCP basics
+- [Local Servers](/docs/mcp/local-servers) - Server configuration
+- [Creating Servers](/docs/mcp/creating-servers) - Build custom servers

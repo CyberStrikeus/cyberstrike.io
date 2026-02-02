@@ -1,0 +1,329 @@
+---
+title: Permission Modes
+description: Understanding Cyberstrike's permission modes and when to use each
+sidebar:
+  order: 2
+  label: Permission Modes
+---
+
+Cyberstrike offers different permission modes to balance security and automation needs.
+
+{/* TODO: Diagram - Permission mode comparison */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📊 DIAGRAM: permission-modes.mmd</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Permission mode comparison flowchart</p>
+</div>
+
+## Overview
+
+| Mode | Behavior | Use Case |
+|------|----------|----------|
+| Default | Prompts for dangerous operations | Interactive sessions |
+| Plan | Read-only, no modifications | Research and exploration |
+| Auto | Automatically approves all | CI/CD and automation |
+
+## Default Mode
+
+The standard mode for interactive sessions.
+
+### Behavior
+
+- Read operations proceed automatically
+- Write operations prompt for approval
+- Command execution prompts based on risk
+- User can approve once or always
+
+### Configuration
+
+```json title="~/.cyberstrike/config.json"
+{
+  "permissions": {
+    "mode": "default"
+  }
+}
+```
+
+### Command Line
+
+```bash
+cyberstrike --permission default
+```
+
+### Permission Prompt
+
+```
+┌─────────────────────────────────────────────┐
+│ Bash: rm -rf node_modules                   │
+├─────────────────────────────────────────────┤
+│ Allow this command?                         │
+│                                             │
+│ [y] Yes, once                               │
+│ [a] Yes, always for this pattern            │
+│ [n] No                                      │
+│ [v] View details                            │
+└─────────────────────────────────────────────┘
+```
+
+### Approval Options
+
+| Key | Action |
+|-----|--------|
+| `y` | Approve this instance only |
+| `a` | Approve and add to allow list |
+| `n` | Deny this operation |
+| `v` | Show more details |
+| `Esc` | Deny and cancel |
+
+## Plan Mode
+
+Read-only mode for research and exploration.
+
+### Behavior
+
+- All read operations allowed
+- All write operations blocked
+- Command execution blocked
+- No changes to filesystem
+
+### Configuration
+
+```json
+{
+  "permissions": {
+    "mode": "plan"
+  }
+}
+```
+
+### Command Line
+
+```bash
+cyberstrike --permission plan
+```
+
+### Use Cases
+
+1. **Code exploration** - Understand codebase without changes
+2. **Security research** - Analyze without modification
+3. **Learning** - Safe exploration of AI capabilities
+4. **Planning** - Design approach before implementing
+
+### Allowed Operations
+
+| Tool | Allowed |
+|------|---------|
+| Read | Yes |
+| Glob | Yes |
+| Grep | Yes |
+| Write | No |
+| Edit | No |
+| Bash | No (read-only commands only) |
+| Browser | Read-only navigation |
+
+### Read-Only Bash Commands
+
+Some commands are allowed in plan mode:
+
+```bash
+# Allowed
+ls, cat, head, tail, grep, find
+git status, git log, git diff
+npm list, pip list
+
+# Blocked
+rm, mv, cp, mkdir
+git commit, git push
+npm install, pip install
+```
+
+## Auto Mode (YOLO)
+
+Automatically approves all operations.
+
+### Behavior
+
+- All operations proceed without prompting
+- No user interaction required
+- Full trust in AI decisions
+- Maximum automation
+
+<Aside variant="danger">
+  Auto mode executes all operations without confirmation. Only use in controlled environments with trusted prompts.
+</Aside>
+
+### Configuration
+
+```json
+{
+  "permissions": {
+    "mode": "auto"
+  }
+}
+```
+
+### Command Line
+
+```bash
+cyberstrike --permission auto
+# or
+cyberstrike --yolo
+```
+
+### Use Cases
+
+1. **CI/CD pipelines** - Automated security scanning
+2. **Batch processing** - Processing multiple targets
+3. **Controlled scripts** - Pre-defined automation
+4. **Testing** - Automated test execution
+
+### Safety Considerations
+
+Even in auto mode:
+
+1. **Scope limitations** - Restrict working directory
+2. **Deny patterns** - Block dangerous operations
+3. **Hooks** - Validate before execution
+4. **Logging** - Audit all operations
+
+### Safe Auto Mode Configuration
+
+```json
+{
+  "permissions": {
+    "mode": "auto",
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(dd *)",
+      "Write(~/.ssh/*)",
+      "Write(.env*)"
+    ]
+  }
+}
+```
+
+## Switching Modes
+
+### During Session
+
+```
+/permission plan
+/permission default
+/permission auto
+```
+
+### Per-Command
+
+```bash
+# Single command in auto mode
+cyberstrike run "scan target" --permission auto
+
+# Interactive session defaults to default
+cyberstrike
+```
+
+## Mode Comparison
+
+### Security vs Automation
+
+```
+Security    ←──────────────────────→    Automation
+
+  Plan           Default           Auto
+   │                │                │
+   │  Read-only    │  Balanced     │  Full auto
+   │  Max safety   │  User control │  Max speed
+```
+
+### Decision Flowchart
+
+```
+Start
+  │
+  ▼
+Is operation read-only?
+  │
+  ├─ Yes → Allow
+  │
+  └─ No → Check mode
+           │
+           ├─ Plan → Block
+           │
+           ├─ Auto → Allow
+           │
+           └─ Default → Check patterns
+                         │
+                         ├─ Allow pattern → Allow
+                         │
+                         ├─ Deny pattern → Block
+                         │
+                         └─ Unknown → Prompt user
+```
+
+## Mixing Modes
+
+### Default with Allow List
+
+Most common configuration:
+
+```json
+{
+  "permissions": {
+    "mode": "default",
+    "allow": [
+      "Bash(npm *)",
+      "Bash(git status)",
+      "Write(reports/**)"
+    ]
+  }
+}
+```
+
+### Auto with Deny List
+
+Automation with safety rails:
+
+```json
+{
+  "permissions": {
+    "mode": "auto",
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Write(.env*)"
+    ]
+  }
+}
+```
+
+### Plan with Exceptions
+
+Research with specific capabilities:
+
+```json
+{
+  "permissions": {
+    "mode": "plan",
+    "allow": [
+      "Write(notes/**)"
+    ]
+  }
+}
+```
+
+## Best Practices
+
+1. **Start with plan** - Explore safely first
+2. **Use default** - For interactive security testing
+3. **Auto for CI/CD** - With proper deny lists
+4. **Document mode** - Note in project config
+5. **Review logs** - Audit auto mode operations
+
+<Aside variant="tip">
+  Start in plan mode to understand what operations will be performed, then switch to default for execution.
+</Aside>
+
+## Related Documentation
+
+- [Permissions Overview](/docs/permissions) - Permission system basics
+- [Patterns](/docs/permissions/patterns) - Pattern syntax
+- [Automation](/docs/permissions/automation) - CI/CD setup

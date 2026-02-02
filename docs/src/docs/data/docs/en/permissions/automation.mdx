@@ -1,0 +1,449 @@
+---
+title: Automation
+description: Configure permissions for CI/CD and automated workflows
+sidebar:
+  order: 4
+  label: Automation
+---
+
+Configure Cyberstrike permissions for automated workflows, CI/CD pipelines, and batch processing.
+
+{/* TODO: Diagram - CI/CD workflow */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📊 DIAGRAM: cicd-workflow.mmd</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">CI/CD automation workflow</p>
+</div>
+
+## Overview
+
+Automation requires:
+
+- Non-interactive execution
+- Predictable behavior
+- Security guardrails
+- Logging and auditing
+
+## Auto Mode Configuration
+
+### Basic Auto Mode
+
+```json title="cyberstrike.json"
+{
+  "permissions": {
+    "mode": "auto"
+  }
+}
+```
+
+### Auto Mode with Guardrails
+
+```json
+{
+  "permissions": {
+    "mode": "auto",
+    "allow": [
+      "Bash(npm *)",
+      "Bash(nmap *)",
+      "Write(reports/**)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Write(.env*)"
+    ]
+  }
+}
+```
+
+## CI/CD Integration
+
+### GitHub Actions
+
+```yaml title=".github/workflows/security-scan.yml"
+name: Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Cyberstrike
+        run: npm install -g cyberstrike
+
+      - name: Run Security Scan
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CYBERSTRIKE_PERMISSION_MODE: auto
+        run: |
+          cyberstrike run "scan this codebase for security vulnerabilities" \
+            --output json > security-report.json
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: security-report.json
+```
+
+### GitLab CI
+
+```yaml title=".gitlab-ci.yml"
+security-scan:
+  image: node:20
+  stage: test
+  variables:
+    CYBERSTRIKE_PERMISSION_MODE: auto
+  script:
+    - npm install -g cyberstrike
+    - cyberstrike run "analyze code for vulnerabilities" --output json > report.json
+  artifacts:
+    paths:
+      - report.json
+    reports:
+      codequality: report.json
+```
+
+### Jenkins
+
+```groovy title="Jenkinsfile"
+pipeline {
+    agent any
+
+    environment {
+        ANTHROPIC_API_KEY = credentials('anthropic-api-key')
+        CYBERSTRIKE_PERMISSION_MODE = 'auto'
+    }
+
+    stages {
+        stage('Install') {
+            steps {
+                sh 'npm install -g cyberstrike'
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh '''
+                    cyberstrike run "scan for security issues" \
+                        --agent web-application \
+                        --output json > security-report.json
+                '''
+            }
+        }
+
+        stage('Publish Report') {
+            steps {
+                archiveArtifacts artifacts: 'security-report.json'
+            }
+        }
+    }
+}
+```
+
+### CircleCI
+
+```yaml title=".circleci/config.yml"
+version: 2.1
+
+jobs:
+  security-scan:
+    docker:
+      - image: cimg/node:20.0
+    steps:
+      - checkout
+      - run:
+          name: Install Cyberstrike
+          command: npm install -g cyberstrike
+      - run:
+          name: Run Security Scan
+          command: |
+            cyberstrike run "scan codebase" --permission auto
+          environment:
+            ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      - store_artifacts:
+          path: reports/
+
+workflows:
+  security:
+    jobs:
+      - security-scan
+```
+
+## Docker Automation
+
+### Dockerfile
+
+```dockerfile
+FROM node:20-slim
+
+# Install Cyberstrike
+RUN npm install -g cyberstrike
+
+# Install security tools
+RUN apt-get update && apt-get install -y \
+    nmap \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /workspace
+
+# Set environment
+ENV CYBERSTRIKE_PERMISSION_MODE=auto
+
+# Default command
+ENTRYPOINT ["cyberstrike"]
+CMD ["--help"]
+```
+
+### Docker Compose
+
+```yaml title="docker-compose.yml"
+version: '3.8'
+
+services:
+  security-scanner:
+    image: cyberstrike/cyberstrike:latest
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - CYBERSTRIKE_PERMISSION_MODE=auto
+    volumes:
+      - ./:/workspace
+      - ./reports:/reports
+    command: run "scan workspace for vulnerabilities" --output json -o /reports/scan.json
+```
+
+## Batch Processing
+
+### Multiple Targets
+
+```bash title="scan-targets.sh"
+#!/bin/bash
+
+TARGETS=(
+    "192.168.1.100"
+    "192.168.1.101"
+    "192.168.1.102"
+)
+
+for target in "${TARGETS[@]}"; do
+    echo "Scanning $target..."
+    cyberstrike run "scan $target for vulnerabilities" \
+        --permission auto \
+        --output json > "reports/${target}.json"
+done
+```
+
+### Parallel Scanning
+
+```bash title="parallel-scan.sh"
+#!/bin/bash
+
+cat targets.txt | parallel -j 4 \
+    'cyberstrike run "scan {} for open ports" --permission auto > reports/{}.json'
+```
+
+### With Error Handling
+
+```bash title="safe-scan.sh"
+#!/bin/bash
+set -e
+
+scan_target() {
+    local target=$1
+    local output="reports/${target//\//_}.json"
+
+    if cyberstrike run "scan $target" --permission auto --output json > "$output"; then
+        echo "SUCCESS: $target"
+    else
+        echo "FAILED: $target" >> failed.txt
+    fi
+}
+
+export -f scan_target
+cat targets.txt | parallel -j 4 scan_target
+```
+
+## Scheduled Scanning
+
+### Cron Job
+
+```bash
+# Run daily security scan at 2 AM
+0 2 * * * /usr/local/bin/cyberstrike run "daily security scan" --permission auto >> /var/log/cyberstrike.log 2>&1
+```
+
+### Systemd Timer
+
+```ini title="/etc/systemd/system/cyberstrike-scan.service"
+[Unit]
+Description=Cyberstrike Security Scan
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/cyberstrike run "scheduled security scan" --permission auto
+Environment=ANTHROPIC_API_KEY=sk-ant-...
+```
+
+```ini title="/etc/systemd/system/cyberstrike-scan.timer"
+[Unit]
+Description=Run Cyberstrike scan daily
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+## Output Handling
+
+### JSON Output
+
+```bash
+cyberstrike run "scan target" --output json > report.json
+```
+
+### Structured Reports
+
+```bash
+cyberstrike run "generate security report" --output markdown > report.md
+```
+
+### Exit Codes
+
+```bash
+cyberstrike run "check for critical vulnerabilities"
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "No critical issues found"
+elif [ $EXIT_CODE -eq 1 ]; then
+    echo "Critical issues found"
+    exit 1
+fi
+```
+
+## Logging and Auditing
+
+### Enable Logging
+
+```json
+{
+  "logging": {
+    "level": "info",
+    "file": "/var/log/cyberstrike/scan.log",
+    "format": "json"
+  }
+}
+```
+
+### Audit Trail
+
+```json
+{
+  "hooks": {
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "echo '{\"timestamp\": \"'$(date -Iseconds)'\", \"tool\": \"$TOOL_NAME\"}' >> /var/log/cyberstrike/audit.jsonl"
+      }
+    ]
+  }
+}
+```
+
+## Security Considerations
+
+### Principle of Least Privilege
+
+```json
+{
+  "permissions": {
+    "mode": "auto",
+    "allow": [
+      "Read(**)",
+      "Bash(nmap -sV *)",
+      "Write(reports/**)"
+    ]
+  }
+}
+```
+
+### Network Isolation
+
+```yaml
+# Docker with limited network
+docker run --network=scanning-network cyberstrike
+```
+
+### Secret Management
+
+```bash
+# Use secret manager
+export ANTHROPIC_API_KEY=$(aws secretsmanager get-secret-value --secret-id cyberstrike-api-key --query SecretString --output text)
+```
+
+### Resource Limits
+
+```yaml
+# Kubernetes with limits
+resources:
+  limits:
+    cpu: "2"
+    memory: "4Gi"
+  requests:
+    cpu: "1"
+    memory: "2Gi"
+```
+
+## Monitoring
+
+### Health Checks
+
+```bash
+# Check Cyberstrike is working
+cyberstrike --version && echo "OK" || echo "FAILED"
+```
+
+### Metrics
+
+```bash
+# Custom metrics
+cyberstrike run "scan target" --output json | jq '.findings | length' > metrics/findings_count.txt
+```
+
+### Alerts
+
+```bash
+#!/bin/bash
+FINDINGS=$(cyberstrike run "scan for critical issues" --output json | jq '.critical | length')
+
+if [ "$FINDINGS" -gt 0 ]; then
+    curl -X POST https://slack.webhook.url -d "{\"text\": \"Critical findings: $FINDINGS\"}"
+fi
+```
+
+<Aside variant="caution">
+  Always use deny patterns in auto mode to prevent destructive operations.
+</Aside>
+
+## Related Documentation
+
+- [Permission Modes](/docs/permissions/permission-modes) - Mode configuration
+- [Patterns](/docs/permissions/patterns) - Pattern syntax
+- [CLI Run Command](/docs/cli/run-command) - Non-interactive execution

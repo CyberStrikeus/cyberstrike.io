@@ -1,0 +1,503 @@
+---
+title: Security Agents
+description: Specialized AI agents for different security assessment scenarios
+sidebar:
+  order: 1
+  label: Overview
+---
+
+Cyberstrike includes specialized agents optimized for different security assessment scenarios. Each agent has domain-specific knowledge, methodologies, and tool configurations.
+
+{/* TODO: GIF - Agent switching demo */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: g05-agent-switch.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Agent değiştirme demosu (12s)</p>
+</div>
+
+{/* TODO: Screenshot - Agent selection dialog */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s09-agent-select.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Agent seçim dialogu</p>
+</div>
+
+{/* TODO: Diagram - Agent selection flow */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📊 DIAGRAM: agent-selection-flow.mermaid</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Agent seçim akış diyagramı</p>
+</div>
+
+## Available Agents
+
+| Agent | Purpose | Primary Tools |
+|-------|---------|---------------|
+| `web-application` | Web app security testing | Browser, Nuclei, SQLMap |
+| `cloud-security` | Cloud infrastructure auditing | AWS CLI, Prowler, ScoutSuite |
+| `internal-network` | Network penetration testing | Nmap, Impacket, BloodHound |
+| `bug-hunter` | Bug bounty reconnaissance | Subfinder, GAU, ffuf |
+
+## Selecting an Agent
+
+### Command Line
+
+```bash
+# Start with specific agent
+cyberstrike --agent web-application
+
+# One-time run with agent
+cyberstrike run --agent cloud-security "audit AWS account"
+```
+
+### Interactive Mode
+
+Press `Tab` or use the agent selector to switch agents during a session.
+
+### Configuration
+
+Set a default agent in `cyberstrike.json`:
+
+```json
+{
+  "default_agent": "web-application"
+}
+```
+
+---
+
+## Web Application Agent
+
+The `web-application` agent specializes in OWASP-based web security testing with integrated browser automation.
+
+### Capabilities
+
+- OWASP Top 10 vulnerability detection
+- OWASP Web Security Testing Guide (WSTG) methodology
+- Interactive browser-based testing with traffic capture
+- Injection attack testing (SQLi, XSS, XXE, SSTI)
+- Authentication and authorization bypass
+- Session management analysis
+- Business logic flaw detection
+
+### Browser Integration
+
+The agent uses an integrated browser with DevTools access:
+
+```
+browser launch              # Start browser with traffic capture
+browser navigate url="..."  # Navigate to target
+browser network             # View captured HTTP traffic
+browser har                 # Export HAR file
+browser screenshot          # Capture evidence
+browser execute script="..."# Run JavaScript
+browser close               # Close browser
+```
+
+### Testing Methodology
+
+The agent follows the WSTG checklist:
+
+1. **WSTG-INFO**: Information Gathering (10 tests)
+2. **WSTG-CONF**: Configuration Testing (13 tests)
+3. **WSTG-IDNT**: Identity Management (5 tests)
+4. **WSTG-ATHN**: Authentication Testing (11 tests)
+5. **WSTG-AUTHZ**: Authorization Testing (7 tests)
+6. **WSTG-SESS**: Session Management (11 tests)
+7. **WSTG-INPV**: Input Validation (29 tests)
+8. **WSTG-ERRH**: Error Handling (2 tests)
+9. **WSTG-CRYP**: Cryptography (4 tests)
+10. **WSTG-BUSL**: Business Logic (10 tests)
+11. **WSTG-CLNT**: Client-side (14 tests)
+12. **WSTG-APIT**: API Testing (4 tests)
+
+### Tools
+
+- **Browser Tool**: Interactive testing with full traffic capture
+- **Nuclei**: Automated vulnerability scanning
+- **SQLMap**: SQL injection testing
+- **FFUF**: Directory and parameter fuzzing
+- **Nikto**: Web server scanning
+- **curl**: Manual HTTP requests
+
+### Example Session
+
+```bash
+cyberstrike --agent web-application
+
+> Launch the browser and navigate to https://target.com
+> Capture all login traffic and test for authentication bypass
+> Check for SQL injection in the search parameter
+> Export HAR file for evidence
+```
+
+### Finding Output Format
+
+```
+WSTG-ID: WSTG-INPV-05
+Title: SQL Injection in Login Form
+Severity: High (CVSS 8.6)
+CWE: CWE-89
+Evidence: Request/Response captured
+Remediation: Use parameterized queries
+```
+
+---
+
+## Cloud Security Agent
+
+The `cloud-security` agent audits AWS, Azure, and GCP environments against security benchmarks.
+
+### Capabilities
+
+- AWS security assessment (IAM, S3, EC2, Lambda, RDS)
+- Azure security review (AD, Blob Storage, RBAC, Key Vault)
+- GCP security analysis (IAM, GCS, Compute, Cloud Functions)
+- CIS Benchmarks compliance checking
+- Cloud misconfiguration detection
+- Privilege escalation path identification
+
+### Methodology
+
+1. **Enumeration**: Identify cloud resources and configurations
+2. **IAM Analysis**: Review policies, roles, and permissions
+3. **Storage Security**: Check bucket/blob permissions
+4. **Network Security**: Review security groups and firewalls
+5. **Secrets Management**: Identify exposed credentials
+6. **Logging and Monitoring**: Verify audit configurations
+7. **Compliance**: Check against CIS benchmarks
+
+### Key Checks
+
+#### AWS
+
+| Check | Description |
+|-------|-------------|
+| S3 Public Access | Detect publicly accessible buckets |
+| IAM Over-Permissions | Identify overly permissive policies |
+| EC2 Metadata | Check IMDS v1 exposure |
+| Lambda Permissions | Review function execution roles |
+| RDS Accessibility | Verify database isolation |
+| CloudTrail Status | Confirm audit logging |
+
+#### Azure
+
+| Check | Description |
+|-------|-------------|
+| Blob Anonymous Access | Detect public containers |
+| RBAC Misconfig | Review role assignments |
+| Key Vault Access | Analyze access policies |
+| NSG Rules | Check network security groups |
+| Conditional Access | Review Azure AD policies |
+
+#### GCP
+
+| Check | Description |
+|-------|-------------|
+| GCS Bucket ACLs | Check storage permissions |
+| IAM Bindings | Review member permissions |
+| Service Accounts | Analyze compute identities |
+| VPC Firewall | Review firewall rules |
+| Cloud Functions | Check function permissions |
+
+### Tools
+
+- **Prowler**: AWS/Azure/GCP security assessment
+- **ScoutSuite**: Multi-cloud auditing
+- **PACU**: AWS exploitation framework
+- **CloudSploit**: Configuration scanning
+- **aws-cli, az-cli, gcloud**: Manual checks
+
+### Example Session
+
+```bash
+cyberstrike --agent cloud-security
+
+> Enumerate all S3 buckets and check for public access
+> Review IAM policies for overly permissive permissions
+> Check CloudTrail logging configuration
+> Run CIS Benchmark assessment with Prowler
+```
+
+### Finding Output Format
+
+```
+Cloud Provider: AWS
+Service: S3
+Issue: Public bucket access enabled
+Severity: Critical (CVSS 9.0)
+CIS Benchmark: CIS AWS 2.1.1
+Evidence: Bucket policy allows s3:GetObject to *
+Remediation: Enable S3 Block Public Access
+```
+
+---
+
+## Internal Network Agent
+
+The `internal-network` agent performs network penetration testing and Active Directory attacks.
+
+### Capabilities
+
+- Network enumeration and service discovery
+- Active Directory security testing
+- Kerberos attacks (Kerberoasting, AS-REP Roasting)
+- Credential attacks (Password Spraying, Pass-the-Hash)
+- Lateral movement techniques
+- Privilege escalation (Windows, Linux, Domain)
+- Persistence mechanism analysis
+
+### Methodology
+
+#### 1. Network Reconnaissance
+
+- Port scanning and service enumeration
+- Banner grabbing and version detection
+- Network topology mapping
+
+#### 2. Active Directory Enumeration
+
+- Domain information gathering
+- User and group discovery
+- Trust relationship mapping
+- GPO analysis
+- ACL abuse path identification
+
+#### 3. Credential Attacks
+
+- Kerberoasting
+- AS-REP Roasting
+- Password spraying
+- NTLM relay attacks
+
+#### 4. Lateral Movement
+
+- Pass-the-Hash
+- Pass-the-Ticket
+- DCOM/WMI execution
+- PSExec/WinRM
+
+#### 5. Privilege Escalation
+
+- Local admin to domain admin paths
+- Unconstrained delegation abuse
+- Resource-based constrained delegation
+- AD CS certificate attacks
+
+### Attack Paths
+
+```
+LLMNR/NBT-NS Poisoning → NTLMv2 Hash Capture
+Kerberoasting → Service Account Passwords
+AS-REP Roasting → User Passwords without Preauth
+BloodHound Analysis → Domain Admin Path
+GPO Abuse → Code Execution on Domain Machines
+AD CS → Certificates for Domain Authentication
+```
+
+### Tools
+
+- **Nmap**: Network scanning and enumeration
+- **BloodHound**: AD relationship mapping
+- **NetExec**: Network exploitation
+- **Kerbrute**: Kerberos enumeration
+- **Impacket**: Protocol attacks
+- **Responder**: LLMNR/NBT-NS poisoning
+- **Mimikatz**: Credential extraction
+
+### Example Session
+
+```bash
+cyberstrike --agent internal-network
+
+> Scan the 10.0.0.0/24 network for live hosts
+> Enumerate Active Directory users and groups
+> Run Kerberoasting attack against service accounts
+> Identify BloodHound paths to Domain Admin
+```
+
+### Finding Output Format
+
+```
+Attack Vector: Kerberoasting
+Target: SVC_SQL service account
+Severity: High (CVSS 7.5)
+MITRE ATT&CK: T1558.003
+Evidence: TGS hash captured, password cracked
+Impact: Direct path to domain compromise
+Remediation: Use MSAs, enforce complex passwords
+```
+
+---
+
+## Bug Hunter Agent
+
+The `bug-hunter` agent focuses on reconnaissance and vulnerability hunting for bug bounty programs.
+
+### Capabilities
+
+- Attack surface discovery
+- Subdomain enumeration (passive and active)
+- Historical data analysis (Wayback, GAU)
+- JavaScript endpoint extraction
+- Secret detection in code
+- Business logic vulnerability hunting
+- Vulnerability chaining strategies
+
+### Methodology
+
+#### 1. Asset Discovery
+
+- Subdomain enumeration (passive + active)
+- Port scanning on discovered hosts
+- Technology fingerprinting
+- Content discovery
+
+#### 2. Historical Analysis
+
+- Wayback Machine archives
+- GetAllURLs (GAU)
+- Historical DNS records
+- Certificate transparency logs
+
+#### 3. JavaScript Analysis
+
+- Endpoint extraction
+- API key discovery
+- Secret detection
+- Hidden functionality
+
+#### 4. Vulnerability Hunting
+
+- IDOR on identified endpoints
+- Authentication bypass
+- Access control issues
+- Business logic flaws
+- Rate limiting bypass
+- Subdomain takeover
+
+#### 5. Impact Amplification
+
+- Chain vulnerabilities
+- Demonstrate business impact
+- Write clear PoC
+- Calculate accurate CVSS
+
+### Reconnaissance Flow
+
+```
+Domain
+  ├── Subdomain Enum (subfinder, amass)
+  │     └── DNS Resolution
+  │           └── HTTP Probing (httpx)
+  │                 └── Technology Fingerprint
+  │                       └── Nuclei Scan
+  ├── Historical URLs (gau, wayback)
+  │     └── Parameter Discovery
+  │           └── SQLi/XSS Testing
+  └── JavaScript Analysis
+        └── Endpoint Extraction
+              └── API Testing
+```
+
+### Tools
+
+- **Subfinder, Amass**: Subdomain enumeration
+- **Httpx**: HTTP probing
+- **Nuclei**: Vulnerability scanning
+- **GAU, Waybackurls**: Historical URL discovery
+- **LinkFinder, SecretFinder**: JavaScript analysis
+- **ffuf**: Fuzzing
+- **Shodan**: Passive reconnaissance
+
+### Example Session
+
+```bash
+cyberstrike --agent bug-hunter
+
+> Enumerate subdomains for target.com
+> Probe discovered hosts with httpx
+> Run nuclei templates on live hosts
+> Extract endpoints from JavaScript files
+> Check for subdomain takeover opportunities
+```
+
+### Finding Output Format
+
+```
+Program: target-security (HackerOne)
+Asset: api.target.com
+Vulnerability: IDOR in user profile endpoint
+Severity: High (CVSS 7.5)
+Impact: Access to any user's PII
+PoC: GET /api/users/12345 with modified user ID
+Business Impact: GDPR violation, data breach risk
+```
+
+---
+
+## Creating Custom Agents
+
+Create custom agents by adding markdown files to `.cyberstrike/agents/`:
+
+```markdown title=".cyberstrike/agents/api-security.md"
+---
+description: API security testing specialist
+model: anthropic/claude-opus-4-20250514
+mode: primary
+color: "#00FF88"
+steps: 100
+---
+
+You are an API security specialist focusing on:
+- REST API security testing
+- GraphQL vulnerability assessment
+- OAuth/OIDC implementation review
+- Rate limiting and abuse prevention
+- API versioning security
+
+## Methodology
+1. API discovery and documentation review
+2. Authentication mechanism analysis
+3. Authorization testing (BOLA, BFLA)
+4. Input validation testing
+5. Rate limiting assessment
+```
+
+### Agent Configuration Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `description` | string | Agent description for selection |
+| `model` | string | Override model for this agent |
+| `mode` | string | "primary" or "subagent" |
+| `color` | string | Hex color for UI (#RRGGBB) |
+| `steps` | number | Maximum iterations |
+| `temperature` | number | Model temperature (0-1) |
+
+---
+
+## Agent Switching
+
+Switch between agents during a session:
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Tab` | Next agent |
+| `Shift+Tab` | Previous agent |
+| `<leader>a` | Agent list |
+
+### Slash Command
+
+```
+/agent web-application
+```
+
+### Inline Mention
+
+```
+@web-application scan the login form for vulnerabilities
+```
+
+<Aside variant="info">
+  Agents can be customized per-project by placing configuration files in the `.cyberstrike/agents/` directory.
+</Aside>
