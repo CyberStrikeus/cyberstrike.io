@@ -1,0 +1,204 @@
+---
+title: Installation
+description: Install Cyberstrike using npm, bun, homebrew, or curl
+sidebar:
+  order: 2
+  label: Installation
+---
+
+Cyberstrike can be installed through multiple package managers. Choose the method that best fits your development environment.
+
+{/* TODO: Screenshot - Terminal installation */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: installation-terminal.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Terminal installation output</p>
+</div>
+
+## npm (Recommended)
+
+The recommended installation method for most users.
+
+```bash
+npm install -g cyberstrike
+```
+
+Verify the installation:
+
+```bash
+cyberstrike --version
+```
+
+## Bun
+
+For users preferring the Bun runtime:
+
+```bash
+# Install Bun if not already installed
+curl -fsSL https://bun.sh/install | bash
+
+# Install Cyberstrike
+bun install -g cyberstrike
+```
+
+<Aside variant="caution">
+  Bun blocks postinstall scripts by default for security. If you see "Run: npm run postinstall to download binary", run:
+
+  ```bash
+  bun pm trust cyberstrike -g
+  bun pm trust @anthropic-ai/claude-code -g
+  ```
+
+  Then reinstall: `bun install -g cyberstrike`
+</Aside>
+
+## Homebrew (macOS)
+
+For macOS users with Homebrew:
+
+```bash
+brew install CyberStrikeus/tap/cyberstrike
+```
+
+Or add the tap separately:
+
+```bash
+brew tap CyberStrikeus/tap
+brew install cyberstrike
+```
+
+## curl (Linux/macOS)
+
+Direct installation via shell script:
+
+```bash
+curl -fsSL https://cyberstrike.io/install.sh | bash
+```
+
+<Aside variant="caution">
+  Always review installation scripts before executing them. The script source is available at [github.com/CyberStrikeus/cyberstrike.io](https://github.com/CyberStrikeus/cyberstrike.io).
+</Aside>
+
+## Docker
+
+Run Cyberstrike in a containerized environment:
+
+```bash
+# Pull the image
+docker pull cyberstrike/cyberstrike:latest
+
+# Run interactively
+docker run -it cyberstrike/cyberstrike
+
+# Mount local directory
+docker run -it -v $(pwd):/workspace cyberstrike/cyberstrike
+```
+
+## Cargo (Rust)
+
+For Rust developers:
+
+```bash
+cargo install cyberstrike
+```
+
+## Verifying Installation
+
+After installation, verify Cyberstrike is working:
+
+```bash
+# Check version
+cyberstrike --version
+
+# Run doctor to check system
+cyberstrike doctor
+```
+
+Expected output:
+
+```
+cyberstrike 1.0.0
+✓ Node.js 20.0.0
+✓ Bun 1.1.0
+✓ Git 2.40.0
+✓ Configuration valid
+```
+
+## Updating Cyberstrike
+
+Update to the latest version:
+
+```bash
+# npm
+npm update -g cyberstrike
+
+# Bun
+bun update -g cyberstrike
+
+# Homebrew
+brew upgrade cyberstrike
+
+# Self-update
+cyberstrike update
+```
+
+## Uninstalling
+
+Remove Cyberstrike from your system:
+
+```bash
+# npm
+npm uninstall -g cyberstrike
+
+# Bun
+bun remove -g cyberstrike
+
+# Homebrew
+brew uninstall cyberstrike
+```
+
+Configuration files are stored in `~/.cyberstrike/` and can be removed manually if needed.
+
+## Troubleshooting
+
+### Command Not Found
+
+If `cyberstrike` is not found after installation:
+
+1. Check your PATH includes npm global bin directory
+2. Restart your terminal
+3. Run `npm bin -g` to find the global bin path
+
+### Permission Errors
+
+On Linux/macOS, if you encounter permission errors:
+
+```bash
+# Fix npm permissions
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Version Conflicts
+
+If you have multiple Node versions:
+
+```bash
+# Use nvm to manage versions
+nvm use 20
+npm install -g cyberstrike
+```
+
+### Bun Postinstall Blocked
+
+If Bun shows "Blocked 1 postinstall" and Cyberstrike says "Run: npm run postinstall to download binary":
+
+```bash
+# Trust the packages
+bun pm trust cyberstrike -g
+bun pm trust @anthropic-ai/claude-code -g
+
+# Reinstall
+bun install -g cyberstrike
+```

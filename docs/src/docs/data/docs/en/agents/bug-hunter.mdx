@@ -1,0 +1,566 @@
+---
+title: Bug Hunter Agent
+description: Comprehensive reconnaissance methodology and vulnerability discovery for bug bounty programs
+sidebar:
+  order: 5
+  label: Bug Hunter
+---
+
+The Bug Hunter agent is a specialized security testing agent equipped with comprehensive knowledge of reconnaissance methodology, attack surface discovery, and bug bounty hunting techniques.
+
+## Overview
+
+The Bug Hunter agent combines deep reconnaissance knowledge with automated tooling to maximize attack surface discovery for bug bounty programs. It's pre-loaded with specialized skills for subdomain enumeration, content discovery, and vulnerability pattern detection.
+
+### Agent Configuration
+
+| Property | Value |
+|----------|-------|
+| **Agent ID** | `bug-hunter` |
+| **Color** | Green |
+| **Pre-loaded Skills** | `recon-methodology`, `owasp-wstg`, `subdomain-takeover`, `nuclei-templates` |
+| **Allowed Tools** | Browser, Bash, WebFetch, WebSearch, Read, Glob, Grep, Memory |
+
+### Launch the Agent
+
+```bash
+# Start Cyberstrike with bug hunter agent
+cyberstrike --agent bug-hunter
+
+# Or switch during session
+/agent bug-hunter
+```
+
+## Knowledge Base
+
+The Bug Hunter agent has access to extensive security knowledge through the skills system.
+
+### Recon Methodology Skill
+
+The agent is pre-loaded with comprehensive reconnaissance methodology including:
+
+- Passive reconnaissance techniques
+- Active enumeration methods
+- Asset discovery workflows
+- Technology fingerprinting
+- Content discovery strategies
+- Parameter mining techniques
+
+### OWASP WSTG Integration
+
+Full OWASP Web Security Testing Guide v4.2 knowledge for systematic vulnerability testing after reconnaissance is complete.
+
+### Subdomain Takeover Skill
+
+Complete subdomain takeover detection including:
+
+- 70+ vulnerable fingerprints
+- Cloud provider patterns (AWS, Azure, GCP)
+- Third-party service patterns
+- DNS configuration analysis
+- CNAME chain analysis
+
+### Nuclei Templates Skill
+
+Knowledge of Nuclei template categories and usage:
+
+- CVE detection templates
+- Exposure detection
+- Misconfiguration checks
+- Takeover detection
+- Technology fingerprinting
+
+## Reconnaissance Methodology
+
+The agent follows a structured multi-phase reconnaissance approach:
+
+### Phase 1: Passive Reconnaissance (15 techniques)
+
+| Technique ID | Technique Name | Data Sources |
+|--------------|----------------|--------------|
+| RECON-01 | Certificate Transparency | crt.sh, Censys, Google CT |
+| RECON-02 | DNS History | SecurityTrails, ViewDNS |
+| RECON-03 | Reverse DNS | PTR records, IP ranges |
+| RECON-04 | ASN Enumeration | BGP data, WHOIS |
+| RECON-05 | WHOIS Analysis | Domain registration data |
+| RECON-06 | Search Engine Dorking | Google, Bing, Yandex |
+| RECON-07 | Archive Mining | Wayback Machine, Common Crawl |
+| RECON-08 | GitHub Recon | Code leaks, secrets, endpoints |
+| RECON-09 | S3 Bucket Enumeration | Bucket naming patterns |
+| RECON-10 | JavaScript Analysis | Endpoints, API keys, secrets |
+| RECON-11 | Social Media OSINT | LinkedIn, Twitter, employee info |
+| RECON-12 | Job Posting Analysis | Technology stack discovery |
+| RECON-13 | Public Breach Data | Credential leaks, email patterns |
+| RECON-14 | Shodan/Censys Queries | Internet-wide scan data |
+| RECON-15 | Cloud Resource Discovery | Azure, AWS, GCP resources |
+
+### Phase 2: Active Enumeration (12 techniques)
+
+| Technique ID | Technique Name | Tools |
+|--------------|----------------|-------|
+| ENUM-01 | DNS Brute Force | ffuf, gobuster, amass |
+| ENUM-02 | Virtual Host Discovery | ffuf, gobuster |
+| ENUM-03 | Port Scanning | nmap, masscan, naabu |
+| ENUM-04 | Service Fingerprinting | nmap, httpx |
+| ENUM-05 | Technology Detection | wappalyzer, whatweb |
+| ENUM-06 | Directory Bruteforce | ffuf, feroxbuster |
+| ENUM-07 | Parameter Discovery | arjun, paramspider |
+| ENUM-08 | API Endpoint Discovery | kiterunner, ffuf |
+| ENUM-09 | Favicon Hash Analysis | favfreak, shodan |
+| ENUM-10 | HTTP Header Analysis | curl, httpx |
+| ENUM-11 | Robots.txt/Sitemap Mining | Custom scripts |
+| ENUM-12 | JavaScript Endpoint Extraction | LinkFinder, JSParser |
+
+### Phase 3: Vulnerability Discovery (10 patterns)
+
+| Pattern ID | Vulnerability Pattern | Detection Method |
+|------------|----------------------|------------------|
+| VULN-01 | Subdomain Takeover | DNS CNAME analysis |
+| VULN-02 | Open Redirect | Parameter fuzzing |
+| VULN-03 | CORS Misconfiguration | Header analysis |
+| VULN-04 | SSRF Patterns | Parameter testing |
+| VULN-05 | IDOR Indicators | Response comparison |
+| VULN-06 | Information Disclosure | Pattern matching |
+| VULN-07 | Debug Endpoints | Path discovery |
+| VULN-08 | Default Credentials | Credential testing |
+| VULN-09 | Version Disclosure | Banner grabbing |
+| VULN-10 | Security Header Missing | Header analysis |
+
+## Subdomain Takeover Detection
+
+The agent includes comprehensive subdomain takeover knowledge:
+
+### Vulnerable Fingerprints (70+)
+
+| Service | Fingerprint | Takeover Possible |
+|---------|-------------|-------------------|
+| AWS S3 | NoSuchBucket | Yes |
+| AWS CloudFront | Bad Request | Yes |
+| Azure | NXDOMAIN on *.azurewebsites.net | Yes |
+| GitHub Pages | 404 There isn't a GitHub Pages site | Yes |
+| Heroku | No such app | Yes |
+| Shopify | Sorry, this shop is currently unavailable | Yes |
+| Tumblr | There's nothing here | Yes |
+| WordPress.com | Do you want to register | Yes |
+| Ghost | The thing you were looking for is no longer here | Yes |
+| Surge.sh | project not found | Yes |
+| Fastly | Fastly error: unknown domain | Yes |
+| Pantheon | 404 error unknown site | Yes |
+| Zendesk | Help Center Closed | Conditional |
+| Readme.io | Project doesnt exist | Yes |
+| Bitbucket | Repository not found | Yes |
+| Intercom | This page is reserved for | Conditional |
+| Cargo | 404 Not Found | Yes |
+| StatusPage | Status page launched | Conditional |
+| Uptimerobot | page not found | Yes |
+| Vercel | The deployment could not be found | Yes |
+
+<Aside variant="tip">
+  Always verify takeover possibility manually before reporting. Some fingerprints may produce false positives.
+</Aside>
+
+### Takeover Detection Example
+
+```
+> Check subdomains for takeover vulnerabilities
+
+[Checking 147 subdomains...]
+
+FINDING: Subdomain Takeover - AWS S3
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Subdomain: assets.target.com
+CNAME: assets.target.com.s3.amazonaws.com
+Status: NoSuchBucket error
+Severity: High (CVSS 8.6)
+Bounty Estimate: $500-$3,000
+
+Claim Instructions:
+1. Create S3 bucket: assets.target.com
+2. Upload proof of ownership file
+3. Report to program
+
+FINDING: Subdomain Takeover - GitHub Pages
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Subdomain: docs.target.com
+CNAME: target.github.io
+Status: 404 - No GitHub Pages site
+Severity: High (CVSS 8.6)
+Bounty Estimate: $300-$1,500
+
+Claim Instructions:
+1. Create GitHub repo: target/target.github.io
+2. Enable GitHub Pages
+3. Add CNAME file with docs.target.com
+```
+
+## Content Discovery Methodology
+
+### Wordlist Strategy
+
+The agent uses optimized wordlist combinations:
+
+| Wordlist Type | Purpose | Size |
+|---------------|---------|------|
+| Common | Frequently seen paths | 10K |
+| Technology-specific | Framework paths (Rails, Django, etc.) | 5K |
+| API | REST/GraphQL endpoints | 15K |
+| Backup files | .bak, .old, .backup | 2K |
+| Config files | .env, .config, web.config | 1K |
+| Custom | Generated from JS analysis | Dynamic |
+
+### Recursive Discovery
+
+```
+> Perform recursive content discovery on target.com
+
+[Phase 1: Initial discovery...]
+Found 234 paths
+
+[Phase 2: Recursive on interesting directories...]
+/api/ → 47 new endpoints
+/admin/ → 23 new paths
+/internal/ → 12 new paths
+
+[Phase 3: Technology-specific...]
+Detected: Laravel
+Running Laravel-specific wordlist...
+Found: /telescope, /horizon, /log-viewer
+
+FINDING: Debug Interface Exposed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+URL: https://target.com/telescope
+Technology: Laravel Telescope
+Access: Unauthenticated
+Severity: High (CVSS 7.5)
+Evidence: Full request/response logging visible
+CWE: CWE-215
+
+Bounty Estimate: $500-$2,000
+```
+
+## Parameter Mining
+
+### Sources for Parameters
+
+| Source | Method | Example |
+|--------|--------|---------|
+| URL History | Wayback Machine | ?id=, ?user= |
+| JavaScript | Static analysis | apiKey, token |
+| HTML Forms | DOM parsing | username, password |
+| API Docs | Swagger/OpenAPI | All documented params |
+| Traffic Analysis | Proxy capture | Hidden parameters |
+
+### Parameter Testing Workflow
+
+```
+> Discover and test parameters on target.com
+
+[Mining parameters...]
+URL Parameters: 47 unique
+POST Parameters: 23 unique
+Headers: 8 custom
+
+[High-value parameters found...]
+?redirect_url → Potential Open Redirect
+?file → Potential LFI/Path Traversal
+?url → Potential SSRF
+?id → Potential IDOR
+?debug → Potential Info Disclosure
+
+[Testing redirect_url...]
+
+FINDING: Open Redirect
+━━━━━━━━━━━━━━━━━━━━━
+URL: https://target.com/login?redirect_url=
+Parameter: redirect_url
+Payload: //evil.com
+Severity: Medium (CVSS 5.4)
+Evidence: Redirects to attacker-controlled domain
+CWE: CWE-601
+
+Bounty Estimate: $100-$500
+```
+
+## Testing Methodology
+
+The agent follows a structured approach:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    TESTING METHODOLOGY                       │
+├─────────────────────────────────────────────────────────────┤
+│  1. SCOPE ANALYSIS                                           │
+│     └── Parse program policy, understand boundaries         │
+│                                                              │
+│  2. PASSIVE RECON                                            │
+│     └── Certificate transparency, OSINT, archives           │
+│                                                              │
+│  3. ACTIVE ENUMERATION                                       │
+│     └── Subdomain brute, port scan, content discovery       │
+│                                                              │
+│  4. FINGERPRINTING                                           │
+│     └── Technology stack, version detection                 │
+│                                                              │
+│  5. VULNERABILITY DISCOVERY                                  │
+│     └── Pattern matching, fuzzing, template scanning        │
+│                                                              │
+│  6. EXPLOITATION & PoC                                       │
+│     └── Demonstrate impact, document steps                  │
+│                                                              │
+│  7. REPORTING                                                │
+│     └── Write clear report, estimate bounty                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Integrated Security Tools
+
+The agent leverages industry-standard bug bounty tools:
+
+| Tool | Purpose |
+|------|---------|
+| **Subfinder** | Passive subdomain enumeration |
+| **Amass** | Comprehensive asset discovery |
+| **httpx** | HTTP probing and fingerprinting |
+| **Nuclei** | Template-based vulnerability scanning |
+| **ffuf** | Web fuzzing |
+| **Arjun** | HTTP parameter discovery |
+| **gau** | URL discovery from archives |
+| **Waybackurls** | Historical URL mining |
+| **Katana** | Crawling and spidering |
+| **Dalfox** | XSS detection |
+
+### Tool Chain Example
+
+```
+> Run full recon workflow on target.com
+
+[Step 1: Subdomain enumeration...]
+subfinder -d target.com -all -o subs.txt
+
+[Step 2: DNS resolution and probing...]
+cat subs.txt | httpx -silent -o live.txt
+
+[Step 3: Port scanning on live hosts...]
+naabu -l live.txt -top-ports 1000 -o ports.txt
+
+[Step 4: Technology fingerprinting...]
+cat live.txt | httpx -tech-detect -o tech.txt
+
+[Step 5: Content discovery...]
+ffuf -w wordlist.txt -u FUZZ -o content.txt
+
+[Step 6: Nuclei scanning...]
+nuclei -l live.txt -t nuclei-templates/ -o vulns.txt
+
+Summary:
+━━━━━━━━
+Subdomains: 147
+Live hosts: 89
+Open ports: 234
+Technologies: 23 unique
+Directories: 1,247
+Vulnerabilities: 12 potential
+```
+
+## Nuclei Template Categories
+
+| Category | Templates | Coverage |
+|----------|-----------|----------|
+| cves | 3,000+ | Known CVE exploits |
+| exposures | 500+ | Sensitive data exposure |
+| misconfiguration | 400+ | Server misconfigurations |
+| takeovers | 70+ | Subdomain takeover |
+| default-logins | 200+ | Default credential checks |
+| technologies | 600+ | Technology detection |
+| file | 300+ | Sensitive file detection |
+| fuzzing | 100+ | Parameter fuzzing |
+| headless | 50+ | Browser-based checks |
+
+### Nuclei Scanning Example
+
+```
+> Run Nuclei vulnerability scan
+
+[Loading templates...]
+Loaded: 4,847 templates
+
+[Scanning 89 live hosts...]
+
+FINDING: CVE-2023-44487 (HTTP/2 Rapid Reset)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Template: CVE-2023-44487
+Host: api.target.com
+Severity: High (CVSS 7.5)
+Evidence: Server vulnerable to rapid reset
+CWE: CWE-400
+
+FINDING: Exposed .git Directory
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Template: git-config-exposure
+Host: staging.target.com/.git/config
+Severity: High (CVSS 7.5)
+Evidence: Git config file accessible
+CWE: CWE-200
+
+FINDING: AWS Credentials in JavaScript
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Template: aws-access-key-exposure
+Host: target.com/assets/app.js
+Severity: Critical (CVSS 9.8)
+Evidence: AKIA... pattern found
+CWE: CWE-798
+```
+
+## CVSS Severity Rating
+
+The agent rates findings using CVSS 3.1 and bounty estimates:
+
+| Severity | CVSS Score | Example Findings | Bounty Range |
+|----------|------------|------------------|--------------|
+| **Critical** | 9.0 - 10.0 | RCE, Auth bypass, exposed creds | $5,000-$50,000 |
+| **High** | 7.0 - 8.9 | Subdomain takeover, SSRF, SQLi | $1,000-$10,000 |
+| **Medium** | 4.0 - 6.9 | XSS, Open redirect, IDOR | $200-$2,000 |
+| **Low** | 0.1 - 3.9 | Info disclosure, missing headers | $50-$500 |
+
+## Session Example
+
+```
+You: Hunt for bugs on target.com bug bounty program
+
+Agent: I'll perform comprehensive reconnaissance and vulnerability hunting on target.com.
+
+## Phase 1: Scope Analysis
+
+[Parsing program scope...]
+In Scope:
+  - *.target.com
+  - api.target.com
+  - app.target.com
+Out of Scope:
+  - blog.target.com (Wordpress)
+  - support.target.com (Zendesk)
+
+## Phase 2: Passive Reconnaissance
+
+[Certificate Transparency...]
+Found 234 certificates → 156 unique subdomains
+
+[Archive Mining...]
+Wayback URLs: 12,847
+Interesting params: redirect, file, url, callback
+
+[GitHub Recon...]
+⚠ FINDING - Exposed API key in public repo
+
+FINDING: Exposed API Key in GitHub
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Repository: target/mobile-app (commit abc123)
+File: src/config/api.js
+Secret: STRIPE_API_KEY=sk_live_...
+Severity: Critical (CVSS 9.8)
+Evidence: Active Stripe key found in public commit
+CWE: CWE-798
+
+Bounty Estimate: $5,000-$15,000
+
+## Phase 3: Active Enumeration
+
+[Subdomain brute forcing...]
+New subdomains: 23
+
+[Live host probing...]
+Live hosts: 89/179
+
+[Content discovery on api.target.com...]
+⚠ FINDING - Unauthenticated GraphQL introspection
+
+FINDING: GraphQL Introspection Enabled
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+URL: https://api.target.com/graphql
+Issue: Full schema accessible via introspection
+Severity: Medium (CVSS 5.3)
+Evidence: __schema query returns all types/fields
+CWE: CWE-200
+
+Bounty Estimate: $300-$800
+
+## Phase 4: Subdomain Takeover Check
+
+[Checking 179 subdomains...]
+⚠ FINDING - Takeover possible on staging
+
+FINDING: Subdomain Takeover (Heroku)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Subdomain: staging.target.com
+CNAME: target-staging.herokuapp.com
+Status: No such app
+Severity: High (CVSS 8.6)
+Evidence: NXDOMAIN for Heroku app
+
+Bounty Estimate: $1,000-$3,000
+
+[Continuing with remaining phases...]
+```
+
+## Report Template
+
+```markdown
+## Summary
+[One sentence describing the vulnerability]
+
+## Affected Asset
+- **URL:** https://target.com/vulnerable-endpoint
+- **Parameter:** redirect_url
+- **Method:** GET
+
+## Vulnerability Type
+Open Redirect (CWE-601)
+
+## Severity
+Medium (CVSS 5.4)
+
+## Steps to Reproduce
+1. Navigate to https://target.com/login
+2. Append ?redirect_url=//evil.com to the URL
+3. Complete login process
+4. Observe redirect to evil.com
+
+## Proof of Concept
+[Screenshot or video]
+
+## Impact
+An attacker can craft a malicious link that appears to be from target.com
+but redirects users to a phishing page. This can be used for:
+- Credential harvesting
+- Malware distribution
+- OAuth token theft
+
+## Remediation
+1. Validate redirect URLs against a whitelist
+2. Use relative URLs only
+3. Implement destination verification
+
+## References
+- https://cwe.mitre.org/data/definitions/601.html
+- https://owasp.org/www-project-web-security-testing-guide/
+```
+
+## Best Practices
+
+1. **Read Program Policy** - Understand scope, rules, and exclusions
+2. **Start Passive** - Begin with non-invasive reconnaissance
+3. **Track Progress** - Use Memory tool to avoid duplicate work
+4. **Verify Impact** - Demonstrate real security impact
+5. **Write Clear Reports** - Help triagers reproduce issues
+6. **Focus on Unique Issues** - Automated findings are often duplicates
+
+<Aside variant="caution">
+  Always respect program scope and rate limits. Aggressive scanning can result in program bans and legal issues.
+</Aside>
+
+## Related Documentation
+
+- [Web Application Agent](/docs/agents/web-application) - Detailed vulnerability testing
+- [Browser Tool](/docs/tools/browser) - Manual verification
+- [Memory Tool](/docs/tools/memory) - Tracking tested assets
+- [Report Generator](/docs/agents/report-generator) - Creating professional reports

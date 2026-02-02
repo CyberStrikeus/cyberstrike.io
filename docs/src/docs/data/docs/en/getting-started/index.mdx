@@ -1,0 +1,270 @@
+---
+title: Getting Started
+description: Installing Cyberstrike and running your first security assessment
+sidebar:
+  order: 1
+  label: Introduction
+---
+
+Cyberstrike is an AI-powered penetration testing agent that automates security assessments. This guide covers installation, authentication, and running your first scan.
+
+{/* TODO: GIF - First run and authentication */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: g01-first-run.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">İlk çalıştırma ve kimlik doğrulama akışı (15s)</p>
+</div>
+
+{/* TODO: Screenshot - Terminal installation */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s01-installation.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Terminal kurulum ekranı</p>
+</div>
+
+## System Requirements
+
+Before installing Cyberstrike, verify your system meets these requirements:
+
+| Requirement | Minimum | Recommended |
+|-------------|---------|-------------|
+| Operating System | macOS 12+, Ubuntu 20.04+, Windows 10+ | macOS 14+, Ubuntu 22.04+ |
+| RAM | 4 GB | 8 GB |
+| Disk Space | 500 MB | 2 GB |
+| Node.js | 18.0+ | 20.0+ |
+| Bun | 1.0+ | 1.1+ |
+
+## Installing Cyberstrike
+
+Choose your preferred installation method based on your operating system and package manager.
+
+### npm (Recommended)
+
+1. Open your terminal
+2. Run the installation command:
+
+```bash
+npm install -g cyberstrike
+```
+
+3. Verify the installation:
+
+```bash
+cyberstrike --version
+```
+
+### Bun
+
+1. Install Bun if not already installed:
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+2. Install Cyberstrike:
+
+```bash
+bun install -g cyberstrike
+```
+
+### Homebrew (macOS)
+
+1. Add the Cyberstrike tap:
+
+```bash
+brew tap CyberStrikeus/tap
+```
+
+2. Install Cyberstrike:
+
+```bash
+brew install cyberstrike
+```
+
+### curl (Linux/macOS)
+
+Run the installation script:
+
+```bash
+curl -fsSL https://cyberstrike.io/install.sh | bash
+```
+
+<Aside variant="caution">
+  Review scripts before executing them. The installation script is available at [github.com/CyberStrikeus/cyberstrike.io](https://github.com/CyberStrikeus/cyberstrike.io).
+</Aside>
+
+### Docker
+
+Pull and run the official Docker image:
+
+```bash
+docker pull cyberstrike/cyberstrike:latest
+docker run -it cyberstrike/cyberstrike
+```
+
+## Authenticating with an AI Provider
+
+Cyberstrike requires an AI provider to function. The following providers are supported:
+
+| Provider | Free Tier | API Key Required |
+|----------|-----------|------------------|
+| OpenRouter | Yes | Yes |
+| Anthropic | No | Yes |
+| OpenAI | No | Yes |
+| Google Gemini | Yes | Yes |
+| Ollama | Yes (Local) | No |
+
+### Setting Up Authentication
+
+{/* TODO: Screenshot - Auth login flow */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s02-auth.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Auth login akışı</p>
+</div>
+
+1. Run the authentication command:
+
+```bash
+cyberstrike auth login
+```
+
+2. Select your provider from the list:
+
+```
+? Select provider
+❯ OpenRouter (free tier available)
+  Anthropic (API key from console.anthropic.com)
+  OpenAI (ChatGPT Plus/Pro or API key)
+  Google (API key from ai.google.dev)
+  Ollama (local models)
+  Other
+```
+
+3. Enter your API key when prompted
+
+4. Verify your credentials:
+
+```bash
+cyberstrike auth list
+```
+
+### Using Environment Variables
+
+Set API keys as environment variables instead of storing them:
+
+```bash
+# Anthropic
+export ANTHROPIC_API_KEY="sk-ant-..."
+
+# OpenAI
+export OPENAI_API_KEY="sk-..."
+
+# Google
+export GOOGLE_API_KEY="AI..."
+
+# OpenRouter
+export OPENROUTER_API_KEY="sk-or-..."
+```
+
+Add these to your shell profile (`~/.bashrc`, `~/.zshrc`) for persistence.
+
+## Running Your First Scan
+
+### Starting Interactive Mode
+
+Launch Cyberstrike in your target directory:
+
+```bash
+cd /path/to/target
+cyberstrike
+```
+
+The terminal user interface (TUI) appears with:
+- Input prompt at the bottom
+- Response area in the center
+- Status bar showing model and token usage
+
+{/* TODO: Screenshot - TUI main interface */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: s03-tui-main.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">TUI ana arayüz görünümü</p>
+</div>
+
+### Executing a Quick Scan
+
+Run a single command without entering interactive mode:
+
+```bash
+cyberstrike run "perform reconnaissance on example.com"
+```
+
+### Selecting a Security Agent
+
+Cyberstrike includes specialized agents for different assessment types:
+
+```bash
+# Web application security
+cyberstrike --agent web-application
+
+# Cloud infrastructure
+cyberstrike --agent cloud-security
+
+# Network penetration testing
+cyberstrike --agent internal-network
+
+# Bug bounty reconnaissance
+cyberstrike --agent bug-hunter
+```
+
+## Basic Configuration
+
+Create a project configuration file for consistent settings:
+
+```bash
+cyberstrike init
+```
+
+This creates `cyberstrike.json` in your current directory:
+
+```json title="cyberstrike.json"
+{
+  "$schema": "https://cyberstrike.io/schema.json",
+  "provider": "anthropic",
+  "model": "claude-sonnet-4-20250514",
+  "agent": "web-application"
+}
+```
+
+### Configuration Hierarchy
+
+Cyberstrike loads configuration from multiple sources in this order:
+
+1. Command line arguments (highest priority)
+2. Environment variables
+3. Project config (`cyberstrike.json`)
+4. User config (`~/.cyberstrike/config.json`)
+5. Default values (lowest priority)
+
+## Keyboard Shortcuts
+
+Learn these shortcuts for efficient navigation:
+
+| Shortcut | Action |
+|----------|--------|
+| `Enter` | Submit message |
+| `Ctrl+C` | Cancel current operation |
+| `Ctrl+D` | Exit Cyberstrike |
+| `Ctrl+L` | Clear screen |
+| `Tab` | Autocomplete commands |
+| `↑` / `↓` | Navigate history |
+
+## Next Steps
+
+Continue learning with these guides:
+
+1. [Configuration Reference](/docs/configuration) - Customize Cyberstrike settings
+2. [AI Providers](/docs/providers) - Configure your preferred AI provider
+3. [Security Agents](/docs/agents) - Learn about specialized agents
+4. [CLI Commands](/docs/cli) - Complete command reference
+
+<Aside variant="tip">
+  Join the community at [discord.gg/cyberstrike](https://discord.gg/cyberstrike) for support and updates.
+</Aside>

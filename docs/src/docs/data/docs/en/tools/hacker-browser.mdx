@@ -1,0 +1,732 @@
+---
+title: HackerBrowser
+description: Deep dive into Cyberstrike's browser automation for security testing
+sidebar:
+  order: 7
+  label: HackerBrowser
+---
+
+HackerBrowser is Cyberstrike's built-in browser automation system designed for web security testing. It provides full browser control with automatic traffic capture, visual feedback, and seamless agent integration.
+
+{/* TODO: GIF - HackerBrowser in action */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: hacker-browser-demo.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">HackerBrowser automated security testing</p>
+</div>
+
+## Overview
+
+HackerBrowser enables:
+
+- **Visual browser automation** - See exactly what the agent is doing
+- **Automatic traffic capture** - Every HTTP request/response is logged
+- **HAR file export** - Export traffic for analysis in Burp Suite, OWASP ZAP
+- **Console logging** - Capture JavaScript errors and logs
+- **Screenshot evidence** - Document findings with visual proof
+- **Form interaction** - Fill and submit forms programmatically
+- **JavaScript execution** - Run custom scripts in page context
+
+## Architecture
+
+{/* TODO: Diagram - HackerBrowser architecture */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📊 DIAGRAM: hacker-browser-architecture.mmd</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">HackerBrowser internal architecture</p>
+</div>
+
+### Core Components
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      Cyberstrike CLI                        │
+│                   (Agent Conversation)                      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                      Browser Tool                           │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │   Actions   │  │   State     │  │   Traffic Capture   │ │
+│  │  Handler    │  │  Manager    │  │   (HAR Recording)   │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Playwright Engine                        │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐ │
+│  │  Chromium   │  │  DevTools   │  │  Network Monitor    │ │
+│  │  Browser    │  │  Protocol   │  │                     │ │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Visual Interface                         │
+│  ┌───────────────────────┐  ┌─────────────────────────────┐│
+│  │   Control Tab         │  │   Target Tab               ││
+│  │   (Cyberstrike UI)    │  │   (Web Application)        ││
+│  │   ┌───────────────┐   │  │   ┌─────────────────────┐  ││
+│  │   │ Status Panel  │   │  │   │ Cyberstrike Banner  │  ││
+│  │   │ Network Active│   │  │   │ "Debugging active"  │  ││
+│  │   │ DevTools Ready│   │  │   ├─────────────────────┤  ││
+│  │   └───────────────┘   │  │   │ Target Web Page     │  ││
+│  └───────────────────────┘  │   │ (with blue border)  │  ││
+│                             │   └─────────────────────┘  ││
+│                             └─────────────────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+```
+
+### State Management
+
+Each session has its own browser state:
+
+```typescript
+interface BrowserState {
+  browser: Browser           // Playwright Browser instance
+  context: BrowserContext    // Browser context with HAR recording
+  page: Page                 // Main working page
+  networkLogs: NetworkEntry[]  // In-memory request/response logs
+  consoleLogs: ConsoleEntry[]  // Console messages and errors
+  harPath: string            // Path to HAR file on disk
+}
+```
+
+The browser persists across multiple tool calls within a session, allowing complex multi-step workflows.
+
+## How It Works
+
+### 1. Launch Process
+
+When you ask the agent to use the browser:
+
+```
+> Launch the browser and go to https://target.com
+```
+
+The agent calls:
+
+```
+browser launch
+browser navigate url="https://target.com"
+```
+
+**What happens internally:**
+
+1. **Playwright loads Chromium** in visible mode (not headless)
+2. **HAR recording starts** - All traffic saved to `cyberstrike-session-{id}.har`
+3. **Two tabs open:**
+   - **Tab 1: Control Panel** - Navy blue dashboard showing status
+   - **Tab 2: Working Tab** - Where target sites are loaded
+4. **Injection script prepared** - Banner will be added to all visited pages
+5. **Event listeners attached** - Network and console monitoring begins
+
+### 2. Visual Feedback System
+
+{/* TODO: Screenshot - Browser with Cyberstrike banner */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: browser-banner.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Cyberstrike banner on target page</p>
+</div>
+
+#### Cyberstrike Banner
+
+Every page visited shows a banner at the top:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🔒 "Cyberstrike" started debugging this browser    [Cancel]│
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Features:**
+- Navy blue gradient background
+- Always visible (z-index: 2147483647)
+- Cancel button to close browser
+- 40px height, pushes page content down
+
+#### Page Border
+
+Target pages have a **3px navy blue border** indicating Cyberstrike control:
+
+```css
+body {
+  border: 3px solid #1e3a5f !important;
+}
+```
+
+#### Control Panel Tab
+
+The first tab shows a status dashboard:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                      CYBERSTRIKE                            │
+│                    Browser Control                          │
+│                                                             │
+│     ┌─────────────────────────────────────────────────┐    │
+│     │  ● Connected                                     │    │
+│     │  Cyberstrike is controlling this browser         │    │
+│     └─────────────────────────────────────────────────┘    │
+│                                                             │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐       │
+│  │   DevTools   │ │   Network    │ │  Screenshot  │       │
+│  │    Ready     │ │   Capture    │ │    Ready     │       │
+│  │              │ │   Active     │ │              │       │
+│  └──────────────┘ └──────────────┘ └──────────────┘       │
+│                                                             │
+│  Network traffic is being captured automatically.          │
+│  Use 'browser har' to export traffic.                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 3. Traffic Capture
+
+**All HTTP/HTTPS traffic is automatically captured:**
+
+```typescript
+// Request capture
+page.on("request", (request) => {
+  networkLogs.push({
+    timestamp: Date.now(),
+    method: request.method(),      // GET, POST, PUT, DELETE
+    url: request.url(),
+    requestHeaders: request.headers(),
+    requestBody: request.postData(),
+    resourceType: request.resourceType()  // document, xhr, script
+  })
+})
+
+// Response capture
+page.on("response", async (response) => {
+  // Match with request and add:
+  entry.status = response.status()         // 200, 404, 500
+  entry.statusText = response.statusText() // OK, Not Found
+  entry.responseHeaders = response.headers()
+  entry.responseBody = await response.text()  // For text/json content
+  entry.duration = Date.now() - entry.timestamp
+})
+```
+
+**What's captured:**
+- Request method, URL, headers, body
+- Response status, headers, body
+- Timing information
+- Resource type (document, XHR, script, stylesheet, etc.)
+
+### 4. Console Logging
+
+JavaScript console output is captured:
+
+```typescript
+page.on("console", (msg) => {
+  consoleLogs.push({
+    timestamp: Date.now(),
+    type: msg.type(),      // log, error, warn, info
+    text: msg.text(),
+    location: msg.location()?.url
+  })
+})
+
+page.on("pageerror", (error) => {
+  consoleLogs.push({
+    timestamp: Date.now(),
+    type: "error",
+    text: error.message
+  })
+})
+```
+
+## CLI + Browser Integration
+
+### Real-Time Visibility
+
+While you chat with the agent in the CLI, you can simultaneously:
+
+1. **Watch the browser window** - See navigation, clicks, form fills
+2. **Monitor the control tab** - Verify connection status
+3. **Check traffic in real-time** - Using `browser network`
+
+{/* TODO: GIF - Split screen CLI and Browser */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: cli-browser-split.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Split screen: CLI conversation with browser visible</p>
+</div>
+
+### Example Workflow
+
+**In CLI:**
+```
+You: Test the login page for SQL injection
+
+Agent: I'll launch the browser and test the login form.
+
+[browser launch]
+Browser launched. Control panel open in first tab.
+
+[browser navigate url="https://target.com/login"]
+Navigated to login page. Page title: "Login - Target App"
+
+[browser fill selector="#username" value="admin' OR '1'='1' --"]
+Filled username field with SQL injection payload.
+
+[browser fill selector="#password" value="anything"]
+Filled password field.
+
+[browser click selector="#login-btn"]
+Clicked login button.
+
+[browser status]
+Current URL: https://target.com/dashboard
+Title: "Dashboard - Welcome Admin"
+
+FINDING: SQL Injection vulnerability confirmed!
+The login was bypassed using a basic SQL injection payload.
+```
+
+**Meanwhile in Browser Window:**
+- You see the login page load
+- Watch fields being filled with payloads
+- See the form submit
+- Observe the redirect to dashboard
+
+### Status Monitoring
+
+The agent can check browser state anytime:
+
+```
+[browser status]
+```
+
+Returns:
+```json
+{
+  "url": "https://target.com/dashboard",
+  "title": "Dashboard - Welcome Admin",
+  "recentRequests": [
+    "POST /api/login - 302",
+    "GET /dashboard - 200",
+    "GET /api/user/profile - 200"
+  ],
+  "recentConsoleLogs": [
+    "[info] User authenticated successfully",
+    "[warn] Session token expires in 30 minutes"
+  ]
+}
+```
+
+## Agent Integration
+
+### Automatic Browser Preference
+
+Security agents are configured to prefer browser over other tools:
+
+```typescript
+// In agent prompts (e.g., bug-hunter.txt)
+## CRITICAL: Browser Behavior
+
+**ALWAYS use the browser tool for ALL web operations:**
+- URLs, navigation → `browser navigate`
+- Web searching → `browser navigate url="https://google.com/search?q=..."`
+- Fetching page content → `browser navigate` + `browser content`
+
+**NEVER use these tools for web:**
+- `webfetch` tool (no traffic capture)
+- `websearch` tool (no traffic capture)
+- `open` or `xdg-open` (no control)
+```
+
+### Agent Permissions
+
+All security agents have browser access enabled:
+
+```json
+{
+  "web-application": { "browser": "allow" },
+  "cloud-security": { "browser": "allow" },
+  "internal-network": { "browser": "allow" },
+  "bug-hunter": { "browser": "allow" }
+}
+```
+
+### Permission Prompts
+
+Before browser actions, you're prompted:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ Browser: Navigate to https://target.com/admin               │
+├─────────────────────────────────────────────────────────────┤
+│ Allow browser automation?                                   │
+│                                                             │
+│ [y] Yes, once                                               │
+│ [a] Yes, always for this domain                             │
+│ [n] No                                                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Available Actions
+
+### Navigation & State
+
+| Action | Parameters | Description |
+|--------|------------|-------------|
+| `launch` | - | Start browser with traffic capture |
+| `navigate` | `url` | Go to URL, wait for network idle |
+| `status` | - | Get current URL, title, recent activity |
+| `content` | - | Extract page text, links, forms |
+| `close` | - | Close browser, save HAR file |
+
+### Interaction
+
+| Action | Parameters | Description |
+|--------|------------|-------------|
+| `click` | `selector` | Click element |
+| `fill` | `selector`, `value` | Fill input field |
+| `execute` | `script` | Run JavaScript |
+| `wait` | `selector?` | Wait for element or network |
+
+### Evidence Collection
+
+| Action | Parameters | Description |
+|--------|------------|-------------|
+| `screenshot` | `selector?`, `fullPage?` | Capture screenshot |
+| `network` | `filter?` | Get captured traffic |
+| `har` | - | Export HAR file |
+| `console` | - | Get console logs |
+
+## Traffic Analysis
+
+### Viewing Network Traffic
+
+```
+> Show me all POST requests to the API
+```
+
+Agent uses:
+```
+browser network filter={"method": "POST", "urlPattern": "/api"}
+```
+
+Returns:
+```json
+[
+  {
+    "timestamp": "2025-01-15T10:30:45.123Z",
+    "method": "POST",
+    "url": "https://target.com/api/login",
+    "status": 200,
+    "requestHeaders": {
+      "Content-Type": "application/json"
+    },
+    "requestBody": "{\"username\":\"admin\",\"password\":\"test\"}",
+    "responseHeaders": {
+      "Set-Cookie": "session=abc123..."
+    },
+    "responseBody": "{\"success\":true,\"token\":\"eyJ...\"}",
+    "duration": 245
+  }
+]
+```
+
+### Exporting HAR Files
+
+```
+> Export the traffic for Burp Suite analysis
+```
+
+Agent uses:
+```
+browser har
+```
+
+Creates: `traffic-1705312245123.har`
+
+**HAR format (HTTP Archive 1.2):**
+```json
+{
+  "log": {
+    "version": "1.2",
+    "creator": { "name": "Cyberstrike", "version": "1.0.0" },
+    "entries": [
+      {
+        "startedDateTime": "2025-01-15T10:30:45.123Z",
+        "time": 245,
+        "request": {
+          "method": "POST",
+          "url": "https://target.com/api/login",
+          "headers": [...],
+          "postData": {...}
+        },
+        "response": {
+          "status": 200,
+          "headers": [...],
+          "content": {...}
+        }
+      }
+    ]
+  }
+}
+```
+
+**Use with:**
+- Burp Suite - Import for replay and analysis
+- OWASP ZAP - Import for scanning
+- Charles Proxy - Traffic review
+- Browser DevTools - Network analysis
+
+## Content Extraction
+
+### Getting Page Content
+
+```
+browser content
+```
+
+Returns structured data:
+```json
+{
+  "url": "https://target.com/login",
+  "title": "Login - Target App",
+  "textContent": "Login to your account...",
+  "links": [
+    { "text": "Forgot Password", "href": "/forgot" },
+    { "text": "Register", "href": "/register" }
+  ],
+  "forms": [
+    {
+      "action": "/api/login",
+      "method": "POST",
+      "inputs": [
+        { "type": "text", "name": "username", "id": "username" },
+        { "type": "password", "name": "password", "id": "password" },
+        { "type": "hidden", "name": "csrf", "id": "csrf-token" }
+      ]
+    }
+  ]
+}
+```
+
+This helps agents understand page structure without parsing HTML.
+
+## JavaScript Execution
+
+### Running Custom Scripts
+
+```
+> Extract all API endpoints from the JavaScript
+```
+
+Agent uses:
+```
+browser execute script="
+  const scripts = document.querySelectorAll('script');
+  const endpoints = [];
+  scripts.forEach(s => {
+    const matches = s.textContent.match(/['\"]\/api\/[^'\"]+['\"]/g);
+    if (matches) endpoints.push(...matches);
+  });
+  return [...new Set(endpoints)];
+"
+```
+
+### Common Scripts
+
+**Get all cookies:**
+```javascript
+document.cookie
+```
+
+**Extract local storage:**
+```javascript
+JSON.stringify(localStorage)
+```
+
+**Find hidden inputs:**
+```javascript
+Array.from(document.querySelectorAll('input[type=hidden]'))
+  .map(i => ({name: i.name, value: i.value}))
+```
+
+**Trigger events:**
+```javascript
+document.querySelector('#target').dispatchEvent(new Event('click'))
+```
+
+## Security Testing Examples
+
+### SQL Injection Testing
+
+```
+> Test the search form for SQL injection
+
+[browser navigate url="https://target.com/search"]
+[browser fill selector="#search" value="' OR '1'='1"]
+[browser click selector="#search-btn"]
+[browser content]
+// Check if unexpected results appear
+
+[browser fill selector="#search" value="'; DROP TABLE users; --"]
+[browser click selector="#search-btn"]
+[browser network filter={"urlPattern": "/search"}]
+// Analyze server response for errors
+```
+
+### XSS Testing
+
+```
+> Test for reflected XSS in the name parameter
+
+[browser navigate url="https://target.com/profile?name=<script>alert(1)</script>"]
+[browser execute script="
+  return document.body.innerHTML.includes('<script>alert(1)</script>')
+"]
+// If true, XSS vulnerability exists
+
+[browser screenshot]
+// Capture evidence
+```
+
+### Authentication Testing
+
+```
+> Test session management after logout
+
+[browser navigate url="https://target.com/login"]
+[browser fill selector="#user" value="testuser"]
+[browser fill selector="#pass" value="testpass123"]
+[browser click selector="#login"]
+
+// Capture session token
+[browser execute script="document.cookie"]
+
+// Logout
+[browser navigate url="https://target.com/logout"]
+
+// Try to access protected page with old session
+[browser navigate url="https://target.com/dashboard"]
+[browser status]
+// Check if redirected to login or still accessible
+```
+
+## Browser Extension
+
+Cyberstrike includes an optional browser extension for additional integration:
+
+### Extension Structure
+
+```
+browser-extension/
+├── manifest.json    # Manifest V3 configuration
+├── content.js       # Banner injection script
+├── styles.css       # Visual styling
+├── icon16.png
+├── icon48.png
+└── icon128.png
+```
+
+### Alternative Theming
+
+The extension provides an orange-themed banner (vs the default navy):
+
+```css
+.cyberstrike-banner {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+}
+```
+
+### When to Use Extension
+
+- **Playwright injection** (default): Works automatically, no installation
+- **Browser extension**: For manual browsing with Cyberstrike awareness
+
+## Best Practices
+
+### 1. Always Launch First
+
+```
+browser launch
+browser navigate url="..."
+```
+
+Don't assume browser is running.
+
+### 2. Use Status to Monitor
+
+```
+browser status
+```
+
+Check page state before interactions.
+
+### 3. Export Evidence
+
+```
+browser screenshot
+browser har
+```
+
+Document findings before closing.
+
+### 4. Clean Close
+
+```
+browser close
+```
+
+Ensures HAR file is saved properly.
+
+### 5. Timeout Handling
+
+Operations have 30-second default timeout. For slow pages:
+
+```
+browser navigate url="https://slow-target.com" timeout=60000
+```
+
+## Troubleshooting
+
+### Browser Won't Launch
+
+```
+Error: Playwright not installed
+```
+
+Solution:
+```bash
+npx playwright install chromium
+```
+
+### Page Not Loading
+
+Check:
+- URL is correct and accessible
+- Network connectivity
+- Target isn't blocking automation
+
+### Traffic Not Captured
+
+Ensure:
+- Browser was launched with `browser launch`
+- Not using external browser
+- HAR recording is active (check control panel)
+
+### Injection Not Working
+
+Some pages may block injections:
+- Content Security Policy restrictions
+- Frame sandboxing
+- JavaScript disabled
+
+<Aside variant="tip">
+  Use `browser status` frequently to understand current page state and debug issues.
+</Aside>
+
+## Related Documentation
+
+- [Browser Tool](/docs/tools/browser) - Basic browser documentation
+- [Web Application Agent](/docs/agents/web-application) - Web testing agent
+- [Permissions](/docs/permissions) - Browser permissions
