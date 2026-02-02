@@ -8,10 +8,8 @@ sidebar:
 
 Cyberstrike can be installed through multiple package managers. Choose the method that best fits your development environment.
 
-{/* TODO: Screenshot - Terminal installation */}
-<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
-  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: installation-terminal.png</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Terminal installation output</p>
+<div className="rounded-lg overflow-hidden my-6 border border-gray-200 dark:border-gray-700">
+  <img src="/docs/images/screenshots/s01-installation.png" alt="Cyberstrike TUI after installation" className="w-full" />
 </div>
 
 ## npm (Recommended)
@@ -19,7 +17,7 @@ Cyberstrike can be installed through multiple package managers. Choose the metho
 The recommended installation method for most users.
 
 ```bash
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 ```
 
 Verify the installation:
@@ -36,19 +34,12 @@ For users preferring the Bun runtime:
 # Install Bun if not already installed
 curl -fsSL https://bun.sh/install | bash
 
-# Install Cyberstrike
-bun install -g cyberstrike
+# Install Cyberstrike with --trust flag
+bun install -g @cyberstrike-io/cli --trust
 ```
 
-<Aside variant="caution">
-  Bun blocks postinstall scripts by default for security. If you see "Run: npm run postinstall to download binary", run:
-
-  ```bash
-  bun pm trust cyberstrike -g
-  bun pm trust @anthropic-ai/claude-code -g
-  ```
-
-  Then reinstall: `bun install -g cyberstrike`
+<Aside variant="tip">
+  The `--trust` flag is required because Bun blocks postinstall scripts by default. This allows the binary download to complete during installation.
 </Aside>
 
 ## Homebrew (macOS)
@@ -80,26 +71,10 @@ curl -fsSL https://cyberstrike.io/install.sh | bash
 
 ## Docker
 
-Run Cyberstrike in a containerized environment:
+<Aside variant="caution">
+  Docker image is coming soon. For now, use npm, Bun, or Homebrew installation methods above.
+</Aside>
 
-```bash
-# Pull the image
-docker pull cyberstrike/cyberstrike:latest
-
-# Run interactively
-docker run -it cyberstrike/cyberstrike
-
-# Mount local directory
-docker run -it -v $(pwd):/workspace cyberstrike/cyberstrike
-```
-
-## Cargo (Rust)
-
-For Rust developers:
-
-```bash
-cargo install cyberstrike
-```
 
 ## Verifying Installation
 
@@ -109,19 +84,11 @@ After installation, verify Cyberstrike is working:
 # Check version
 cyberstrike --version
 
-# Run doctor to check system
-cyberstrike doctor
+# List available commands
+cyberstrike --help
 ```
 
-Expected output:
-
-```
-cyberstrike 1.0.0
-✓ Node.js 20.0.0
-✓ Bun 1.1.0
-✓ Git 2.40.0
-✓ Configuration valid
-```
+You should see the Cyberstrike banner and version number, followed by a list of available commands.
 
 ## Updating Cyberstrike
 
@@ -129,16 +96,16 @@ Update to the latest version:
 
 ```bash
 # npm
-npm update -g cyberstrike
+npm update -g @cyberstrike-io/cli
 
 # Bun
-bun update -g cyberstrike
+bun update -g @cyberstrike-io/cli
 
 # Homebrew
 brew upgrade cyberstrike
 
-# Self-update
-cyberstrike update
+# Self-update (recommended)
+cyberstrike upgrade
 ```
 
 ## Uninstalling
@@ -147,10 +114,10 @@ Remove Cyberstrike from your system:
 
 ```bash
 # npm
-npm uninstall -g cyberstrike
+npm uninstall -g @cyberstrike-io/cli
 
 # Bun
-bun remove -g cyberstrike
+bun remove -g @cyberstrike-io/cli
 
 # Homebrew
 brew uninstall cyberstrike
@@ -187,18 +154,13 @@ If you have multiple Node versions:
 ```bash
 # Use nvm to manage versions
 nvm use 20
-npm install -g cyberstrike
+npm install -g @cyberstrike-io/cli
 ```
 
 ### Bun Postinstall Blocked
 
-If Bun shows "Blocked 1 postinstall" and Cyberstrike says "Run: npm run postinstall to download binary":
+If Bun shows "Blocked 1 postinstall" and Cyberstrike says the binary is not found, reinstall with the `--trust` flag:
 
 ```bash
-# Trust the packages
-bun pm trust cyberstrike -g
-bun pm trust @anthropic-ai/claude-code -g
-
-# Reinstall
-bun install -g cyberstrike
+bun install -g @cyberstrike-io/cli --trust
 ```

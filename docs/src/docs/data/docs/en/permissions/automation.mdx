@@ -81,7 +81,7 @@ jobs:
           node-version: '20'
 
       - name: Install Cyberstrike
-        run: npm install -g cyberstrike
+        run: npm install -g @cyberstrike-io/cli
 
       - name: Run Security Scan
         env:
@@ -107,7 +107,7 @@ security-scan:
   variables:
     CYBERSTRIKE_PERMISSION_MODE: auto
   script:
-    - npm install -g cyberstrike
+    - npm install -g @cyberstrike-io/cli
     - cyberstrike run "analyze code for vulnerabilities" --output json > report.json
   artifacts:
     paths:
@@ -130,7 +130,7 @@ pipeline {
     stages {
         stage('Install') {
             steps {
-                sh 'npm install -g cyberstrike'
+                sh 'npm install -g @cyberstrike-io/cli'
             }
         }
 
@@ -166,7 +166,7 @@ jobs:
       - checkout
       - run:
           name: Install Cyberstrike
-          command: npm install -g cyberstrike
+          command: npm install -g @cyberstrike-io/cli
       - run:
           name: Run Security Scan
           command: |
@@ -190,7 +190,7 @@ workflows:
 FROM node:20-slim
 
 # Install Cyberstrike
-RUN npm install -g cyberstrike
+RUN npm install -g @cyberstrike-io/cli
 
 # Install security tools
 RUN apt-get update && apt-get install -y \
