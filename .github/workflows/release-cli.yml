@@ -1,11 +1,12 @@
-name: publish
-run-name: "${{ format('release {0}', inputs.bump) }}"
+name: Release CLI & Desktop
+run-name: "${{ github.event_name == 'push' && format('Release {0}', github.ref_name) || format('Release {0}', inputs.bump || inputs.version) }}"
 
+# Industry best practice: Tag-based releases
+# To release: git tag v1.0.7 && git push origin v1.0.7
 on:
   push:
-    branches:
-      - dev
-      - snapshot-*
+    tags:
+      - 'v*'  # Triggers on v1.0.0, v1.0.1-beta, etc.
   workflow_dispatch:
     inputs:
       bump:
@@ -17,11 +18,13 @@ on:
           - minor
           - patch
       version:
-        description: "Override version (optional)"
+        description: "Override version (optional, e.g., 1.0.7)"
         required: false
         type: string
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}-${{ inputs.version || inputs.bump }}
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false  # Never cancel in-progress releases
 
 permissions:
   id-token: write
@@ -31,7 +34,7 @@ permissions:
 jobs:
   publish:
     runs-on: blacksmith-4vcpu-ubuntu-2404
-    if: github.repository == 'cyberstrike/cyberstrike'
+    if: github.repository == 'CyberStrikeus/cyberstrike.io'
     steps:
       - uses: actions/checkout@v3
         with:
