@@ -113,12 +113,15 @@ await $`rm -rf dist`
 
 const binaries: Record<string, string> = {}
 if (!skipInstall) {
-  await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${pkg.dependencies["@cyberstrike-io/tui-core"]}`
-  await $`bun install --os="*" --cpu="*" @parcel/watcher@${pkg.dependencies["@parcel/watcher"]}`
+  // Version references moved here since cli package.json no longer has dependencies
+  const TUI_CORE_VERSION = "0.1.75"
+  const PARCEL_WATCHER_VERSION = "2.5.1"
+  await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
+  await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
 }
 for (const item of targets) {
   const name = [
-    pkg.name,
+    "cyberstrike",
     // changing to win32 flags npm for some reason
     item.os === "win32" ? "windows" : item.os,
     item.arch,
@@ -149,7 +152,7 @@ for (const item of targets) {
       //@ts-ignore (bun types aren't up to date)
       autoloadTsconfig: true,
       autoloadPackageJson: true,
-      target: name.replace(pkg.name, "bun") as any,
+      target: name.replace("cyberstrike", "bun") as any,
       outfile: `dist/${name}/bin/cyberstrike`,
       execArgv: [`--user-agent=cyberstrike/${Script.version}`, "--use-system-ca", "--"],
       windows: {},
