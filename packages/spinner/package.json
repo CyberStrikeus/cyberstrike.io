@@ -49,9 +49,9 @@
     "lint:fix": "biome check . --write"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.3.4",
+    "@biomejs/biome": "2.3.13",
     "@types/bun": "latest",
-    "tsdown": "^0.16.0"
+    "tsdown": "^0.20.1"
   },
   "peerDependencies": {
     "@cyberstrike-io/tui-core": "^0.1.49",
