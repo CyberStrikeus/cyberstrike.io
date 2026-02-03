@@ -1,0 +1,266 @@
+---
+title: Google (Gemini)
+description: Configure Google Gemini models for Cyberstrike
+sidebar:
+  order: 4
+  label: Google
+---
+
+Google's Gemini models offer large context windows and multimodal capabilities for security analysis.
+
+{/* TODO: Screenshot - Gemini model selection */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: gemini-model-select.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Gemini model selection dialog</p>
+</div>
+
+## Available Models
+
+| Model | Context | Best For |
+|-------|---------|----------|
+| gemini-2.0-flash | 1M | Fast analysis, large codebases |
+| gemini-2.0-flash-thinking | 1M | Complex reasoning |
+| gemini-1.5-pro | 2M | Maximum context |
+| gemini-1.5-flash | 1M | Quick tasks |
+
+## Authentication
+
+### API Key Setup
+
+1. Get your API key from [ai.google.dev](https://ai.google.dev)
+2. Run authentication:
+
+```bash
+cyberstrike auth login
+# Select: Google
+# Enter your API key
+```
+
+### Environment Variable
+
+```bash
+export GOOGLE_API_KEY="AI..."
+```
+
+### Configuration File
+
+```json title="~/.cyberstrike/config.json"
+{
+  "provider": {
+    "google": {
+      "options": {
+        "apiKey": "{env:GOOGLE_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+## Model Configuration
+
+### Set Default Model
+
+```json title="~/.cyberstrike/config.json"
+{
+  "model": "google/gemini-2.0-flash"
+}
+```
+
+### Command Line Override
+
+```bash
+cyberstrike --model google/gemini-1.5-pro
+```
+
+## Large Context Advantage
+
+Gemini's 1M-2M context window enables:
+
+- Analyzing entire codebases at once
+- Processing multiple files simultaneously
+- Long security assessment sessions
+- Comprehensive log analysis
+
+### Example: Full Codebase Review
+
+```
+> Analyze the entire src/ directory for security vulnerabilities
+```
+
+The model can process hundreds of files in a single request.
+
+## Multimodal Capabilities
+
+Gemini supports image analysis:
+
+```
+> Analyze this screenshot for security issues
+```
+
+Useful for:
+- Analyzing security tool output images
+- Processing network diagrams
+- Reviewing UI for security flaws
+
+## Thinking Mode
+
+Enable thinking mode for complex analysis:
+
+```bash
+cyberstrike --model google/gemini-2.0-flash-thinking
+```
+
+Best for:
+- Complex vulnerability chains
+- Multi-step attack planning
+- Deep code analysis
+
+## Google Vertex AI
+
+For enterprise deployments:
+
+### Setup
+
+```bash
+# Authenticate with Google Cloud
+gcloud auth application-default login
+
+# Set project
+gcloud config set project your-project-id
+```
+
+### Configuration
+
+```json title="~/.cyberstrike/config.json"
+{
+  "provider": {
+    "google-vertex": {
+      "options": {
+        "project": "your-project-id",
+        "location": "us-central1"
+      }
+    }
+  }
+}
+```
+
+### Available Regions
+
+| Region | Location |
+|--------|----------|
+| us-central1 | Iowa |
+| us-east4 | Virginia |
+| europe-west4 | Netherlands |
+| asia-northeast1 | Tokyo |
+
+## Rate Limits
+
+Google AI Studio limits:
+
+| Tier | RPM | TPM |
+|------|-----|-----|
+| Free | 15 | 1,000,000 |
+| Pay-as-you-go | 360 | 4,000,000 |
+
+### Handling Limits
+
+```json
+{
+  "provider": {
+    "google": {
+      "options": {
+        "maxRetries": 3,
+        "retryDelay": 1000
+      }
+    }
+  }
+}
+```
+
+## Safety Settings
+
+Configure content filtering:
+
+```json
+{
+  "provider": {
+    "google": {
+      "options": {
+        "safetySettings": [
+          {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE"
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+<Aside variant="caution">
+  Adjust safety settings carefully. Some security testing content may trigger filters.
+</Aside>
+
+## Best Practices
+
+### Model Selection
+
+| Task | Recommended Model |
+|------|-------------------|
+| Quick scans | gemini-2.0-flash |
+| Large codebase | gemini-1.5-pro |
+| Complex analysis | gemini-2.0-flash-thinking |
+| High volume | gemini-1.5-flash |
+
+### Leveraging Large Context
+
+1. Include full files instead of snippets
+2. Provide complete configuration files
+3. Include related test files
+4. Add documentation for context
+
+### Cost Optimization
+
+1. Use Flash models for most tasks
+2. Leverage the free tier
+3. Use context efficiently
+4. Monitor usage in Google Cloud Console
+
+## Troubleshooting
+
+### Invalid API Key
+
+```
+Error: API key not valid
+```
+
+Verify:
+- Key is from ai.google.dev
+- API is enabled
+- No extra whitespace
+
+### Quota Exceeded
+
+```
+Error: Quota exceeded
+```
+
+Solutions:
+- Wait for quota reset
+- Enable billing
+- Request quota increase
+
+### Region Not Available
+
+```
+Error: Model not available in region
+```
+
+Try different regions or use Google AI Studio instead of Vertex.
+
+## Related Documentation
+
+- [Providers Overview](/docs/providers) - All providers
+- [AWS Bedrock](/docs/providers/aws-bedrock) - Alternative enterprise option
+- [Configuration](/docs/configuration) - Full options

@@ -1,0 +1,132 @@
+---
+title: Web
+description: Using Cyberstrike in your browser.
+---
+
+Cyberstrike can run as a web application in your browser, providing the same powerful AI coding experience without needing a terminal.
+
+![Cyberstrike Web - New Session](../../assets/web/web-homepage-new-session.png)
+
+## Getting Started
+
+Start the web interface by running:
+
+```bash
+cyberstrike web
+```
+
+This starts a local server on `127.0.0.1` with a random available port and automatically opens Cyberstrike in your default browser.
+
+:::caution
+If `CYBERSTRIKE_SERVER_PASSWORD` is not set, the server will be unsecured. This is fine for local use but should be set for network access.
+:::
+
+---
+
+## Configuration
+
+You can configure the web server using command line flags or in your [config file](/docs/config).
+
+### Port
+
+By default, Cyberstrike picks an available port. You can specify a port:
+
+```bash
+cyberstrike web --port 4096
+```
+
+### Hostname
+
+By default, the server binds to `127.0.0.1` (localhost only). To make Cyberstrike accessible on your network:
+
+```bash
+cyberstrike web --hostname 0.0.0.0
+```
+
+When using `0.0.0.0`, Cyberstrike will display both local and network addresses:
+
+```
+  Local access:       http://localhost:4096
+  Network access:     http://192.168.1.100:4096
+```
+
+### mDNS Discovery
+
+Enable mDNS to make your server discoverable on the local network:
+
+```bash
+cyberstrike web --mdns
+```
+
+This automatically sets the hostname to `0.0.0.0` and advertises the server as `cyberstrike.local`.
+
+### CORS
+
+To allow additional domains for CORS (useful for custom frontends):
+
+```bash
+cyberstrike web --cors https://example.com
+```
+
+### Authentication
+
+To protect access, set a password using the `CYBERSTRIKE_SERVER_PASSWORD` environment variable:
+
+```bash
+CYBERSTRIKE_SERVER_PASSWORD=secret cyberstrike web
+```
+
+The username defaults to `cyberstrike` but can be changed with `CYBERSTRIKE_SERVER_USERNAME`.
+
+---
+
+## Using the Web Interface
+
+Once started, the web interface provides access to your Cyberstrike sessions.
+
+### Sessions
+
+View and manage your sessions from the homepage. You can see active sessions and start new ones.
+
+![Cyberstrike Web - Active Session](../../assets/web/web-homepage-active-session.png)
+
+### Server Status
+
+Click "See Servers" to view connected servers and their status.
+
+![Cyberstrike Web - See Servers](../../assets/web/web-homepage-see-servers.png)
+
+---
+
+## Attaching a Terminal
+
+You can attach a terminal TUI to a running web server:
+
+```bash
+# Start the web server
+cyberstrike web --port 4096
+
+# In another terminal, attach the TUI
+cyberstrike attach http://localhost:4096
+```
+
+This allows you to use both the web interface and terminal simultaneously, sharing the same sessions and state.
+
+---
+
+## Config File
+
+You can also configure server settings in your `cyberstrike.json` config file:
+
+```json
+{
+  "server": {
+    "port": 4096,
+    "hostname": "0.0.0.0",
+    "mdns": true,
+    "cors": ["https://example.com"]
+  }
+}
+```
+
+Command line flags take precedence over config file settings.

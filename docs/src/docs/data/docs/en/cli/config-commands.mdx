@@ -1,0 +1,422 @@
+---
+title: Config Commands
+description: Manage Cyberstrike configuration from the command line
+sidebar:
+  order: 5
+  label: Config Commands
+---
+
+The `cyberstrike config` commands manage configuration settings at global and project levels.
+
+{/* TODO: Screenshot - Config command interface */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: config-commands.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Config command interface</p>
+</div>
+
+## Get Configuration
+
+### Get Single Value
+
+```bash
+cyberstrike config get model
+```
+
+Output:
+
+```
+anthropic/claude-sonnet-4-20250514
+```
+
+### Get Nested Value
+
+```bash
+cyberstrike config get provider.anthropic.options.apiKey
+```
+
+### Get All Settings
+
+```bash
+cyberstrike config get
+```
+
+### JSON Output
+
+```bash
+cyberstrike config get --json
+```
+
+## Set Configuration
+
+### Set Single Value
+
+```bash
+cyberstrike config set model anthropic/claude-opus-4-5-20251101
+```
+
+### Set Nested Value
+
+```bash
+cyberstrike config set provider.anthropic.options.thinking.enabled true
+```
+
+### Set Array Value
+
+```bash
+cyberstrike config set permissions.allow '["Bash(nmap *)", "Bash(nuclei *)"]'
+```
+
+### Global vs Project
+
+```bash
+# Global (default)
+cyberstrike config set model anthropic/claude-sonnet-4-20250514 --global
+
+# Project only
+cyberstrike config set model anthropic/claude-opus-4-5-20251101 --project
+```
+
+## Unset Configuration
+
+### Remove Value
+
+```bash
+cyberstrike config unset model
+```
+
+### Remove Nested Value
+
+```bash
+cyberstrike config unset provider.openai
+```
+
+## List Configuration
+
+### Show All
+
+```bash
+cyberstrike config list
+```
+
+Output:
+
+```
+Configuration
+━━━━━━━━━━━━━
+
+Global (~/.cyberstrike/config.json):
+  model: anthropic/claude-sonnet-4-20250514
+  theme: cyberpunk
+
+Project (./cyberstrike.json):
+  model: anthropic/claude-opus-4-5-20251101
+  agent: web-application
+
+Effective:
+  model: anthropic/claude-opus-4-5-20251101 (project)
+  theme: cyberpunk (global)
+  agent: web-application (project)
+```
+
+### Show Source
+
+```bash
+cyberstrike config list --show-source
+```
+
+Shows where each value comes from.
+
+## Edit Configuration
+
+### Open in Editor
+
+```bash
+cyberstrike config edit
+```
+
+Opens global config in default editor.
+
+### Edit Project Config
+
+```bash
+cyberstrike config edit --project
+```
+
+### Specify Editor
+
+```bash
+EDITOR=vim cyberstrike config edit
+```
+
+## Initialize Configuration
+
+### Create Global Config
+
+```bash
+cyberstrike config init --global
+```
+
+### Create Project Config
+
+```bash
+cyberstrike config init
+```
+
+Creates `cyberstrike.json` in current directory.
+
+### With Template
+
+```bash
+cyberstrike config init --template security
+```
+
+Available templates:
+- `default` - Basic configuration
+- `security` - Security testing focused
+- `minimal` - Minimal configuration
+
+## Validate Configuration
+
+### Validate Current Config
+
+```bash
+cyberstrike config validate
+```
+
+Output:
+
+```
+Configuration Validation
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+Global config: ✓ Valid
+Project config: ✓ Valid
+
+Warnings:
+  - API key should use environment variable reference
+```
+
+### Validate Specific File
+
+```bash
+cyberstrike config validate path/to/config.json
+```
+
+## Reset Configuration
+
+### Reset to Defaults
+
+```bash
+cyberstrike config reset
+```
+
+### Reset Specific Setting
+
+```bash
+cyberstrike config reset model
+```
+
+### Force Reset
+
+```bash
+cyberstrike config reset --force
+```
+
+## Import/Export
+
+### Export Configuration
+
+```bash
+cyberstrike config export > my-config.json
+```
+
+### Export Without Secrets
+
+```bash
+cyberstrike config export --no-secrets > shareable-config.json
+```
+
+### Import Configuration
+
+```bash
+cyberstrike config import my-config.json
+```
+
+### Merge Import
+
+```bash
+cyberstrike config import my-config.json --merge
+```
+
+## Environment Variables
+
+### List Environment Variables
+
+```bash
+cyberstrike config env
+```
+
+Output:
+
+```
+Environment Variables
+━━━━━━━━━━━━━━━━━━━━━
+
+Variable              Status    Used By
+──────────────────────────────────────────
+ANTHROPIC_API_KEY     ✓ Set     provider.anthropic
+OPENAI_API_KEY        ✗ Not set provider.openai
+GOOGLE_API_KEY        ✗ Not set provider.google
+CYBERSTRIKE_MODEL     ✗ Not set model
+```
+
+### Show Env Overrides
+
+```bash
+cyberstrike config env --overrides
+```
+
+## Path Information
+
+### Show Config Paths
+
+```bash
+cyberstrike config paths
+```
+
+Output:
+
+```
+Configuration Paths
+━━━━━━━━━━━━━━━━━━━
+
+Global Config:  ~/.cyberstrike/config.json
+Project Config: ./cyberstrike.json (not found)
+Auth File:      ~/.cyberstrike/auth.json
+Data Directory: ~/.cyberstrike/
+Cache:          ~/.cyberstrike/cache/
+Logs:           ~/.cyberstrike/logs/
+```
+
+## Common Settings
+
+### Model
+
+```bash
+cyberstrike config set model anthropic/claude-sonnet-4-20250514
+```
+
+### Theme
+
+```bash
+cyberstrike config set theme cyberpunk
+```
+
+### Permission Mode
+
+```bash
+cyberstrike config set permissions.mode default
+```
+
+### Auto-compact
+
+```bash
+cyberstrike config set autoCompact true
+```
+
+### Keybindings
+
+```bash
+cyberstrike config set keybinds.leader "ctrl+a"
+```
+
+## Examples
+
+### Set Up for Security Testing
+
+```bash
+# Set model
+cyberstrike config set model anthropic/claude-opus-4-5-20251101
+
+# Set default agent
+cyberstrike config set agent web-application
+
+# Allow common security tools
+cyberstrike config set permissions.allow '["Bash(nmap *)", "Bash(nuclei *)", "Bash(ffuf *)"]'
+
+# Set output directory
+cyberstrike config set outputDir "./security-reports"
+```
+
+### Team Configuration
+
+```bash
+# Export team config
+cyberstrike config export --no-secrets > team-config.json
+
+# Team member imports
+cyberstrike config import team-config.json --merge
+```
+
+### Debug Configuration Issues
+
+```bash
+# Validate
+cyberstrike config validate
+
+# Show effective config
+cyberstrike config list --show-source
+
+# Check env vars
+cyberstrike config env
+```
+
+## Troubleshooting
+
+### Invalid JSON
+
+```
+Error: Invalid JSON in config file
+```
+
+Solution:
+
+```bash
+cyberstrike config validate
+# Shows specific error location
+```
+
+### Permission Denied
+
+```
+Error: Cannot write to config file
+```
+
+Check permissions:
+
+```bash
+ls -la ~/.cyberstrike/config.json
+chmod 644 ~/.cyberstrike/config.json
+```
+
+### Config Not Loading
+
+```
+Warning: Project config not found
+```
+
+Initialize:
+
+```bash
+cyberstrike config init
+```
+
+<Aside variant="tip">
+  Use `cyberstrike config list` to see which values come from global vs project configuration.
+</Aside>
+
+## Related Documentation
+
+- [Configuration Guide](/docs/configuration) - Full configuration options
+- [Project Config](/docs/configuration/project-config) - Project-level settings
+- [Global Config](/docs/configuration/global-config) - Global settings

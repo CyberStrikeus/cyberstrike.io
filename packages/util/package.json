@@ -1,0 +1,30 @@
+{
+  "name": "@cyberstrike-io/util",
+  "description": "Shared utility functions and helpers for Cyberstrike",
+  "version": "1.1.36",
+  "private": true,
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/util"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "typescript": "catalog:",
+    "@types/bun": "catalog:"
+  }
+}

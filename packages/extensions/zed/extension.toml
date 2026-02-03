@@ -1,0 +1,36 @@
+id = "cyberstrike"
+name = "Cyberstrike"
+description = "AI-powered penetration testing and security assessment agent."
+version = "1.0.1"
+schema_version = 1
+authors = ["CyberStrikeus"]
+repository = "https://github.com/CyberStrikeus/cyberstrike.io"
+
+[agent_servers.cyberstrike]
+name = "Cyberstrike"
+icon = "./icons/cyberstrike.svg"
+
+[agent_servers.cyberstrike.targets.darwin-aarch64]
+archive = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download/v1.0.1/cyberstrike-darwin-arm64.tar.gz"
+cmd = "./cyberstrike"
+args = ["acp"]
+
+[agent_servers.cyberstrike.targets.darwin-x86_64]
+archive = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download/v1.0.1/cyberstrike-darwin-x64.tar.gz"
+cmd = "./cyberstrike"
+args = ["acp"]
+
+[agent_servers.cyberstrike.targets.linux-aarch64]
+archive = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download/v1.0.1/cyberstrike-linux-arm64.tar.gz"
+cmd = "./cyberstrike"
+args = ["acp"]
+
+[agent_servers.cyberstrike.targets.linux-x86_64]
+archive = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download/v1.0.1/cyberstrike-linux-x64.tar.gz"
+cmd = "./cyberstrike"
+args = ["acp"]
+
+[agent_servers.cyberstrike.targets.windows-x86_64]
+archive = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download/v1.0.1/cyberstrike-windows-x64.zip"
+cmd = "./cyberstrike.exe"
+args = ["acp"]

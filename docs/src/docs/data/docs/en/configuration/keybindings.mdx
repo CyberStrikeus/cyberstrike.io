@@ -1,0 +1,416 @@
+---
+title: Keybindings Configuration
+description: Customize keyboard shortcuts for Cyberstrike
+sidebar:
+  order: 5
+  label: Keybindings
+---
+
+Customize keyboard shortcuts to match your workflow and preferences.
+
+{/* TODO: Screenshot - Keybindings configuration */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: keybindings-config.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Keybindings configuration options</p>
+</div>
+
+## Configuration Location
+
+Keybindings are configured in:
+
+```json title="~/.cyberstrike/config.json"
+{
+  "keybinds": {
+    "leader": "ctrl+x",
+    "session_new": "<leader>n"
+  }
+}
+```
+
+## Leader Key
+
+The leader key is a prefix for many shortcuts:
+
+### Default Leader
+
+```json
+{
+  "keybinds": {
+    "leader": "ctrl+x"
+  }
+}
+```
+
+### Alternative Leaders
+
+```json
+{
+  "keybinds": {
+    "leader": "ctrl+a"
+  }
+}
+```
+
+```json
+{
+  "keybinds": {
+    "leader": "space"
+  }
+}
+```
+
+## Key Syntax
+
+### Modifiers
+
+| Modifier | Syntax |
+|----------|--------|
+| Control | `ctrl` |
+| Alt/Option | `alt` |
+| Shift | `shift` |
+| Meta/Command | `meta` |
+
+### Combinations
+
+```
+ctrl+s          # Ctrl + S
+alt+shift+p     # Alt + Shift + P
+ctrl+shift+k    # Ctrl + Shift + K
+meta+enter      # Cmd/Win + Enter
+```
+
+### Special Keys
+
+| Key | Syntax |
+|-----|--------|
+| Enter | `enter` |
+| Escape | `escape` |
+| Tab | `tab` |
+| Space | `space` |
+| Backspace | `backspace` |
+| Delete | `delete` |
+| Arrow Up | `up` |
+| Arrow Down | `down` |
+| Arrow Left | `left` |
+| Arrow Right | `right` |
+| Page Up | `pageup` |
+| Page Down | `pagedown` |
+| Home | `home` |
+| End | `end` |
+
+### Leader Reference
+
+```
+<leader>n       # Leader + N
+<leader>m       # Leader + M
+```
+
+### Chord Sequences
+
+```
+ctrl+x,ctrl+c   # Ctrl+X then Ctrl+C
+<leader>g,s     # Leader+G then S
+```
+
+## Available Actions
+
+### Session Actions
+
+```json
+{
+  "keybinds": {
+    "session_new": "<leader>n",
+    "session_list": "<leader>l",
+    "session_compact": "<leader>c",
+    "session_timeline": "<leader>g",
+    "session_rename": "ctrl+r",
+    "session_export": "<leader>x"
+  }
+}
+```
+
+### Navigation Actions
+
+```json
+{
+  "keybinds": {
+    "scroll_up": "ctrl+u",
+    "scroll_down": "ctrl+d",
+    "go_top": "g",
+    "go_bottom": "G",
+    "undo": "u",
+    "redo": "ctrl+r"
+  }
+}
+```
+
+### Dialog Actions
+
+```json
+{
+  "keybinds": {
+    "model_list": "<leader>m",
+    "agent_list": "<leader>a",
+    "theme_list": "<leader>t",
+    "command_palette": "<leader><leader>"
+  }
+}
+```
+
+### Interface Actions
+
+```json
+{
+  "keybinds": {
+    "sidebar_toggle": "<leader>b",
+    "status_view": "<leader>s",
+    "editor_open": "<leader>e"
+  }
+}
+```
+
+### Application Actions
+
+```json
+{
+  "keybinds": {
+    "app_exit": "ctrl+c,ctrl+d,<leader>q"
+  }
+}
+```
+
+### Input Actions
+
+```json
+{
+  "keybinds": {
+    "submit": "enter",
+    "newline": "shift+enter",
+    "cancel": "ctrl+c",
+    "autocomplete": "tab"
+  }
+}
+```
+
+## Full Configuration Example
+
+```json title="~/.cyberstrike/config.json"
+{
+  "keybinds": {
+    "leader": "ctrl+x",
+
+    "session_new": "<leader>n",
+    "session_list": "<leader>l",
+    "session_compact": "<leader>c",
+    "session_timeline": "<leader>g",
+    "session_rename": "ctrl+r",
+    "session_export": "<leader>x",
+
+    "model_list": "<leader>m",
+    "agent_list": "<leader>a",
+    "theme_list": "<leader>t",
+    "command_palette": "<leader><leader>",
+
+    "sidebar_toggle": "<leader>b",
+    "status_view": "<leader>s",
+    "editor_open": "<leader>e",
+
+    "scroll_up": "ctrl+u",
+    "scroll_down": "ctrl+d",
+    "go_top": "g",
+    "go_bottom": "G",
+    "undo": "u",
+
+    "app_exit": "ctrl+c,ctrl+d,<leader>q"
+  }
+}
+```
+
+## Multiple Bindings
+
+Assign multiple shortcuts to one action:
+
+```json
+{
+  "keybinds": {
+    "app_exit": "ctrl+c,ctrl+d,<leader>q",
+    "model_list": "<leader>m,ctrl+shift+m"
+  }
+}
+```
+
+Comma separates alternative bindings, not chord sequences.
+
+## Vim Mode Keybindings
+
+### Enable Vim Mode
+
+```json
+{
+  "vim": {
+    "enabled": true
+  }
+}
+```
+
+### Vim Normal Mode
+
+These work when vim mode is enabled:
+
+| Key | Action |
+|-----|--------|
+| `i` | Insert mode |
+| `a` | Append |
+| `A` | Append at end |
+| `o` | New line below |
+| `O` | New line above |
+| `dd` | Delete line |
+| `yy` | Yank line |
+| `p` | Paste |
+| `u` | Undo |
+
+### Vim Movement
+
+| Key | Action |
+|-----|--------|
+| `h` | Left |
+| `l` | Right |
+| `j` | Down |
+| `k` | Up |
+| `w` | Next word |
+| `b` | Previous word |
+| `0` | Start of line |
+| `$` | End of line |
+| `gg` | Start of input |
+| `G` | End of input |
+
+### Custom Vim Bindings
+
+```json
+{
+  "vim": {
+    "enabled": true,
+    "keybinds": {
+      "normal": {
+        "jj": "escape"
+      }
+    }
+  }
+}
+```
+
+## Dialog Keybindings
+
+When in dialogs (model selection, etc.):
+
+```json
+{
+  "keybinds": {
+    "dialog_up": "up,k,ctrl+p",
+    "dialog_down": "down,j,ctrl+n",
+    "dialog_select": "enter,tab",
+    "dialog_close": "escape,q",
+    "dialog_filter": "/",
+    "dialog_favorite": "ctrl+f",
+    "dialog_delete": "ctrl+d"
+  }
+}
+```
+
+## Permission Prompt Keybindings
+
+```json
+{
+  "keybinds": {
+    "permission_approve": "y",
+    "permission_approve_always": "a",
+    "permission_reject": "n,escape"
+  }
+}
+```
+
+## Platform-Specific Bindings
+
+### macOS
+
+```json
+{
+  "keybinds": {
+    "leader": "meta+x",
+    "app_exit": "meta+q"
+  }
+}
+```
+
+### Linux/Windows
+
+```json
+{
+  "keybinds": {
+    "leader": "ctrl+x",
+    "app_exit": "alt+f4"
+  }
+}
+```
+
+### Conditional Platform Bindings
+
+```json
+{
+  "keybinds": {
+    "leader": {
+      "darwin": "meta+x",
+      "linux": "ctrl+x",
+      "win32": "ctrl+x"
+    }
+  }
+}
+```
+
+## Resetting Keybindings
+
+### Reset Specific Binding
+
+```bash
+cyberstrike config unset keybinds.session_new
+```
+
+### Reset All Bindings
+
+```bash
+cyberstrike config unset keybinds
+```
+
+### View Defaults
+
+```bash
+cyberstrike config get keybinds --defaults
+```
+
+## Troubleshooting
+
+### Keybinding Not Working
+
+1. Check for conflicts with terminal
+2. Verify syntax is correct
+3. Ensure config is valid JSON
+
+### Check Active Bindings
+
+```bash
+cyberstrike config get keybinds
+```
+
+### Test Specific Binding
+
+In Cyberstrike, use the command palette (`<leader><leader>`) to verify bindings are registered.
+
+<Aside variant="tip">
+  Use `/help` in Cyberstrike to see a quick reference of active keybindings.
+</Aside>
+
+## Related Documentation
+
+- [Keyboard Shortcuts](/docs/getting-started/keyboard-shortcuts) - Full shortcut reference
+- [Global Config](/docs/configuration/global-config) - Configuration guide
+- [Vim Mode](/docs/getting-started/keyboard-shortcuts#vim-mode) - Vim keybindings

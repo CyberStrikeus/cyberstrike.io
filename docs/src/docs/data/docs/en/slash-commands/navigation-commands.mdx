@@ -1,0 +1,428 @@
+---
+title: Navigation Commands
+description: Slash commands for navigating the Cyberstrike interface
+sidebar:
+  order: 3
+  label: Navigation Commands
+---
+
+Navigation commands help you move through the interface, switch between modes, and access different features.
+
+{/* TODO: GIF - Navigation commands demo */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: navigation-commands.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Navigation commands demonstration</p>
+</div>
+
+## Model and Agent Selection
+
+### /model
+
+Open model selection dialog.
+
+```
+/model
+```
+
+Interactive picker for available models.
+
+**Direct selection:**
+
+```
+/model anthropic/claude-opus-4-5-20251101
+/model openai/gpt-4o
+/model ollama/llama3.3
+```
+
+**Model aliases:**
+
+```
+/model opus
+/model sonnet
+/model haiku
+```
+
+### /agents
+
+Open agent selection dialog.
+
+```
+/agents
+```
+
+Switch between security agents.
+
+**Direct selection:**
+
+```
+/agents web-application
+/agents cloud-security
+/agents internal-network
+/agents bug-hunter
+```
+
+### /provider
+
+Switch AI provider.
+
+```
+/provider
+```
+
+**Direct selection:**
+
+```
+/provider anthropic
+/provider openai
+/provider ollama
+```
+
+## Interface Navigation
+
+### /theme
+
+Open theme selection.
+
+```
+/theme
+```
+
+**Direct selection:**
+
+```
+/theme cyberpunk
+/theme dark
+/theme light
+/theme matrix
+```
+
+### /vim
+
+Toggle vim mode.
+
+```
+/vim        # Toggle
+/vim on     # Enable
+/vim off    # Disable
+```
+
+### /help
+
+Show help information.
+
+```
+/help
+```
+
+**Topic-specific help:**
+
+```
+/help commands
+/help keyboard
+/help agents
+/help permissions
+```
+
+## Configuration
+
+### /config
+
+Open configuration.
+
+```
+/config
+```
+
+Opens config file in editor.
+
+**Direct settings:**
+
+```
+/config model anthropic/claude-sonnet-4-20250514
+/config theme cyberpunk
+/config vim on
+```
+
+**View setting:**
+
+```
+/config get model
+/config get permissions
+```
+
+### /permission
+
+Change permission mode.
+
+```
+/permission
+```
+
+**Direct selection:**
+
+```
+/permission default
+/permission plan
+/permission auto
+```
+
+## File and Project
+
+### /init
+
+Initialize project configuration.
+
+```
+/init
+```
+
+Creates `cyberstrike.json` in current directory with guided setup.
+
+**Options:**
+
+```
+/init --minimal   # Minimal config
+/init --security  # Security-focused config
+```
+
+### /files
+
+List project files.
+
+```
+/files
+```
+
+Shows file tree of current directory.
+
+**Options:**
+
+```
+/files src/
+/files --pattern "*.ts"
+/files --recent
+```
+
+### /cd
+
+Change working directory.
+
+```
+/cd /path/to/project
+/cd ../other-project
+/cd ~
+```
+
+## Tools and MCP
+
+### /tools
+
+List available tools.
+
+```
+/tools
+```
+
+Shows all tools including MCP tools.
+
+**Filter:**
+
+```
+/tools --mcp       # MCP tools only
+/tools --builtin   # Built-in only
+/tools kali        # From specific server
+```
+
+### /mcp
+
+Manage MCP servers.
+
+```
+/mcp
+```
+
+**Server commands:**
+
+```
+/mcp list
+/mcp status kali
+/mcp start kali
+/mcp stop kali
+/mcp tools kali
+```
+
+## Status and Information
+
+### /status
+
+Show system status.
+
+```
+/status
+```
+
+**Output:**
+
+```
+Cyberstrike Status
+━━━━━━━━━━━━━━━━━━
+
+Version: 1.0.0
+Model: anthropic/claude-sonnet-4-20250514
+Agent: web-application
+Permission: default
+Working Dir: /home/user/project
+
+MCP Servers:
+  ✓ kali (15 tools)
+  ✓ filesystem (3 tools)
+
+Session:
+  Messages: 42
+  Duration: 1h 23m
+  Tokens: 45,230
+```
+
+### /version
+
+Show version information.
+
+```
+/version
+```
+
+**Output:**
+
+```
+cyberstrike 1.0.0
+Node.js 20.10.0
+Platform: darwin (arm64)
+```
+
+### /doctor
+
+Run diagnostics.
+
+```
+/doctor
+```
+
+Checks system configuration and dependencies.
+
+**Output:**
+
+```
+System Check
+━━━━━━━━━━━━
+
+✓ Node.js 20.10.0
+✓ Git 2.43.0
+✓ Configuration valid
+✓ API key configured
+✓ MCP servers reachable
+⚠ nmap not installed (optional)
+```
+
+## Quick Navigation
+
+### /bug
+
+Report a bug.
+
+```
+/bug
+```
+
+Opens browser to issue tracker with session context.
+
+### /feedback
+
+Submit feedback.
+
+```
+/feedback
+```
+
+### /docs
+
+Open documentation.
+
+```
+/docs
+```
+
+Opens documentation in browser.
+
+**Topic-specific:**
+
+```
+/docs agents
+/docs mcp
+/docs permissions
+```
+
+### /changelog
+
+View changelog.
+
+```
+/changelog
+```
+
+Shows recent changes and updates.
+
+## Keyboard Shortcuts
+
+Most navigation commands have keyboard equivalents:
+
+| Command | Shortcut |
+|---------|----------|
+| `/model` | `<leader>m` |
+| `/agents` | `<leader>a` |
+| `/theme` | `<leader>t` |
+| `/help` | `?` |
+| `/status` | `<leader>s` |
+
+## Quick Reference
+
+### Switching Context
+
+```
+/model opus          # Use more powerful model
+/agents bug-hunter   # Switch to recon agent
+/permission plan     # Read-only mode
+```
+
+### Checking Status
+
+```
+/status              # Full status
+/cost                # Token usage
+/context             # Session context
+```
+
+### Configuration
+
+```
+/config              # Open config
+/init                # Create project config
+/theme cyberpunk     # Change theme
+```
+
+### Getting Help
+
+```
+/help                # General help
+/docs                # Online docs
+/doctor              # System check
+```
+
+<Aside variant="tip">
+  Use Tab to autocomplete slash commands and their arguments.
+</Aside>
+
+## Related Documentation
+
+- [Slash Commands Overview](/docs/slash-commands) - All commands
+- [Session Commands](/docs/slash-commands/session-commands) - Session management
+- [Keyboard Shortcuts](/docs/getting-started/keyboard-shortcuts) - Key bindings

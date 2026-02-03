@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.cyberstrike.cyberstrike</id>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Cyberstrike</name>
+  <summary>AI-powered penetration testing agent</summary>
+
+  <developer id="io.cyberstrike">
+    <name>Cyberstrike Team</name>
+  </developer>
+
+  <description>
+    <p>
+      Cyberstrike is an open source AI agent for penetration testing and security assessments.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">io.cyberstrike.cyberstrike.desktop</launchable>
+
+  <content_rating type="oars-1.1" />
+
+  <url type="bugtracker">https://github.com/CyberStrikeus/cyberstrike.io/issues</url>
+  <url type="homepage">https://cyberstrike.io</url>
+  <url type="vcs-browser">https://github.com/CyberStrikeus/cyberstrike.io</url>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://cyberstrike.io/docs/_astro/screenshot.webp</image>
+    </screenshot>
+  </screenshots>
+
+  <releases>
+    <release version="1.1.36" date="2026-01-29">
+      <url type="details">https://github.com/CyberStrikeus/cyberstrike.io/releases/tag/v1.1.36</url>
+    </release>
+  </releases>
+</component>

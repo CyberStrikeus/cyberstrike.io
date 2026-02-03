@@ -1,33 +1,44 @@
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Build outputs
-dist/
-*.tsbuildinfo
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-
-# OS
 .DS_Store
-Thumbs.db
+node_modules
+.worktrees
+.sst
+.env
+.idea
+.vscode
+*~
+playground
+tmp
+dist
+ts-dist
+.turbo
+**/.serena
+.serena/
+/result
+refs
+Session.vim
+cyberstrike.json
+a.out
+target
+.scripts
+.direnv/
 
-# Test & Debug
-*.log
-*.har
-screenshot-*.png
-coverage/
+# Local dev files
+cyberstrike-dev
+logs/
+*.bun-build
 
-# Cyberstrike specific
-.cyberstrike/
-settings.local.json
+# Claude Code local settings (may contain secrets)
+.claude/settings.local.json
+
+# Audit reports (internal only)
+OPEN_SOURCE_AUDIT_REPORT.md
+OPEN_SOURCE_RELEASE_PLAN.md
+
+# Internal packages
+packages/console/
+packages/enterprise/
+infra/console.ts
+infra/enterprise.ts
+
+# Internal notes
+.cyberstrike/MEMORY.md
