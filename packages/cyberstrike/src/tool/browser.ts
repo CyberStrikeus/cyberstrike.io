@@ -5,6 +5,8 @@ import path from "path"
 import { Instance } from "../project/instance"
 import { Log } from "../util/log"
 import { CYBERSTRIKE_CONTROL_PAGE } from "./browser-ui"
+import { spawn } from "child_process"
+import * as readline from "readline"
 
 const log = Log.create({ service: "tool.browser" })
 
@@ -118,13 +120,134 @@ interface ConsoleEntry {
 // Global browser state (per session)
 const browserStates = new Map<string, BrowserState>()
 
-async function getPlaywright() {
+/**
+ * Prompts user for confirmation via readline interface
+ */
+async function promptUserConfirmation(question: string): Promise<boolean> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  })
+
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close()
+      const normalized = answer.trim().toLowerCase()
+      // Default to yes if user just presses enter
+      resolve(normalized === "" || normalized === "y" || normalized === "yes")
+    })
+  })
+}
+
+/**
+ * Runs a shell command and returns a promise
+ */
+async function runCommand(command: string, args: string[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    console.log(`\n> ${command} ${args.join(" ")}\n`)
+
+    const proc = spawn(command, args, {
+      stdio: "inherit",
+      shell: true,
+    })
+
+    proc.on("close", (code) => {
+      if (code === 0) {
+        resolve()
+      } else {
+        reject(new Error(`Command failed with exit code ${code}`))
+      }
+    })
+
+    proc.on("error", (err) => {
+      reject(err)
+    })
+  })
+}
+
+/**
+ * Checks if Playwright is installed by attempting to import it
+ */
+async function isPlaywrightInstalled(): Promise<boolean> {
   try {
+    await import("playwright")
+    return true
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Installs Playwright and Chromium browser
+ */
+async function installPlaywright(): Promise<void> {
+  console.log("\n📦 Installing Playwright...")
+
+  // Detect package manager
+  const packageManager = process.env.npm_execpath?.includes("bun")
+    ? "bun"
+    : process.env.npm_execpath?.includes("pnpm")
+      ? "pnpm"
+      : "npm"
+
+  // Install playwright package
+  const installCmd = packageManager === "bun" ? "bun" : packageManager
+  const installArgs =
+    packageManager === "bun" ? ["add", "playwright"] : ["install", "playwright"]
+
+  await runCommand(installCmd, installArgs)
+
+  // Install Chromium browser
+  console.log("\n🌐 Installing Chromium browser...")
+  const npxCmd = packageManager === "bun" ? "bunx" : "npx"
+  await runCommand(npxCmd, ["playwright", "install", "chromium"])
+
+  console.log("\n✅ Playwright installed successfully!\n")
+}
+
+async function getPlaywright() {
+  // First, try to import playwright
+  if (await isPlaywrightInstalled()) {
+    const pw = await import("playwright")
+    return pw
+  }
+
+  // Playwright not installed - prompt user
+  console.log("\n⚠️  Browser tool requires Playwright which is not installed.\n")
+
+  const shouldInstall = await promptUserConfirmation(
+    "Would you like to install Playwright now? [Y/n]: ",
+  )
+
+  if (!shouldInstall) {
+    throw new Error(
+      "Browser tool requires Playwright. To install manually, run:\n" +
+        "  npm install playwright && npx playwright install chromium\n" +
+        "  (or with bun: bun add playwright && bunx playwright install chromium)",
+    )
+  }
+
+  // Install Playwright
+  try {
+    await installPlaywright()
+  } catch (installError) {
+    throw new Error(
+      `Failed to install Playwright: ${installError instanceof Error ? installError.message : String(installError)}\n\n` +
+        "To install manually, run:\n" +
+        "  npm install playwright && npx playwright install chromium",
+    )
+  }
+
+  // Clear require cache and try importing again
+  // Note: Dynamic imports are cached, so we need to use a workaround
+  try {
+    // For Bun/Node ESM, we can try importing with a cache-busting query
     const pw = await import("playwright")
     return pw
   } catch (e) {
     throw new Error(
-      "Playwright is not installed. Run: bun add playwright && bunx playwright install chromium",
+      "Playwright was installed but could not be loaded. " +
+        "Please restart Cyberstrike and try again.",
     )
   }
 }
