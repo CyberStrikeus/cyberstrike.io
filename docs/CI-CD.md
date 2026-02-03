@@ -1,41 +1,41 @@
-# Cyberstrike CI/CD Kullanım Rehberi
+# Cyberstrike CI/CD Guide
 
-Bu doküman, Cyberstrike projesinin CI/CD pipeline'ını ve release süreçlerini açıklar.
-
----
-
-## Genel Bakış
-
-Cyberstrike, **trunk-based development** stratejisi kullanır:
-
-- Tek ana branch: `main`
-- Release'ler tag-based: `v1.0.7`, `v1.0.8-beta.1`
-- PR'lar otomatik kontrol edilir
-- Production deploy ayrı branch üzerinden
-
-### Workflow'lar
-
-| Workflow | Dosya | Trigger | Açıklama |
-|----------|-------|---------|----------|
-| PR Check: TypeScript Validation | `typecheck.yml` | PR açılınca | TypeScript tip kontrolü |
-| PR Check: Run Tests | `test.yml` | PR açılınca | Linux + Windows testleri |
-| Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm ve GitHub release |
-| Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deploy |
+This document explains the Cyberstrike project's CI/CD pipeline and release processes.
 
 ---
 
-## 1. Günlük Geliştirme
+## Overview
 
-Normal geliştirme `main` branch üzerinde yapılır. Push'lar hiçbir workflow tetiklemez.
+Cyberstrike uses a **trunk-based development** strategy:
+
+- Single main branch: `main`
+- Tag-based releases: `v1.0.7`, `v1.0.8-beta.1`
+- PRs are automatically checked
+- Production deploy via separate branch
+
+### Workflows
+
+| Workflow | File | Trigger | Description |
+|----------|------|---------|-------------|
+| PR Check: TypeScript Validation | `typecheck.yml` | On PR | TypeScript type checking |
+| PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
+| Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
+| Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
+
+---
+
+## 1. Daily Development
+
+Regular development happens on the `main` branch. Pushes don't trigger any workflow.
 
 ```bash
-# Kod yaz
+# Write code
 git add .
-git commit -m "feat: yeni özellik ekle"
+git commit -m "feat: add new feature"
 git push origin main
 ```
 
-### Commit Mesaj Formatı (Conventional Commits)
+### Commit Message Format (Conventional Commits)
 
 ```
 <type>(<scope>): <description>
@@ -45,16 +45,16 @@ git push origin main
 [optional footer]
 ```
 
-**Type'lar:**
-- `feat`: Yeni özellik
-- `fix`: Bug düzeltme
-- `docs`: Dokümantasyon
-- `style`: Kod formatı (fonksiyonellik değişmez)
-- `refactor`: Kod refactor
-- `test`: Test ekleme/düzeltme
-- `chore`: Build, CI, dependency güncelleme
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation
+- `style`: Code formatting (no functional change)
+- `refactor`: Code refactoring
+- `test`: Adding/fixing tests
+- `chore`: Build, CI, dependency updates
 
-**Örnekler:**
+**Examples:**
 ```bash
 git commit -m "feat(browser): add interactive Playwright installation"
 git commit -m "fix(auth): resolve token refresh issue"
@@ -64,109 +64,109 @@ git commit -m "chore: bump version to 1.0.7"
 
 ---
 
-## 2. Pull Request Süreci
+## 2. Pull Request Process
 
-Feature branch'ler üzerinden PR açıldığında otomatik kontroller çalışır.
+Automated checks run when PRs are opened via feature branches.
 
-### Adımlar
+### Steps
 
 ```bash
-# 1. Feature branch oluştur
-git checkout -b feature/yeni-ozellik
+# 1. Create feature branch
+git checkout -b feature/new-feature
 
-# 2. Geliştirme yap
-# ... kod yaz ...
+# 2. Develop
+# ... write code ...
 
-# 3. Commit ve push
+# 3. Commit and push
 git add .
-git commit -m "feat: yeni özellik açıklaması"
-git push origin feature/yeni-ozellik
+git commit -m "feat: new feature description"
+git push origin feature/new-feature
 
-# 4. GitHub'da PR aç
-gh pr create --title "feat: yeni özellik" --body "Açıklama..."
+# 4. Open PR on GitHub
+gh pr create --title "feat: new feature" --body "Description..."
 ```
 
-### Otomatik Kontroller
+### Automated Checks
 
-PR açıldığında şu workflow'lar çalışır:
+These workflows run when a PR is opened:
 
-| Workflow | Kontrol | Süre |
-|----------|---------|------|
-| PR Check: TypeScript Validation | Tip hataları | ~1 dk |
-| PR Check: Run Tests (Linux + Windows) | E2E testler | ~5 dk |
+| Workflow | Check | Duration |
+|----------|-------|----------|
+| PR Check: TypeScript Validation | Type errors | ~1 min |
+| PR Check: Run Tests (Linux + Windows) | E2E tests | ~5 min |
 
-PR'da ✅ veya ❌ işareti görünür. Tüm kontroller geçmeden merge yapılmamalıdır.
+A ✅ or ❌ indicator appears on the PR. Don't merge until all checks pass.
 
 ### PR Merge
 
 ```bash
-# Squash merge (önerilen)
+# Squash merge (recommended)
 gh pr merge --squash
 
-# Veya GitHub UI'dan "Squash and merge"
+# Or use GitHub UI "Squash and merge"
 ```
 
 ---
 
-## 3. Release Süreci
+## 3. Release Process
 
-### 3.1 Stable Release (Örn: v1.0.7)
+### 3.1 Stable Release (e.g., v1.0.7)
 
-Production-ready sürümler için kullanılır.
+Used for production-ready versions.
 
 ```bash
-# 1. Versiyon güncelle (package.json)
-# packages/cyberstrike/package.json içinde version alanını güncelle
+# 1. Update version (package.json)
+# Update version field in packages/cyberstrike/package.json
 
-# 2. Commit et
+# 2. Commit
 git add .
 git commit -m "chore: bump version to 1.0.7"
 git push origin main
 
-# 3. Tag oluştur
+# 3. Create tag
 git tag v1.0.7
 
-# 4. Tag'i push et (workflow tetiklenir)
+# 4. Push tag (triggers workflow)
 git push origin v1.0.7
 ```
 
-**Sonuç:**
-- ✅ npm'e `@cyberstrike-io/cli@1.0.7` yayınlanır (`latest` tag)
-- ✅ GitHub Release oluşur
-- ✅ Desktop binary'ler (Windows, macOS, Linux) eklenir
+**Result:**
+- ✅ `@cyberstrike-io/cli@1.0.7` published to npm (`latest` tag)
+- ✅ GitHub Release created
+- ✅ Desktop binaries (Windows, macOS, Linux) attached
 
-**Kullanıcı kurulumu:**
+**User installation:**
 ```bash
 npm install -g @cyberstrike-io/cli
-# veya
+# or
 npm install -g @cyberstrike-io/cli@1.0.7
 ```
 
-### 3.2 Beta Release (Örn: v1.0.8-beta.1)
+### 3.2 Beta Release (e.g., v1.0.8-beta.1)
 
-Test amaçlı erken sürümler için kullanılır.
+Used for early test versions.
 
 ```bash
 git tag v1.0.8-beta.1
 git push origin v1.0.8-beta.1
 ```
 
-**Sonuç:**
-- ✅ npm'e `@cyberstrike-io/cli@1.0.8-beta.1` yayınlanır (`beta` tag)
-- ✅ GitHub Pre-release oluşur
+**Result:**
+- ✅ `@cyberstrike-io/cli@1.0.8-beta.1` published to npm (`beta` tag)
+- ✅ GitHub Pre-release created
 
-**Kullanıcı kurulumu:**
+**User installation:**
 ```bash
 npm install -g @cyberstrike-io/cli@beta
 ```
 
-### 3.3 Diğer Pre-release Türleri
+### 3.3 Other Pre-release Types
 
-| Tür | Tag Formatı | npm Tag | Kullanım |
-|-----|-------------|---------|----------|
-| Alpha | `v1.0.8-alpha.1` | `alpha` | Erken geliştirme, unstable |
-| Beta | `v1.0.8-beta.1` | `beta` | Feature-complete, test aşaması |
-| RC | `v1.0.8-rc.1` | `rc` | Release candidate, son testler |
+| Type | Tag Format | npm Tag | Usage |
+|------|------------|---------|-------|
+| Alpha | `v1.0.8-alpha.1` | `alpha` | Early development, unstable |
+| Beta | `v1.0.8-beta.1` | `beta` | Feature-complete, testing phase |
+| RC | `v1.0.8-rc.1` | `rc` | Release candidate, final testing |
 | Stable | `v1.0.8` | `latest` | Production-ready |
 
 ```bash
@@ -185,106 +185,106 @@ git tag v1.0.8 && git push origin v1.0.8
 
 ---
 
-## 4. Production Deploy
+## 4. Production Deployment
 
-Backend/API değişikliklerini production'a almak için kullanılır.
+Used to deploy backend/API changes to production.
 
 ```bash
-# main'den production'a push
+# Push from main to production
 git push origin main:production
 ```
 
 **Workflow:** `Deploy: SST to Cloudflare (Production)`
 
-**Ne deploy edilir:**
-- SST (Serverless Stack) ile Cloudflare Workers
+**What gets deployed:**
+- SST (Serverless Stack) to Cloudflare Workers
 - API endpoints
-- Database migrations (varsa)
+- Database migrations (if any)
 
 ---
 
-## 5. Manuel Workflow Tetikleme
+## 5. Manual Workflow Triggering
 
-Herhangi bir workflow'u manuel olarak çalıştırabilirsin:
+You can manually run any workflow:
 
 ### GitHub UI
-1. GitHub repo → Actions tab
-2. Sol menüden workflow seç
-3. "Run workflow" butonuna tıkla
-4. Branch seç ve "Run workflow"
+1. Go to GitHub repo → Actions tab
+2. Select workflow from left menu
+3. Click "Run workflow" button
+4. Select branch and click "Run workflow"
 
 ### GitHub CLI
 ```bash
-# Release workflow'u manuel tetikle
+# Manually trigger release workflow
 gh workflow run "Release: CLI to npm + Desktop to GitHub"
 
-# Test workflow'u manuel tetikle
+# Manually trigger test workflow
 gh workflow run "PR Check: Run Tests (Linux + Windows)"
 ```
 
 ---
 
-## 6. Hata Durumları
+## 6. Error Handling
 
-### Yanlış Tag Attım
+### Wrong Tag Created
 
 ```bash
-# Local tag'i sil
+# Delete local tag
 git tag -d v1.0.7
 
-# Remote tag'i sil
+# Delete remote tag
 git push origin :v1.0.7
 
-# veya
+# or
 git push origin --delete v1.0.7
 ```
 
-### Workflow Başarısız Oldu
+### Workflow Failed
 
-1. GitHub Actions → İlgili workflow run'a tıkla
-2. Hata loglarını incele
-3. Sorunu düzelt ve tekrar dene
+1. Go to GitHub Actions → Click on the failed workflow run
+2. Review error logs
+3. Fix the issue and retry
 
 ```bash
-# Aynı tag ile tekrar release (önce sil, sonra tekrar at)
+# Re-release with same tag (delete first, then recreate)
 git push origin :v1.0.7
 git tag -d v1.0.7
 git tag v1.0.7
 git push origin v1.0.7
 ```
 
-### npm Publish Başarısız
+### npm Publish Failed
 
-- `NPM_TOKEN` secret'ının geçerli olduğundan emin ol
-- npm'de paket adının kullanılabilir olduğunu kontrol et
-- 2FA gerektiren hesaplarda automation token kullan
+- Ensure `NPM_TOKEN` secret is valid
+- Verify package name is available on npm
+- Use automation token for accounts with 2FA
 
 ---
 
-## 7. Versiyon Yönetimi
+## 7. Version Management
 
 ### Semantic Versioning (SemVer)
 
 Format: `MAJOR.MINOR.PATCH`
 
-| Değişiklik | Ne Zaman | Örnek |
-|------------|----------|-------|
+| Change | When | Example |
+|--------|------|---------|
 | MAJOR | Breaking change | `1.0.0` → `2.0.0` |
-| MINOR | Yeni özellik (backward compatible) | `1.0.0` → `1.1.0` |
+| MINOR | New feature (backward compatible) | `1.0.0` → `1.1.0` |
 | PATCH | Bug fix | `1.0.0` → `1.0.1` |
 
-### Versiyon Güncelleme
+### Version Update
 
 ```bash
-# Manuel güncelleme
-# packages/cyberstrike/package.json dosyasını düzenle
+# Manual update
+# Edit packages/cyberstrike/package.json
 
 # Commit
 git add packages/cyberstrike/package.json
 git commit -m "chore: bump version to 1.0.8"
 git push origin main
 
-# Tag ve release
+# Tag and release
 git tag v1.0.8
 git push origin v1.0.8
 ```
@@ -295,32 +295,32 @@ git push origin v1.0.8
 
 ### Do's ✅
 
-- Her release öncesi testlerin geçtiğinden emin ol
-- Semantic versioning kurallarına uy
-- Anlamlı commit mesajları yaz
-- Breaking change'lerde MAJOR versiyon artır
-- Beta sürümleri production'a almadan önce test et
+- Ensure tests pass before every release
+- Follow semantic versioning rules
+- Write meaningful commit messages
+- Increment MAJOR version for breaking changes
+- Test beta versions before production release
 
 ### Don'ts ❌
 
-- Direkt `main`'e force push yapma
-- Test etmeden release yapma
-- Aynı versiyon numarasını tekrar kullanma
-- npm token'ı kod içinde bırakma
+- Don't force push directly to `main`
+- Don't release without testing
+- Don't reuse the same version number
+- Don't leave npm tokens in code
 
 ---
 
-## 9. Örnek Senaryolar
+## 9. Example Scenarios
 
-### Senaryo 1: Bug Fix Release
+### Scenario 1: Bug Fix Release
 
 ```bash
-# 1. Bug'ı düzelt
+# 1. Fix the bug
 git add .
 git commit -m "fix(auth): resolve login timeout issue"
 git push origin main
 
-# 2. Patch version artır
+# 2. Increment patch version
 # package.json: "version": "1.0.6" → "1.0.7"
 git add .
 git commit -m "chore: bump version to 1.0.7"
@@ -331,10 +331,10 @@ git tag v1.0.7
 git push origin v1.0.7
 ```
 
-### Senaryo 2: Yeni Özellik + Beta Test
+### Scenario 2: New Feature + Beta Testing
 
 ```bash
-# 1. Özellik geliştir
+# 1. Develop feature
 git add .
 git commit -m "feat(browser): add screenshot capture"
 git push origin main
@@ -343,12 +343,12 @@ git push origin main
 git tag v1.1.0-beta.1
 git push origin v1.1.0-beta.1
 
-# 3. Feedback al, düzelt
+# 3. Get feedback, fix issues
 git add .
 git commit -m "fix(browser): improve screenshot quality"
 git push origin main
 
-# 4. İkinci beta
+# 4. Second beta
 git tag v1.1.0-beta.2
 git push origin v1.1.0-beta.2
 
@@ -361,15 +361,15 @@ git tag v1.1.0
 git push origin v1.1.0
 ```
 
-### Senaryo 3: Hotfix
+### Scenario 3: Hotfix
 
 ```bash
-# Kritik bug için hızlı fix
+# Quick fix for critical bug
 git add .
 git commit -m "fix(critical): patch security vulnerability"
 git push origin main
 
-# Hemen release
+# Immediate release
 # package.json: "version": "1.0.8"
 git add .
 git commit -m "chore: bump version to 1.0.8"
@@ -383,34 +383,34 @@ git push origin v1.0.8
 ## 10. Useful Commands
 
 ```bash
-# Tüm tag'leri listele
+# List all tags
 git tag -l
 
-# Son 5 tag
+# Last 5 tags
 git tag -l | tail -5
 
-# Tag detayı
+# Tag details
 git show v1.0.7
 
-# Workflow durumu
+# Workflow status
 gh run list --limit 5
 
-# Workflow logları
+# Workflow logs
 gh run view <run-id> --log
 
-# npm'deki versiyonlar
+# npm versions
 npm view @cyberstrike-io/cli versions
 
-# npm'deki latest version
+# npm latest version
 npm view @cyberstrike-io/cli version
 
-# npm'deki beta version
+# npm beta version
 npm view @cyberstrike-io/cli dist-tags.beta
 ```
 
 ---
 
-## Kaynaklar
+## Resources
 
 - [Semantic Versioning](https://semver.org/)
 - [Conventional Commits](https://www.conventionalcommits.org/)
