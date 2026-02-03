@@ -1,4 +1,4 @@
-name: typecheck
+name: "PR Check: TypeScript Validation"
 
 on:
   pull_request:
