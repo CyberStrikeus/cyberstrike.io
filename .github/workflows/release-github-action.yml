@@ -2,8 +2,8 @@ name: release-github-action
 
 on:
   push:
-    branches:
-      - dev
+    tags:
+      - 'github-action-v*'
     paths:
       - "github/**"
 
