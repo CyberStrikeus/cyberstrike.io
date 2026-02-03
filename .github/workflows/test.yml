@@ -1,4 +1,4 @@
-name: test
+name: "PR Check: Run Tests (Linux + Windows)"
 
 on:
   pull_request:

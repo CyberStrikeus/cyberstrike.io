@@ -1,4 +1,4 @@
-name: deploy
+name: "Deploy: SST to Cloudflare (Production)"
 
 on:
   push:
