@@ -35,6 +35,10 @@ const sidebarNavData: DocsSidebarNavData = {
           id: "cli",
           title: "CLI Reference",
         },
+        {
+          id: "resources",
+          title: "Resources",
+        },
       ],
     },
   ],
