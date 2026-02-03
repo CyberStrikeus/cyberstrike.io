@@ -2,7 +2,7 @@ name: nix desktop
 
 on:
   push:
-    branches: [dev]
+    branches: [production]
     paths:
       - "flake.nix"
       - "flake.lock"
