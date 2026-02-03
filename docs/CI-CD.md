@@ -19,8 +19,15 @@ Cyberstrike uses a **trunk-based development** strategy:
 |----------|------|---------|-------------|
 | PR Check: TypeScript Validation | `typecheck.yml` | On PR | TypeScript type checking |
 | PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
+| Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
+
+### Automated Dependencies
+
+| Tool | File | Schedule | Description |
+|------|------|----------|-------------|
+| Dependabot | `dependabot.yml` | Weekly (Monday) | Automatic dependency updates |
 
 ---
 
@@ -410,9 +417,144 @@ npm view @cyberstrike-io/cli dist-tags.beta
 
 ---
 
+## 11. Security Scanning (CodeQL)
+
+### Why Security Scanning?
+
+For a security testing tool like Cyberstrike, code security is paramount. CodeQL provides:
+
+- **Static Analysis**: Detects vulnerabilities before runtime
+- **OWASP Coverage**: Identifies SQL injection, XSS, command injection, etc.
+- **Automated Auditing**: Every PR and push is automatically scanned
+- **GitHub Integration**: Results appear in Security tab and PR comments
+
+### How It Works
+
+CodeQL analyzes the codebase using semantic queries:
+
+1. **Build Phase**: Creates a database of the code structure
+2. **Analysis Phase**: Runs security queries against the database
+3. **Report Phase**: Generates findings with severity levels
+
+### When It Runs
+
+| Trigger | Description |
+|---------|-------------|
+| Push to main/dev | Every commit is scanned |
+| Pull Request | PRs are blocked if critical issues found |
+| Weekly (Monday 00:00 UTC) | Scheduled scan for new vulnerability patterns |
+| Manual | Can be triggered from Actions tab |
+
+### Viewing Results
+
+1. Go to GitHub repo → Security tab → Code scanning alerts
+2. Or view in PR → Checks → CodeQL
+
+### Severity Levels
+
+| Level | Action |
+|-------|--------|
+| Critical | Block merge, fix immediately |
+| High | Block merge, fix before release |
+| Medium | Warning, fix in next sprint |
+| Low | Informational, fix when convenient |
+
+### Customization
+
+The workflow uses extended security queries:
+- `security-extended`: Additional security rules
+- `security-and-quality`: Code quality + security combined
+
+---
+
+## 12. Dependency Management (Dependabot)
+
+### Why Dependabot?
+
+Outdated dependencies are a major security risk. Dependabot provides:
+
+- **Automatic Updates**: Creates PRs for outdated packages
+- **Security Alerts**: Notifies when dependencies have known vulnerabilities
+- **Version Grouping**: Groups minor/patch updates to reduce PR noise
+- **GitHub Actions**: Also keeps workflow actions up to date
+
+### Configuration
+
+Located at `.github/dependabot.yml`:
+
+```yaml
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+```
+
+### How It Works
+
+1. **Weekly Scan**: Every Monday, Dependabot checks for updates
+2. **PR Creation**: Creates PRs for outdated dependencies
+3. **Grouping**: Minor and patch updates are grouped together
+4. **CI Check**: Your existing test/typecheck workflows run on these PRs
+5. **Review & Merge**: Review the PR, then merge if tests pass
+
+### Handling Dependabot PRs
+
+```bash
+# View open Dependabot PRs
+gh pr list --author "dependabot[bot]"
+
+# Merge a Dependabot PR
+gh pr merge <PR_NUMBER> --squash
+```
+
+### Security Alerts
+
+When a dependency has a known vulnerability:
+1. GitHub creates a security alert
+2. Dependabot creates a security update PR
+3. These PRs are marked with "security" label
+4. **Priority**: Merge security PRs immediately
+
+### Ignoring Updates
+
+Major version updates are ignored by default to prevent breaking changes:
+
+```yaml
+ignore:
+  - dependency-name: "*"
+    update-types: ["version-update:semver-major"]
+```
+
+To update a major version manually:
+```bash
+# Update a specific package
+bun update <package-name>
+
+# Or edit package.json and run
+bun install
+```
+
+---
+
 ## Resources
 
 - [Semantic Versioning](https://semver.org/)
 - [Conventional Commits](https://www.conventionalcommits.org/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [npm Publishing](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
+- [CodeQL Documentation](https://codeql.github.com/docs/)
+- [Dependabot Configuration](https://docs.github.com/en/code-security/dependabot)
