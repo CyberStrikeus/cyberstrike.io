@@ -117,9 +117,9 @@ Security vulnerability detected
 ## GitHub Actions Workflows
 
 ### Priority 1 (Soon)
-- [ ] Security Scan (CodeQL) - Security scanning
-- [ ] Discord Notify - Release announcements
-- [ ] Dependabot - Automatic dependency updates
+- [x] Security Scan (CodeQL) - Security scanning ✅
+- [ ] Discord Notify - Release announcements (on hold - Discord account appeal pending)
+- [x] Dependabot - Automatic dependency updates ✅
 
 ### Priority 2 (Later)
 - [ ] Code Coverage - Test coverage reports
@@ -146,3 +146,8 @@ Security vulnerability detected
 - [x] Interactive installation prompt
 - [x] Auto-detect package manager (npm/bun/pnpm)
 - [x] Cleanup script for testing (testing/cleanup-playwright.sh)
+
+### Security & Automation ✅
+- [x] CodeQL Security Scan workflow (.github/workflows/security-scan.yml)
+- [x] Dependabot configuration (.github/dependabot.yml)
+- [x] CI/CD documentation updated with security sections
