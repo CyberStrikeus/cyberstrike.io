@@ -1,0 +1,43 @@
+{
+  "name": "@cyberstrike-io/mcp-kali",
+  "version": "0.1.0",
+  "description": "MCP server exposing Kali Linux penetration testing tools",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "mcp-kali": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.25.2",
+    "yaml": "^2.3.4",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "keywords": [
+    "mcp",
+    "kali",
+    "linux",
+    "pentest",
+    "security",
+    "tools"
+  ],
+  "author": "Cyberstrike Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io",
+    "directory": "packages/mcp-kali"
+  },
+  "bugs": {
+    "url": "https://github.com/CyberStrikeus/cyberstrike.io/issues"
+  },
+  "license": "MIT"
+}

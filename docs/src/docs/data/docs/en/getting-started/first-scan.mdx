@@ -1,0 +1,206 @@
+---
+title: First Security Scan
+description: Run your first security assessment with Cyberstrike
+sidebar:
+  order: 4
+  label: First Scan
+---
+
+This guide walks you through running your first security scan with Cyberstrike, from launching the TUI to interpreting results.
+
+{/* TODO: GIF - First scan demo */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎬 GIF: first-scan.gif</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Running first security scan</p>
+</div>
+
+## Launching Cyberstrike
+
+Start Cyberstrike in your target directory:
+
+```bash
+cd /path/to/target
+cyberstrike
+```
+
+The terminal user interface (TUI) displays:
+
+- **Input prompt** at the bottom for commands
+- **Response area** in the center for AI output
+- **Status bar** showing model and token usage
+
+## Selecting an Agent
+
+Choose a specialized agent for your assessment:
+
+```bash
+# Web application testing
+cyberstrike --agent web-application
+
+# Cloud infrastructure
+cyberstrike --agent cloud-security
+
+# Network penetration testing
+cyberstrike --agent internal-network
+
+# Bug bounty reconnaissance
+cyberstrike --agent bug-hunter
+```
+
+Or switch agents during a session with `/agents`.
+
+## Basic Reconnaissance
+
+Start with information gathering:
+
+```
+> Perform reconnaissance on example.com
+```
+
+The agent will:
+
+1. Enumerate subdomains
+2. Identify technologies
+3. Discover endpoints
+4. Map the attack surface
+
+## Web Application Scan
+
+For web application testing:
+
+```
+> Launch the browser and scan https://target.com for vulnerabilities
+```
+
+The agent will:
+
+1. Launch browser with traffic capture
+2. Spider the application
+3. Test for common vulnerabilities
+4. Report findings with evidence
+
+### Example Session
+
+```
+> Navigate to https://target.com/login and test for SQL injection
+
+[Launching browser...]
+[Navigating to login page...]
+[Testing username field...]
+[Testing password field...]
+
+FINDING: SQL Injection
+━━━━━━━━━━━━━━━━━━━━━━━━
+WSTG-ID: WSTG-INPV-05
+Location: POST /api/login
+Parameter: username
+Payload: admin' OR '1'='1 --
+Severity: High (CVSS 8.6)
+Evidence: Response contains SQL error message
+```
+
+## Quick Scan Mode
+
+Run a single command without entering interactive mode:
+
+```bash
+cyberstrike run "scan example.com for open ports and services"
+```
+
+With file attachment:
+
+```bash
+cyberstrike run "analyze this code for vulnerabilities" -f src/auth.ts
+```
+
+## Understanding Output
+
+### Finding Format
+
+Cyberstrike reports findings in a structured format:
+
+```
+FINDING: [Vulnerability Name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WSTG-ID: [Testing Guide Reference]
+Location: [Where found]
+Severity: [Critical/High/Medium/Low]
+CWE: [Weakness Enumeration]
+Evidence: [Proof of vulnerability]
+Remediation: [How to fix]
+```
+
+### Severity Levels
+
+| Level | CVSS | Description |
+|-------|------|-------------|
+| Critical | 9.0-10.0 | Immediate exploitation risk |
+| High | 7.0-8.9 | Significant security impact |
+| Medium | 4.0-6.9 | Moderate risk |
+| Low | 0.1-3.9 | Minor security concern |
+| Info | 0.0 | Informational finding |
+
+## Saving Results
+
+### Export Session
+
+```
+/share
+```
+
+Creates a shareable link to the session.
+
+### Export HAR File
+
+For browser-based testing:
+
+```
+> Export the captured traffic to HAR file
+```
+
+### Memory Storage
+
+Save important findings to memory:
+
+```
+> Remember that the target uses PostgreSQL 14.2 on port 5432
+```
+
+## Common Scan Types
+
+### Subdomain Enumeration
+
+```
+> Enumerate all subdomains for target.com
+```
+
+### Port Scanning
+
+```
+> Scan 10.0.0.0/24 for open ports
+```
+
+### Vulnerability Scanning
+
+```
+> Run nuclei templates against https://target.com
+```
+
+### API Testing
+
+```
+> Test the REST API at https://api.target.com for OWASP Top 10
+```
+
+## Next Steps
+
+After your first scan:
+
+1. Review [Security Agents](/docs/agents) for specialized testing
+2. Learn about [Tools](/docs/tools) for manual testing
+3. Configure [Permissions](/docs/permissions) for automation
+4. Set up [MCP servers](/docs/mcp) for extended capabilities
+
+<Aside variant="tip">
+  Use `/compact` to summarize long sessions and continue testing without losing context.
+</Aside>

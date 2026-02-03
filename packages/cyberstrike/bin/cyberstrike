@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# cyberstrike - AI-powered penetration testing agent
+# https://cyberstrike.io
+
+set -e
+
+# Resolve symlinks to get the actual script location
+SOURCE="${BASH_SOURCE[0]}"
+while [ -L "$SOURCE" ]; do
+    DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+SCRIPT_DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+
+# Binary should be in the same directory
+BINARY="$SCRIPT_DIR/cyberstrike-bin"
+
+# Check if binary exists
+if [ ! -f "$BINARY" ]; then
+    echo "Error: Cyberstrike binary not found."
+    echo ""
+    echo "Run the postinstall script to download the binary:"
+    echo "  npm run postinstall"
+    echo ""
+    echo "Or reinstall the package:"
+    echo "  npm install -g cyberstrike"
+    echo ""
+    echo "Alternative installation methods:"
+    echo "  • Homebrew: brew install CyberStrikeus/tap/cyberstrike"
+    echo "  • curl: curl -fsSL https://cyberstrike.io/install.sh | bash"
+    exit 1
+fi
+
+# Execute the binary
+exec "$BINARY" "$@"

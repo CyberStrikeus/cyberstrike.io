@@ -1,0 +1,408 @@
+---
+title: Custom Skills
+description: Create custom slash commands and skills for Cyberstrike
+sidebar:
+  order: 4
+  label: Custom Skills
+---
+
+Custom skills extend Cyberstrike with your own slash commands, automating common workflows and tasks.
+
+{/* TODO: Screenshot - Custom skill configuration */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: custom-skills.png</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Custom skill definition</p>
+</div>
+
+## Overview
+
+Custom skills allow you to:
+
+- Create reusable prompts
+- Define workflow automations
+- Share team conventions
+- Standardize security tests
+
+## Skill Definition
+
+### Basic Skill
+
+```markdown title=".cyberstrike/skills/quick-scan.md"
+---
+name: quick-scan
+description: Run a quick security scan on a target
+args:
+  - name: target
+    description: Target URL or IP
+    required: true
+---
+
+Perform a quick security scan on {{target}}:
+
+1. Check if the target is reachable
+2. Identify open ports (top 100)
+3. Detect web technologies
+4. Run basic vulnerability checks
+5. Summarize findings
+
+Focus on speed over thoroughness.
+```
+
+### Usage
+
+```
+/quick-scan example.com
+```
+
+## Skill Configuration
+
+### Frontmatter Options
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | string | Command name (required) |
+| `description` | string | Help text description |
+| `args` | array | Command arguments |
+| `model` | string | Override model for skill |
+| `agent` | string | Override agent for skill |
+| `permission` | string | Permission mode |
+
+### Arguments
+
+```yaml
+args:
+  - name: target
+    description: Target to scan
+    required: true
+    type: string
+
+  - name: depth
+    description: Scan depth
+    required: false
+    default: "standard"
+    type: string
+    choices:
+      - quick
+      - standard
+      - deep
+```
+
+### Template Variables
+
+```markdown
+---
+name: scan
+args:
+  - name: target
+  - name: ports
+    default: "1-1000"
+---
+
+Scan {{target}} on ports {{ports}}.
+```
+
+## Skill Examples
+
+### Full Web Scan
+
+```markdown title=".cyberstrike/skills/full-web-scan.md"
+---
+name: full-web-scan
+description: Comprehensive web application security scan
+args:
+  - name: url
+    description: Target URL
+    required: true
+agent: web-application
+---
+
+Perform a comprehensive security assessment on {{url}}:
+
+## Phase 1: Reconnaissance
+1. Identify subdomains
+2. Enumerate technologies
+3. Map attack surface
+
+## Phase 2: Vulnerability Scanning
+1. Test for OWASP Top 10
+2. Check for misconfigurations
+3. Identify outdated components
+
+## Phase 3: Authentication Testing
+1. Test login mechanisms
+2. Check session management
+3. Verify access controls
+
+## Phase 4: Reporting
+1. Compile all findings
+2. Prioritize by severity
+3. Provide remediation guidance
+
+Document all findings with evidence.
+```
+
+### Code Review
+
+```markdown title=".cyberstrike/skills/code-review.md"
+---
+name: code-review
+description: Security-focused code review
+args:
+  - name: path
+    description: File or directory to review
+    required: true
+---
+
+Perform a security code review on {{path}}:
+
+Focus areas:
+1. **Injection vulnerabilities**
+   - SQL injection
+   - Command injection
+   - XSS
+
+2. **Authentication/Authorization**
+   - Credential handling
+   - Session management
+   - Access controls
+
+3. **Data Protection**
+   - Sensitive data exposure
+   - Encryption usage
+   - Secret management
+
+4. **Error Handling**
+   - Information leakage
+   - Proper logging
+   - Fail-safe defaults
+
+Report findings with:
+- File and line number
+- Severity rating
+- Code snippet
+- Remediation recommendation
+```
+
+### Network Recon
+
+```markdown title=".cyberstrike/skills/network-recon.md"
+---
+name: network-recon
+description: Network reconnaissance and enumeration
+args:
+  - name: target
+    description: Network range or host
+    required: true
+  - name: depth
+    default: standard
+agent: internal-network
+---
+
+Perform network reconnaissance on {{target}}:
+
+{% if depth == "quick" %}
+Quick scan:
+- Host discovery
+- Top 100 ports
+- Service detection
+{% elif depth == "deep" %}
+Deep scan:
+- Full port scan
+- Service enumeration
+- OS detection
+- Vulnerability scanning
+- Banner grabbing
+{% else %}
+Standard scan:
+- Host discovery
+- Top 1000 ports
+- Service detection
+- Basic vulnerability checks
+{% endif %}
+
+Document:
+- Live hosts
+- Open ports and services
+- Potential vulnerabilities
+- Recommended next steps
+```
+
+### Bug Bounty Recon
+
+```markdown title=".cyberstrike/skills/bb-recon.md"
+---
+name: bb-recon
+description: Bug bounty reconnaissance workflow
+args:
+  - name: domain
+    required: true
+agent: bug-hunter
+---
+
+Bug bounty reconnaissance for {{domain}}:
+
+## Subdomain Enumeration
+1. Passive sources (crt.sh, SecurityTrails)
+2. DNS brute force
+3. Permutation scanning
+
+## Asset Discovery
+1. Probe live hosts
+2. Identify technologies
+3. Screenshot endpoints
+
+## Content Discovery
+1. Directory enumeration
+2. Parameter mining
+3. JavaScript analysis
+4. Wayback Machine
+
+## Vulnerability Identification
+1. Subdomain takeover checks
+2. Open redirect testing
+3. CORS misconfiguration
+4. Information disclosure
+
+Store all findings in memory for future reference.
+```
+
+## Skill Organization
+
+### Directory Structure
+
+```
+.cyberstrike/
+└── skills/
+    ├── recon/
+    │   ├── subdomain.md
+    │   ├── port-scan.md
+    │   └── tech-detect.md
+    ├── testing/
+    │   ├── sqli.md
+    │   ├── xss.md
+    │   └── auth.md
+    └── reporting/
+        ├── executive.md
+        └── technical.md
+```
+
+### Namespaced Skills
+
+```
+/recon/subdomain example.com
+/testing/sqli https://target.com/page?id=1
+/reporting/executive
+```
+
+## Global Skills
+
+Store skills globally for all projects:
+
+```
+~/.cyberstrike/skills/
+├── my-quick-scan.md
+└── my-report.md
+```
+
+## Conditional Logic
+
+### If/Else
+
+```markdown
+{% if args.verbose %}
+Provide detailed output with all evidence.
+{% else %}
+Provide concise summary.
+{% endif %}
+```
+
+### Loops
+
+```markdown
+{% for check in ["sqli", "xss", "idor"] %}
+- Test for {{check}}
+{% endfor %}
+```
+
+## Including Other Skills
+
+### Chain Skills
+
+```markdown
+---
+name: full-assessment
+---
+
+Run the following in sequence:
+
+1. First: /network-recon {{target}}
+2. Then: /full-web-scan {{target}}
+3. Finally: /reporting/executive
+
+Compile all findings into a comprehensive report.
+```
+
+## Skill Variables
+
+### Environment Variables
+
+```markdown
+Scan using API key: {{env.API_KEY}}
+```
+
+### Session Variables
+
+```markdown
+Continue scanning {{session.target}} from previous findings.
+```
+
+### Config Variables
+
+```markdown
+Using model: {{config.model}}
+```
+
+## Publishing Skills
+
+### Share with Team
+
+```bash
+# Copy to shared location
+cp -r .cyberstrike/skills/* /shared/cyberstrike-skills/
+
+# Or use git
+git add .cyberstrike/skills/
+git commit -m "Add security testing skills"
+```
+
+### npm Package
+
+```json title="package.json"
+{
+  "name": "@team/cyberstrike-skills",
+  "cyberstrike": {
+    "skills": [
+      "skills/*.md"
+    ]
+  }
+}
+```
+
+## Best Practices
+
+1. **Clear descriptions** - Help users understand what skills do
+2. **Sensible defaults** - Provide good defaults for optional args
+3. **Consistent naming** - Use clear, descriptive names
+4. **Documentation** - Include examples in skill description
+5. **Modularity** - Create focused, composable skills
+6. **Error handling** - Account for edge cases
+
+<Aside variant="tip">
+  Start with simple skills and gradually add complexity as needed.
+</Aside>
+
+## Related Documentation
+
+- [Slash Commands Overview](/docs/slash-commands) - All commands
+- [Agents](/docs/agents) - Agent configuration
+- [Configuration](/docs/configuration) - Skill settings
