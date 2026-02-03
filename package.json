@@ -96,7 +96,9 @@
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
     "tar": "^7.5.7",
-    "wrangler": "^4.61.1"
+    "wrangler": "^4.61.1",
+    "fast-xml-parser": "^5.3.4",
+    "lodash": "^4.17.23"
   },
   "patchedDependencies": {
     "ghostty-web@0.3.0": "patches/ghostty-web@0.3.0.patch"
