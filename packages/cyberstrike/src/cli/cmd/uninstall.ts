@@ -159,7 +159,7 @@ async function executeUninstall(method: Installation.Method, targets: RemovalTar
     spinner.start(`Removing ${dir.label}...`)
     const err = await fs.rm(dir.path, { recursive: true, force: true }).catch((e) => e)
     if (err) {
-      spinner.stop(`Failed to remove ${dir.label}`, 1)
+      spinner.error(`Failed to remove ${dir.label}`)
       errors.push(`${dir.label}: ${err.message}`)
       continue
     }
@@ -170,7 +170,7 @@ async function executeUninstall(method: Installation.Method, targets: RemovalTar
     spinner.start("Cleaning shell config...")
     const err = await cleanShellConfig(targets.shellConfig).catch((e) => e)
     if (err) {
-      spinner.stop("Failed to clean shell config", 1)
+      spinner.error("Failed to clean shell config")
       errors.push(`Shell config: ${err.message}`)
     } else {
       spinner.stop("Cleaned shell config")
@@ -196,7 +196,7 @@ async function executeUninstall(method: Installation.Method, targets: RemovalTar
           ? await $`echo Y | choco uninstall cyberstrike -y -r`.quiet().nothrow()
           : await $`${cmd}`.quiet().nothrow()
       if (result.exitCode !== 0) {
-        spinner.stop(`Package manager uninstall failed: exit code ${result.exitCode}`, 1)
+        spinner.error(`Package manager uninstall failed: exit code ${result.exitCode}`)
         if (
           method === "choco" &&
           result.stdout.toString("utf8").includes("not running from an elevated command shell")
