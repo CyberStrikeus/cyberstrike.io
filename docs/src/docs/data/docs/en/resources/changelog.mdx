@@ -1,0 +1,90 @@
+---
+title: Changelog
+description: Release notes and version history for Cyberstrike CLI
+sidebar:
+  order: 1
+  label: Changelog
+---
+
+All notable changes to Cyberstrike CLI are documented here. For the full release history with downloadable assets, see [GitHub Releases](https://github.com/CyberStrikeus/cyberstrike.io/releases).
+
+---
+
+## v1.0.7
+
+- <Badge text="Added" variant="tip" size="md" /> Interactive Playwright installation prompt for browser tool
+- <Badge text="Added" variant="tip" size="md" /> CodeQL security scanning workflow for automated vulnerability detection
+- <Badge text="Added" variant="tip" size="md" /> Dependabot for automatic dependency updates
+- <Badge text="Fixed" variant="note" size="md" /> `@clack/prompts` API compatibility for `spinner.error()` method
+- <Badge text="Improved" variant="info" size="md" /> CI/CD documentation with security scanning sections
+- <Badge text="Security" variant="danger" size="md" /> Updated astro to 5.17.1 (fixes XSS and auth bypass vulnerabilities)
+- <Badge text="Security" variant="danger" size="md" /> Updated multiple transitive dependencies via overrides
+
+---
+
+## v1.0.6
+
+- <Badge text="Fixed" variant="note" size="md" /> Bun installation error message with correct `--trust` flag instructions
+- <Badge text="Fixed" variant="note" size="md" /> Documentation for Bun users
+
+---
+
+## v1.0.5
+
+- <Badge text="Added" variant="tip" size="md" /> TUI customization demo with improved theme support
+- <Badge text="Improved" variant="info" size="md" /> Terminal rendering performance
+
+---
+
+## v1.0.4
+
+- <Badge text="Fixed" variant="note" size="md" /> Authentication flow for OAuth providers
+- <Badge text="Improved" variant="info" size="md" /> Error messages for API key validation
+
+---
+
+## v1.0.3
+
+- <Badge text="Added" variant="tip" size="md" /> Support for custom AI providers
+- <Badge text="Fixed" variant="note" size="md" /> MCP server connection timeout issues
+
+---
+
+## v1.0.2
+
+- <Badge text="Release" variant="caution" size="md" /> Initial public release
+- <Badge text="Added" variant="tip" size="md" /> Web application security agent
+- <Badge text="Added" variant="tip" size="md" /> Cloud security agent
+- <Badge text="Added" variant="tip" size="md" /> Internal network agent
+- <Badge text="Added" variant="tip" size="md" /> Bug hunter agent
+- <Badge text="Added" variant="tip" size="md" /> Browser automation tool
+- <Badge text="Added" variant="tip" size="md" /> MCP integration support
+
+---
+
+## Version Format
+
+Cyberstrike follows [Semantic Versioning](https://semver.org/):
+
+| Change Type | Version Bump | Example |
+|-------------|--------------|---------|
+| Breaking changes | Major | 1.0.0 → 2.0.0 |
+| New features | Minor | 1.0.0 → 1.1.0 |
+| Bug fixes | Patch | 1.0.0 → 1.0.1 |
+
+## Badge Legend
+
+- <Badge text="Added" variant="tip" size="md" /> New feature or capability
+- <Badge text="Fixed" variant="note" size="md" /> Bug fix
+- <Badge text="Improved" variant="info" size="md" /> Enhancement to existing feature
+- <Badge text="Security" variant="danger" size="md" /> Security-related update
+- <Badge text="Breaking" variant="caution" size="md" /> Breaking change
+- <Badge text="Deprecated" variant="caution" size="md" /> Feature marked for removal
+
+## Pre-release Versions
+
+| Tag | Purpose | Install Command |
+|-----|---------|-----------------|
+| `latest` | Stable release | `npm install -g @cyberstrike-io/cli` |
+| `beta` | Beta testing | `npm install -g @cyberstrike-io/cli@beta` |
+| `alpha` | Early access | `npm install -g @cyberstrike-io/cli@alpha` |
