@@ -23,8 +23,11 @@ Cyberstrike uses a **trunk-based development** strategy:
 | Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
 | PR: Auto Label | `auto-label.yml` | On PR | Automatic PR labeling |
 | Release: Auto Changelog | `auto-changelog.yml` | On Release | Automatic release notes |
+| PR Check: Bundle Size | `bundle-size.yml` | On PR | CLI bundle size tracking |
+| PR Check: Lighthouse CI | `lighthouse.yml` | On PR (docs/web) | Web performance testing |
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
+| Community: Update Contributors | `contributors.yml` | Push to main | Auto-generate CONTRIBUTORS.md |
 
 ### Automated Dependencies
 
@@ -788,6 +791,165 @@ After the first report, add to `README.md`:
 
 ---
 
+## 16. Bundle Size Check
+
+**File:** `.github/workflows/bundle-size.yml`
+
+The bundle size workflow measures the CLI build output and reports it on PRs so the team can track size regressions.
+
+### How It Works
+
+1. Checks out the PR code
+2. Builds the CLI with `bun run build`
+3. Measures the total size of `packages/cyberstrike/dist`
+4. Comments the result on the PR (or updates an existing comment)
+
+### Triggers
+
+| Event | When |
+|-------|------|
+| Pull Request | Every PR |
+| Manual | Run from Actions tab |
+
+### PR Comment Example
+
+```
+📦 Bundle Size
+
+| Metric | Value |
+|--------|-------|
+| Total Size | **4.52 MB** |
+| Bytes | 4,739,072 |
+
+*Measured from `packages/cyberstrike/dist`*
+```
+
+### Concurrency
+
+Uses `bundle-${{ github.ref }}` group with `cancel-in-progress: true`. If a new push arrives while the check is running, the old run is cancelled.
+
+---
+
+## 17. Lighthouse CI
+
+**File:** `.github/workflows/lighthouse.yml`
+
+The Lighthouse workflow runs Google Lighthouse against the docs site to catch performance, accessibility, and SEO regressions.
+
+### How It Works
+
+1. Checks out the code and sets up Node 22
+2. Builds the docs site (`npm run build` in `docs/`)
+3. Runs Lighthouse CI against the built static files
+4. Comments the PR with scores for each tested page
+
+### Triggers
+
+| Event | When |
+|-------|------|
+| Pull Request | Only when `packages/web/**` or `docs/**` files change |
+| Manual | Run from Actions tab |
+
+### Score Thresholds
+
+| Category | Minimum | Level |
+|----------|---------|-------|
+| Performance | 80 | warn |
+| Accessibility | 90 | error |
+| Best Practices | 80 | warn |
+| SEO | 80 | warn |
+
+The workflow **fails** if Accessibility drops below 90. Other categories produce warnings.
+
+### Tested Pages
+
+- `/` (homepage)
+- `/docs/getting-started/` (docs entry point)
+
+### PR Comment Example
+
+```
+🔦 Lighthouse Results
+
+| Page | Performance | Accessibility | Best Practices | SEO |
+|------|-------------|---------------|----------------|-----|
+| `/` | 🟢 95 | 🟢 100 | 🟢 92 | 🟢 90 |
+| `/docs/getting-started/` | 🟢 88 | 🟢 98 | 🟢 90 | 🟢 85 |
+
+📊 Full Report (link)
+```
+
+### Score Indicators
+
+| Emoji | Range |
+|-------|-------|
+| 🟢 | 90-100 |
+| 🟡 | 50-89 |
+| 🔴 | 0-49 |
+
+### Concurrency
+
+Uses `lighthouse-${{ github.ref }}` group with `cancel-in-progress: true`.
+
+---
+
+## 18. Contributors Bot
+
+**File:** `.github/workflows/contributors.yml`
+
+The contributors workflow automatically generates and maintains a `CONTRIBUTORS.md` file with a visual table of all project contributors.
+
+### How It Works
+
+1. Checks out the repository with full history (`fetch-depth: 0`)
+2. Uses the GitHub API to fetch all contributors
+3. Filters out bot accounts
+4. Generates a markdown table with avatars, profile links, and commit counts
+5. Commits the updated file if anything changed
+
+### Triggers
+
+| Event | When |
+|-------|------|
+| Push to main | After every merge |
+| Manual | Run from Actions tab |
+
+### Generated Output
+
+The workflow creates `CONTRIBUTORS.md` at the repo root with a table like:
+
+```html
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/username">
+        <img src="avatar_url" width="80" alt="username" />
+        <br /><sub><b>username</b></sub>
+      </a>
+      <br />42 commits
+    </td>
+    <!-- 7 contributors per row -->
+  </tr>
+</table>
+```
+
+### Configuration
+
+| Setting | Value |
+|---------|-------|
+| Contributors per row | 7 |
+| Max contributors | 100 |
+| Bot filtering | Excludes accounts with `[bot]` in login |
+| Commit message | `chore: update contributors list [skip ci]` |
+
+The `[skip ci]` tag prevents the commit from triggering other workflows.
+
+### Permissions
+
+Requires `contents: write` permission to push the updated file.
+
+---
+
 ## Resources
 
 - [Semantic Versioning](https://semver.org/)
@@ -797,3 +959,5 @@ After the first report, add to `README.md`:
 - [CodeQL Documentation](https://codeql.github.com/docs/)
 - [Dependabot Configuration](https://docs.github.com/en/code-security/dependabot)
 - [Codecov Documentation](https://docs.codecov.io/)
+- [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
+- [Google Lighthouse](https://developer.chrome.com/docs/lighthouse/)

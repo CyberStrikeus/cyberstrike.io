@@ -1,0 +1,80 @@
+name: "Community: Update Contributors"
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  contributors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Generate contributors list
+        id: contributors
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get all contributors
+            const { data: contributors } = await github.rest.repos.listContributors({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            // Filter out bots
+            const humans = contributors.filter(c =>
+              c.type === 'User' && !c.login.includes('[bot]')
+            );
+
+            // Generate markdown table
+            let md = '## Contributors\n\n';
+            md += 'Thanks to all our contributors!\n\n';
+            md += '<table>\n';
+
+            const cols = 7;
+            for (let i = 0; i < humans.length; i += cols) {
+              md += '  <tr>\n';
+              for (let j = i; j < Math.min(i + cols, humans.length); j++) {
+                const c = humans[j];
+                md += `    <td align="center">\n`;
+                md += `      <a href="${c.html_url}">\n`;
+                md += `        <img src="${c.avatar_url}" width="80" alt="${c.login}" />\n`;
+                md += `        <br /><sub><b>${c.login}</b></sub>\n`;
+                md += `      </a>\n`;
+                md += `      <br />${c.contributions} commits\n`;
+                md += `    </td>\n`;
+              }
+              md += '  </tr>\n';
+            }
+            md += '</table>\n';
+
+            // Write to file
+            const fs = require('fs');
+            fs.writeFileSync('CONTRIBUTORS.md', md);
+            console.log(`Generated contributors list with ${humans.length} contributors`);
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet CONTRIBUTORS.md 2>/dev/null; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --global user.email "cyberstrike@cyberstrike.io"
+          git config --global user.name "cyberstrike-bot"
+          git add CONTRIBUTORS.md
+          git commit -m "chore: update contributors list [skip ci]"
+          git push
