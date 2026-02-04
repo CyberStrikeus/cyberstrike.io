@@ -344,7 +344,7 @@ cyberstrike --agent web-application
 
 - **Documentation**: https://cyberstrike.io/docs
 - **GitHub**: https://github.com/CyberStrikeus/cyberstrike.io
-- **Discord**: https://discord.gg/cyberstrike
+- **Discord**: https://discord.gg/AbESxpk6
 
 ---
 

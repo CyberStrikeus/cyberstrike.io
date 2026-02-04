@@ -108,9 +108,9 @@ Security vulnerability detected
 - [ ] Write first announcement
 
 ### Invites & Promotion
-- [ ] Create invite link
+- [x] Create invite link (discord.gg/AbESxpk6) ✅
 - [ ] Add Discord badge to README.md
-- [ ] Add Discord link to website
+- [x] Add Discord link to website ✅
 
 ---
 

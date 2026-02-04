@@ -12,9 +12,8 @@ const docsSiteData: DocsSiteData = {
     },
     {
       social: "Discord",
-      link: "#",
+      link: "https://discord.gg/AbESxpk6",
       icon: "tabler/brand-discord",
-      disabled: true,
     },
   ],
   footerSocials: [
@@ -30,9 +29,8 @@ const docsSiteData: DocsSiteData = {
     },
     {
       social: "Discord",
-      link: "#",
+      link: "https://discord.gg/AbESxpk6",
       icon: "tabler/brand-discord",
-      disabled: true,
     },
   ],
   // default image for meta tags if the page doesn't have an image already
