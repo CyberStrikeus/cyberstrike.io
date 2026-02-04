@@ -49,17 +49,21 @@ jobs:
               filter: {
                 and: [
                   {
-                    property: 'status',
-                    status: { equals: 'Published' }
+                    property: 'Status',
+                    select: { equals: 'Published' }
                   },
                   {
-                    property: 'published_date',
+                    property: 'Domain',
+                    multi_select: { contains: 'cyberstrike.io' }
+                  },
+                  {
+                    property: 'Date',
                     date: { on_or_after: since }
                   }
                 ]
               },
               sorts: [
-                { property: 'published_date', direction: 'descending' }
+                { property: 'Date', direction: 'descending' }
               ]
             };
 
@@ -96,30 +100,23 @@ jobs:
             const posts = result.results.map(page => {
               const props = page.properties;
 
-              // Extract title (rich_text or title type)
-              let title = '';
-              const titleProp = props.title || props.Title || props.name || props.Name;
-              if (titleProp) {
-                const items = titleProp.title || titleProp.rich_text || [];
-                title = items.map(t => t.plain_text).join('');
-              }
+              // Extract title (Name property, title type)
+              const titleProp = props.Name || props.Title || props.title;
+              const title = titleProp?.title?.[0]?.plain_text || '';
 
-              // Extract slug
-              let slug = '';
-              const slugProp = props.slug || props.Slug;
-              if (slugProp) {
-                const items = slugProp.rich_text || slugProp.title || [];
-                slug = items.map(t => t.plain_text).join('');
-              }
+              // Extract slug (Slug property, rich_text type)
+              const slugProp = props.Slug || props.slug;
+              const slug = slugProp?.rich_text?.[0]?.plain_text || '';
 
-              // Extract published_date
-              let publishedDate = '';
-              const dateProp = props.published_date || props['Published Date'];
-              if (dateProp && dateProp.date) {
-                publishedDate = dateProp.date.start || '';
-              }
+              // Extract date (Date property, date type)
+              const dateProp = props.Date || props.date;
+              const publishedDate = dateProp?.date?.start || '';
 
-              return { title, slug, publishedDate, id: page.id };
+              // Extract description (Summary/Description property, rich_text type)
+              const descProp = props.Summary || props.Description || props.Excerpt;
+              const description = descProp?.rich_text?.[0]?.plain_text || '';
+
+              return { title, slug, publishedDate, description, id: page.id };
             }).filter(p => p.title && p.slug);
 
             console.log(`Found ${posts.length} new post(s) published since ${since}`);
@@ -149,9 +146,13 @@ jobs:
             for (const post of posts) {
               const blogUrl = `https://cyberstrike.io/blog/${post.slug}`;
 
+              const desc = post.description
+                ? `**${post.title}**\n\n${post.description}`
+                : `**${post.title}**`;
+
               const embed = {
                 title: `📝 New Blog Post`,
-                description: `**${post.title}**`,
+                description: desc,
                 url: blogUrl,
                 color: 0x6366F1,
                 fields: [
