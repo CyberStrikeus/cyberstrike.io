@@ -1,0 +1,151 @@
+name: "Release: Auto Changelog"
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to generate changelog for (e.g., v1.0.7)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Get tag info
+        id: tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${{ github.event.release.tag_name }}"
+          fi
+          echo "current=$TAG" >> $GITHUB_OUTPUT
+
+          # Find the previous tag
+          PREVIOUS=$(git tag --sort=-version:refname | grep -A 1 "^$TAG$" | tail -1)
+          if [ "$PREVIOUS" = "$TAG" ]; then
+            # No previous tag found, use first commit
+            PREVIOUS=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "previous=$PREVIOUS" >> $GITHUB_OUTPUT
+          echo "Current: $TAG, Previous: $PREVIOUS"
+
+      - name: Generate changelog
+        id: changelog
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+
+            const current = '${{ steps.tag.outputs.current }}';
+            const previous = '${{ steps.tag.outputs.previous }}';
+
+            // Get commits between tags
+            const log = execSync(
+              `git log ${previous}..${current} --pretty=format:"%s|%h" --no-merges`,
+              { encoding: 'utf8' }
+            ).trim();
+
+            if (!log) {
+              core.setOutput('body', 'No changes found.');
+              return;
+            }
+
+            const commits = log.split('\n').map(line => {
+              const [message, hash] = line.split('|');
+              return { message, hash };
+            });
+
+            // Categorize commits
+            const categories = {
+              'Features': [],
+              'Bug Fixes': [],
+              'Security': [],
+              'Performance': [],
+              'Documentation': [],
+              'CI/CD': [],
+              'Other': []
+            };
+
+            for (const { message, hash } of commits) {
+              const msg = message.toLowerCase();
+              const shortHash = `[\`${hash}\`](https://github.com/${{ github.repository }}/commit/${hash})`;
+              // Clean conventional commit prefix for display
+              const cleanMsg = message
+                .replace(/^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|security)(\([^)]*\))?[!]?:\s*/i, '')
+                .trim();
+
+              const entry = `- ${cleanMsg} (${shortHash})`;
+
+              if (msg.startsWith('feat')) categories['Features'].push(entry);
+              else if (msg.startsWith('fix') && !msg.includes('security')) categories['Bug Fixes'].push(entry);
+              else if (msg.includes('security') || msg.includes('cve')) categories['Security'].push(entry);
+              else if (msg.startsWith('perf')) categories['Performance'].push(entry);
+              else if (msg.startsWith('docs')) categories['Documentation'].push(entry);
+              else if (msg.startsWith('ci') || msg.startsWith('chore(ci)') || msg.startsWith('chore(deps)')) categories['CI/CD'].push(entry);
+              else categories['Other'].push(entry);
+            }
+
+            // Build changelog
+            const icons = {
+              'Features': '🚀',
+              'Bug Fixes': '🐛',
+              'Security': '🔒',
+              'Performance': '⚡',
+              'Documentation': '📝',
+              'CI/CD': '⚙️',
+              'Other': '📦'
+            };
+
+            let body = '';
+            for (const [category, entries] of Object.entries(categories)) {
+              if (entries.length === 0) continue;
+              body += `### ${icons[category]} ${category}\n\n`;
+              body += entries.join('\n') + '\n\n';
+            }
+
+            // Add install instructions
+            body += `---\n\n`;
+            body += `### Installation\n\n`;
+            body += '```bash\n';
+            body += `# npm (recommended)\n`;
+            body += `npm install -g @cyberstrike-io/cli\n\n`;
+            body += `# Bun\n`;
+            body += `bun install -g @cyberstrike-io/cli --trust\n\n`;
+            body += `# Homebrew\n`;
+            body += `brew install CyberStrikeus/tap/cyberstrike\n`;
+            body += '```\n';
+
+            core.setOutput('body', body);
+
+      - name: Update release notes
+        if: github.event_name != 'workflow_dispatch'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `${{ steps.changelog.outputs.body }}`;
+            await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: ${{ github.event.release.id || 0 }},
+              body: body
+            });
+            console.log('Release notes updated successfully');
+
+      - name: Print changelog (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "Generated changelog for ${{ steps.tag.outputs.current }}:"
+          echo ""
+          echo "${{ steps.changelog.outputs.body }}"
