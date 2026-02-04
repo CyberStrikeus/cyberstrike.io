@@ -19,6 +19,7 @@ Cyberstrike uses a **trunk-based development** strategy:
 |----------|------|---------|-------------|
 | PR Check: TypeScript Validation | `typecheck.yml` | On PR | TypeScript type checking |
 | PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
+| PR Check: Code Coverage | `coverage.yml` | Push, PR | Test coverage reports |
 | Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
 | PR: Auto Label | `auto-label.yml` | On PR | Automatic PR labeling |
 | Release: Auto Changelog | `auto-changelog.yml` | On Release | Automatic release notes |
@@ -715,6 +716,78 @@ chore(ci): update CodeQL action          # → CI/CD
 
 ---
 
+## 15. Code Coverage
+
+### Why Code Coverage?
+
+Code coverage measures how much of the codebase is exercised by tests. For a security tool like Cyberstrike, high coverage means:
+
+- **Confidence**: More code tested = fewer hidden bugs
+- **Visibility**: See exactly which files and functions lack tests
+- **Regression Prevention**: Coverage drops alert you when PRs remove test coverage
+- **Quality Gate**: Block PRs that significantly reduce coverage
+
+### How It Works
+
+1. **Test Run**: `bun test --coverage` runs all unit tests with coverage tracking
+2. **Report Generation**: Produces an LCOV report with per-file coverage data
+3. **Upload**: Sends the report to Codecov for analysis and tracking
+4. **PR Comment**: Codecov posts a comment on the PR showing coverage changes
+
+### When It Runs
+
+| Trigger | Description |
+|---------|-------------|
+| Push to main | Track baseline coverage |
+| Pull Request | Compare PR coverage vs main |
+| Manual | Run from Actions tab |
+
+### Codecov Setup
+
+Codecov is free for public open source repos. To complete the setup:
+
+1. Go to [codecov.io](https://codecov.io) and sign in with GitHub
+2. Add the `CyberStrikeus/cyberstrike.io` repository
+3. (Optional) Add `CODECOV_TOKEN` to repo secrets for private uploads
+
+### Reading Coverage Reports
+
+Codecov provides:
+
+| Metric | Description |
+|--------|-------------|
+| **Line Coverage** | Percentage of code lines executed by tests |
+| **Branch Coverage** | Percentage of conditional branches tested |
+| **Patch Coverage** | Coverage of only the changed lines in a PR |
+| **Project Coverage** | Overall repository coverage trend |
+
+### PR Comment Example
+
+```
+Coverage Report
+  Merging #15 into main will increase coverage by +2.3%
+
+@@            Coverage Diff            @@
+##             main     #15     +/-    ##
+=========================================
++ Coverage    72.5%   74.8%   +2.3%
+  Files          85      87      +2
+  Lines        4200    4350    +150
+=========================================
++ Hits         3045    3257    +212
+  Misses       1155    1093     -62
+```
+
+### Adding Coverage Badge to README
+
+After the first report, add to `README.md`:
+
+```markdown
+[![codecov](https://codecov.io/gh/CyberStrikeus/cyberstrike.io/branch/main/graph/badge.svg)](https://codecov.io/gh/CyberStrikeus/cyberstrike.io)
+```
+
+---
+
 ## Resources
 
 - [Semantic Versioning](https://semver.org/)
@@ -723,3 +796,4 @@ chore(ci): update CodeQL action          # → CI/CD
 - [npm Publishing](https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry)
 - [CodeQL Documentation](https://codeql.github.com/docs/)
 - [Dependabot Configuration](https://docs.github.com/en/code-security/dependabot)
+- [Codecov Documentation](https://docs.codecov.io/)

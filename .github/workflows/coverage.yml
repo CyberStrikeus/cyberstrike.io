@@ -1,0 +1,39 @@
+name: "PR Check: Code Coverage"
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      - name: Run tests with coverage
+        working-directory: packages/cyberstrike
+        run: bun test --coverage --coverage-reporter=lcov --coverage-dir=./coverage
+        env:
+          CI: true
+          CYBERSTRIKE_DISABLE_SHARE: "true"
+          CYBERSTRIKE_DISABLE_LSP_DOWNLOAD: "true"
+          CYBERSTRIKE_DISABLE_DEFAULT_PLUGINS: "true"
+          CYBERSTRIKE_EXPERIMENTAL_DISABLE_FILEWATCHER: "true"
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: packages/cyberstrike/coverage/lcov.info
+          flags: unit-tests
+          fail_ci_if_error: false
+          verbose: true
