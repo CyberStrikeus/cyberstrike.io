@@ -1,0 +1,280 @@
+name: "Community: Discord Blog Notify"
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # Every 30 minutes
+  workflow_dispatch:
+    inputs:
+      title:
+        description: "Blog post title"
+        required: true
+        type: string
+      slug:
+        description: "Blog post slug (e.g., getting-started-with-cyberstrike)"
+        required: true
+        type: string
+      description:
+        description: "Short description (optional)"
+        required: false
+        type: string
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Notion for new posts
+        if: github.event_name == 'schedule'
+        id: notion
+        uses: actions/github-script@v7
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        with:
+          script: |
+            const https = require('https');
+
+            const notionKey = process.env.NOTION_API_KEY;
+            const databaseId = process.env.NOTION_DATABASE_ID;
+
+            if (!notionKey || !databaseId) {
+              console.log('Notion secrets not configured, skipping');
+              core.setOutput('posts', '[]');
+              return;
+            }
+
+            // Look for posts published in the last 35 minutes (5 min buffer for cron drift)
+            const since = new Date(Date.now() - 35 * 60 * 1000).toISOString();
+
+            const query = {
+              filter: {
+                and: [
+                  {
+                    property: 'status',
+                    status: { equals: 'Published' }
+                  },
+                  {
+                    property: 'published_date',
+                    date: { on_or_after: since }
+                  }
+                ]
+              },
+              sorts: [
+                { property: 'published_date', direction: 'descending' }
+              ]
+            };
+
+            const payload = JSON.stringify(query);
+
+            const result = await new Promise((resolve, reject) => {
+              const req = https.request({
+                hostname: 'api.notion.com',
+                path: `/v1/databases/${databaseId}/query`,
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${notionKey}`,
+                  'Notion-Version': '2022-06-28',
+                  'Content-Type': 'application/json',
+                  'Content-Length': Buffer.byteLength(payload)
+                }
+              }, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode >= 200 && res.statusCode < 300) {
+                    resolve(JSON.parse(data));
+                  } else {
+                    core.setFailed(`Notion API returned ${res.statusCode}: ${data}`);
+                    reject(new Error(data));
+                  }
+                });
+              });
+              req.on('error', reject);
+              req.write(payload);
+              req.end();
+            });
+
+            const posts = result.results.map(page => {
+              const props = page.properties;
+
+              // Extract title (rich_text or title type)
+              let title = '';
+              const titleProp = props.title || props.Title || props.name || props.Name;
+              if (titleProp) {
+                const items = titleProp.title || titleProp.rich_text || [];
+                title = items.map(t => t.plain_text).join('');
+              }
+
+              // Extract slug
+              let slug = '';
+              const slugProp = props.slug || props.Slug;
+              if (slugProp) {
+                const items = slugProp.rich_text || slugProp.title || [];
+                slug = items.map(t => t.plain_text).join('');
+              }
+
+              // Extract published_date
+              let publishedDate = '';
+              const dateProp = props.published_date || props['Published Date'];
+              if (dateProp && dateProp.date) {
+                publishedDate = dateProp.date.start || '';
+              }
+
+              return { title, slug, publishedDate, id: page.id };
+            }).filter(p => p.title && p.slug);
+
+            console.log(`Found ${posts.length} new post(s) published since ${since}`);
+            core.setOutput('posts', JSON.stringify(posts));
+
+      - name: Send Discord notifications (scheduled)
+        if: github.event_name == 'schedule'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const https = require('https');
+            const posts = JSON.parse('${{ steps.notion.outputs.posts }}');
+
+            if (posts.length === 0) {
+              console.log('No new posts to announce');
+              return;
+            }
+
+            const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+            if (!webhookUrl) {
+              core.setFailed('DISCORD_WEBHOOK_URL secret is not set');
+              return;
+            }
+
+            for (const post of posts) {
+              const blogUrl = `https://cyberstrike.io/blog/${post.slug}`;
+
+              const embed = {
+                title: `📝 New Blog Post`,
+                description: `**${post.title}**`,
+                url: blogUrl,
+                color: 0x6366F1,
+                fields: [
+                  {
+                    name: '🔗 Read',
+                    value: `[${post.title}](${blogUrl})`,
+                    inline: false
+                  }
+                ],
+                footer: {
+                  text: 'Cyberstrike Blog'
+                },
+                timestamp: post.publishedDate || new Date().toISOString()
+              };
+
+              const payload = JSON.stringify({
+                username: 'Cyberstrike Blog',
+                avatar_url: 'https://github.com/CyberStrikeus.png',
+                embeds: [embed]
+              });
+
+              const parsed = new URL(webhookUrl);
+              await new Promise((resolve, reject) => {
+                const req = https.request({
+                  hostname: parsed.hostname,
+                  path: parsed.pathname + parsed.search,
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(payload)
+                  }
+                }, (res) => {
+                  let data = '';
+                  res.on('data', chunk => data += chunk);
+                  res.on('end', () => {
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                      console.log(`Announced: ${post.title}`);
+                      resolve();
+                    } else {
+                      core.setFailed(`Discord API returned ${res.statusCode}: ${data}`);
+                      reject(new Error(data));
+                    }
+                  });
+                });
+                req.on('error', reject);
+                req.write(payload);
+                req.end();
+              });
+
+              // Rate limit: wait 1s between posts
+              if (posts.length > 1) {
+                await new Promise(r => setTimeout(r, 1000));
+              }
+            }
+
+      - name: Send Discord notification (manual)
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const https = require('https');
+
+            const title = '${{ inputs.title }}';
+            const slug = '${{ inputs.slug }}';
+            const description = '${{ inputs.description }}';
+            const blogUrl = `https://cyberstrike.io/blog/${slug}`;
+
+            const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+            if (!webhookUrl) {
+              core.setFailed('DISCORD_WEBHOOK_URL secret is not set');
+              return;
+            }
+
+            const embed = {
+              title: `📝 New Blog Post`,
+              description: description ? `**${title}**\n\n${description}` : `**${title}**`,
+              url: blogUrl,
+              color: 0x6366F1,
+              fields: [
+                {
+                  name: '🔗 Read',
+                  value: `[${title}](${blogUrl})`,
+                  inline: false
+                }
+              ],
+              footer: {
+                text: 'Cyberstrike Blog'
+              },
+              timestamp: new Date().toISOString()
+            };
+
+            const payload = JSON.stringify({
+              username: 'Cyberstrike Blog',
+              avatar_url: 'https://github.com/CyberStrikeus.png',
+              embeds: [embed]
+            });
+
+            const parsed = new URL(webhookUrl);
+            await new Promise((resolve, reject) => {
+              const req = https.request({
+                hostname: parsed.hostname,
+                path: parsed.pathname + parsed.search,
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Content-Length': Buffer.byteLength(payload)
+                }
+              }, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode >= 200 && res.statusCode < 300) {
+                    console.log(`Announced: ${title}`);
+                    resolve();
+                  } else {
+                    core.setFailed(`Discord API returned ${res.statusCode}: ${data}`);
+                    reject(new Error(data));
+                  }
+                });
+              });
+              req.on('error', reject);
+              req.write(payload);
+              req.end();
+            });

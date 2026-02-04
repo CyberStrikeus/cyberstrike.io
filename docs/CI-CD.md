@@ -29,6 +29,7 @@ Cyberstrike uses a **trunk-based development** strategy:
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
 | Community: Update Contributors | `contributors.yml` | Push to main | Auto-generate CONTRIBUTORS.md |
 | Community: Discord Notify | `notify-discord.yml` | On Release | Discord release announcements |
+| Community: Discord Blog Notify | `notify-discord-blog.yml` | Cron (30m) | Discord blog post announcements |
 
 ### Automated Dependencies
 
@@ -1018,6 +1019,95 @@ The workflow waits for the release to be fully published (with changelog) before
 
 ---
 
+## 20. Discord Blog Notifications
+
+**File:** `.github/workflows/notify-discord-blog.yml`
+
+The blog notification workflow polls the Notion database for newly published blog posts and announces them on Discord.
+
+### How It Works
+
+**Automatic (Scheduled):**
+
+1. Runs every 30 minutes via cron
+2. Queries the Notion API for posts with `status: Published` and `published_date` within the last 35 minutes
+3. For each new post, sends a Discord embed to `#announcements`
+
+**Manual:**
+
+1. Trigger from the Actions tab with title, slug, and optional description
+2. Sends a Discord embed immediately
+
+### Triggers
+
+| Event | When |
+|-------|------|
+| Schedule | Every 30 minutes |
+| Manual | Run from Actions tab with blog post details |
+
+### Prerequisites
+
+Add these repository secrets:
+
+| Secret | Description |
+|--------|-------------|
+| `NOTION_API_KEY` | Notion internal integration token |
+| `NOTION_DATABASE_ID` | ID of the blog posts database |
+| `DISCORD_WEBHOOK_URL` | Discord webhook URL (already set) |
+
+### Setting Up Notion Integration
+
+1. Go to [notion.so/my-integrations](https://www.notion.so/my-integrations)
+2. Create a new internal integration
+3. Copy the **Internal Integration Secret** → save as `NOTION_API_KEY`
+4. Open the blog database in Notion → **Share** → **Invite** the integration
+5. Copy the database ID from the URL → save as `NOTION_DATABASE_ID`
+   - URL format: `notion.so/{workspace}/{DATABASE_ID}?v=...`
+
+### Notion Database Schema
+
+The workflow expects these properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `title` | Title | Blog post title |
+| `slug` | Rich text | URL slug for the blog post |
+| `status` | Status | Must have a `Published` option |
+| `published_date` | Date | When the post was published |
+
+### Discord Embed
+
+Blog notifications appear with an indigo-colored embed:
+
+| Field | Content |
+|-------|---------|
+| Title | 📝 New Blog Post |
+| Description | **Blog Post Title** |
+| Link | cyberstrike.io/blog/{slug} |
+| Color | Indigo (#6366F1) |
+
+### Flow Diagram
+
+```
+Notion: Set status → Published → published_date = now
+   ↓ (within 30 min)
+GitHub Actions: Cron → Notion API query → Found new post
+   ↓
+Discord: Blog embed → #announcements
+   ↓ (parallel)
+Coolify: Webhook → Redeploy landing → Blog live on site
+```
+
+### Manual Dispatch Inputs
+
+| Input | Required | Description |
+|-------|----------|-------------|
+| `title` | Yes | Blog post title |
+| `slug` | Yes | URL slug (e.g., `getting-started-with-cyberstrike`) |
+| `description` | No | Short description for the embed |
+
+---
+
 ## Resources
 
 - [Semantic Versioning](https://semver.org/)
@@ -1030,3 +1120,4 @@ The workflow waits for the release to be fully published (with changelog) before
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
 - [Google Lighthouse](https://developer.chrome.com/docs/lighthouse/)
 - [Discord Webhooks](https://discord.com/developers/docs/resources/webhook)
+- [Notion API](https://developers.notion.com/)
