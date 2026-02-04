@@ -28,6 +28,7 @@ Cyberstrike uses a **trunk-based development** strategy:
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
 | Community: Update Contributors | `contributors.yml` | Push to main | Auto-generate CONTRIBUTORS.md |
+| Community: Discord Notify | `notify-discord.yml` | On Release | Discord release announcements |
 
 ### Automated Dependencies
 
@@ -950,6 +951,73 @@ Requires `contents: write` permission to push the updated file.
 
 ---
 
+## 19. Discord Notifications
+
+**File:** `.github/workflows/notify-discord.yml`
+
+The Discord notification workflow sends release announcements to the project's Discord server with a rich embed containing version info, changelog, and install instructions.
+
+### How It Works
+
+1. Fetches release details (tag, body, URL, pre-release status)
+2. Cleans up the changelog markdown for Discord display
+3. Sends a rich embed to the Discord webhook with:
+   - Version and release type (stable/pre-release)
+   - Changelog content from the GitHub release
+   - Install command
+   - Links to release notes, npm, and GitHub
+
+### Triggers
+
+| Event | When |
+|-------|------|
+| Release published | After a GitHub release is published |
+| Manual | Run from Actions tab with a tag input |
+
+### Prerequisites
+
+Add the Discord webhook URL as a repository secret:
+
+1. Go to **Settings → Secrets and variables → Actions**
+2. Click **New repository secret**
+3. Name: `DISCORD_WEBHOOK_URL`
+4. Value: The Discord webhook URL from your `#announcements` channel
+
+### Embed Format
+
+The notification appears as a Discord embed with:
+
+| Field | Content |
+|-------|---------|
+| Title | 🚀 Cyberstrike v1.0.8 |
+| Description | Changelog from release notes |
+| Install | `npm install -g @cyberstrike-io/cli` |
+| Type | Stable Release / Pre-release |
+| Version | `1.0.8` |
+| Links | Release Notes · npm · GitHub |
+| Color | Teal (stable) / Orange (pre-release) |
+
+### Manual Dispatch
+
+You can trigger a notification manually from the Actions tab:
+
+| Input | Required | Description |
+|-------|----------|-------------|
+| `tag` | Yes | Tag to announce (e.g., `v1.0.8`) |
+| `message` | No | Custom message if no release exists for the tag |
+
+### Integration with Release Pipeline
+
+The notification workflow runs after the release pipeline completes:
+
+```
+Tag push (v*) → release-cli.yml → auto-changelog.yml → Release published → notify-discord.yml
+```
+
+The workflow waits for the release to be fully published (with changelog) before sending the Discord notification.
+
+---
+
 ## Resources
 
 - [Semantic Versioning](https://semver.org/)
@@ -961,3 +1029,4 @@ Requires `contents: write` permission to push the updated file.
 - [Codecov Documentation](https://docs.codecov.io/)
 - [Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci)
 - [Google Lighthouse](https://developer.chrome.com/docs/lighthouse/)
+- [Discord Webhooks](https://discord.com/developers/docs/resources/webhook)

@@ -70,7 +70,7 @@
 ### Integrations
 - [x] Create GitHub webhook (for #github-feed)
 - [x] Add webhook to GitHub (releases, issues, PRs, stars)
-- [ ] Add release notification workflow (.github/workflows/notify-discord.yml)
+- [x] Add release notification workflow (.github/workflows/notify-discord.yml) ✅
 
 ### Discord + GitHub Actions Use Cases
 
@@ -118,7 +118,7 @@ Security vulnerability detected
 
 ### Priority 1 (Soon)
 - [x] Security Scan (CodeQL) - Security scanning ✅
-- [ ] Discord Notify - Release announcements (on hold - Discord account appeal pending)
+- [x] Discord Notify - Release announcements ✅
 - [x] Dependabot - Automatic dependency updates ✅
 
 ### Priority 2 (Later)

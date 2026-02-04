@@ -1,0 +1,172 @@
+name: "Community: Discord Notify"
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to announce (e.g., v1.0.7)"
+        required: true
+        type: string
+      message:
+        description: "Custom message (optional)"
+        required: false
+        type: string
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get release info
+        id: release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            let tag, body, url, prerelease;
+
+            if (context.eventName === 'workflow_dispatch') {
+              tag = '${{ inputs.tag }}';
+              // Fetch release by tag
+              try {
+                const { data: release } = await github.rest.repos.getReleaseByTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag
+                });
+                body = release.body || '';
+                url = release.html_url;
+                prerelease = release.prerelease;
+              } catch {
+                body = '${{ inputs.message }}' || `Release ${tag}`;
+                url = `https://github.com/${context.repo.owner}/${context.repo.repo}/releases/tag/${tag}`;
+                prerelease = tag.includes('beta') || tag.includes('alpha') || tag.includes('rc');
+              }
+            } else {
+              const release = context.payload.release;
+              tag = release.tag_name;
+              body = release.body || '';
+              url = release.html_url;
+              prerelease = release.prerelease;
+            }
+
+            // Strip markdown links for cleaner Discord display
+            const cleanBody = body
+              .replace(/\[`([^`]+)`\]\([^)]+\)/g, '`$1`')  // [`hash`](url) → `hash`
+              .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');       // [text](url) → text
+
+            // Truncate if too long for Discord embed (max 4096 chars)
+            const maxLen = 3500;
+            const description = cleanBody.length > maxLen
+              ? cleanBody.substring(0, maxLen) + '\n\n... [See full changelog](' + url + ')'
+              : cleanBody;
+
+            const version = tag.replace(/^v/, '');
+
+            core.setOutput('tag', tag);
+            core.setOutput('version', version);
+            core.setOutput('url', url);
+            core.setOutput('prerelease', String(prerelease));
+            core.setOutput('description', description);
+
+      - name: Send Discord notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const https = require('https');
+            const url = require('url');
+
+            const tag = '${{ steps.release.outputs.tag }}';
+            const version = '${{ steps.release.outputs.version }}';
+            const releaseUrl = '${{ steps.release.outputs.url }}';
+            const prerelease = '${{ steps.release.outputs.prerelease }}' === 'true';
+            const description = `${{ steps.release.outputs.description }}`;
+
+            const color = prerelease ? 0xFFA500 : 0x00D4AA;  // orange for pre-release, teal for stable
+            const emoji = prerelease ? '🧪' : '🚀';
+            const label = prerelease ? 'Pre-release' : 'Stable Release';
+
+            const embed = {
+              title: `${emoji} Cyberstrike ${tag}`,
+              description: description || 'A new version has been released.',
+              url: releaseUrl,
+              color: color,
+              fields: [
+                {
+                  name: '📦 Install',
+                  value: [
+                    '```bash',
+                    'npm install -g @cyberstrike-io/cli',
+                    '```'
+                  ].join('\n'),
+                  inline: false
+                },
+                {
+                  name: '🏷️ Type',
+                  value: label,
+                  inline: true
+                },
+                {
+                  name: '📋 Version',
+                  value: `\`${version}\``,
+                  inline: true
+                },
+                {
+                  name: '🔗 Links',
+                  value: [
+                    `[Release Notes](${releaseUrl})`,
+                    `[npm](https://www.npmjs.com/package/@cyberstrike-io/cli)`,
+                    `[GitHub](https://github.com/${{ github.repository }})`
+                  ].join(' · '),
+                  inline: false
+                }
+              ],
+              footer: {
+                text: 'Cyberstrike — AI-Powered Security CLI'
+              },
+              timestamp: new Date().toISOString()
+            };
+
+            const payload = JSON.stringify({
+              username: 'Cyberstrike Releases',
+              avatar_url: 'https://github.com/CyberStrikeus.png',
+              embeds: [embed]
+            });
+
+            const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+            if (!webhookUrl) {
+              core.setFailed('DISCORD_WEBHOOK_URL secret is not set');
+              return;
+            }
+
+            const parsed = new URL(webhookUrl);
+            const options = {
+              hostname: parsed.hostname,
+              path: parsed.pathname + parsed.search,
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(payload)
+              }
+            };
+
+            await new Promise((resolve, reject) => {
+              const req = https.request(options, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                  if (res.statusCode >= 200 && res.statusCode < 300) {
+                    console.log(`Discord notification sent for ${tag}`);
+                    resolve();
+                  } else {
+                    core.setFailed(`Discord API returned ${res.statusCode}: ${data}`);
+                    reject(new Error(data));
+                  }
+                });
+              });
+              req.on('error', reject);
+              req.write(payload);
+              req.end();
+            });
