@@ -124,7 +124,7 @@ Security vulnerability detected
 ### Priority 2 (Later)
 - [ ] Code Coverage - Test coverage reports
 - [x] Auto Label - Automatic PR labeling ✅
-- [ ] Auto Changelog - Automatic release notes
+- [x] Auto Changelog - Automatic release notes ✅
 
 ### Priority 3 (Future)
 - [ ] Bundle Size Check

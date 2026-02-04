@@ -21,6 +21,7 @@ Cyberstrike uses a **trunk-based development** strategy:
 | PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
 | Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
 | PR: Auto Label | `auto-label.yml` | On PR | Automatic PR labeling |
+| Release: Auto Changelog | `auto-changelog.yml` | On Release | Automatic release notes |
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
 
@@ -626,6 +627,90 @@ gh label list
 # Filter PRs by label
 gh pr list --label feature
 gh pr list --label bug
+```
+
+---
+
+## 14. Automatic Changelog (Release Notes)
+
+### Why Auto Changelog?
+
+Writing release notes manually is time-consuming and error-prone. Auto Changelog provides:
+
+- **Automatic Generation**: Creates release notes from commit history
+- **Categorization**: Groups changes by type (features, fixes, security, etc.)
+- **Consistency**: Every release follows the same format
+- **Traceability**: Each entry links to its commit
+
+### How It Works
+
+When a GitHub Release is created:
+
+1. **Tag Detection**: Identifies the current and previous tags
+2. **Commit Analysis**: Reads all commits between the two tags
+3. **Categorization**: Sorts commits by conventional commit prefix
+4. **Formatting**: Generates markdown with categories, icons, and commit links
+5. **Update**: Updates the GitHub Release body with the generated notes
+
+### Categories
+
+| Prefix | Category | Icon |
+|--------|----------|------|
+| `feat:` | Features | 🚀 |
+| `fix:` | Bug Fixes | 🐛 |
+| `security` keyword | Security | 🔒 |
+| `perf:` | Performance | ⚡ |
+| `docs:` | Documentation | 📝 |
+| `ci:`, `chore(ci):` | CI/CD | ⚙️ |
+| Other | Other | 📦 |
+
+### Example Output
+
+```markdown
+### 🚀 Features
+
+- Add interactive Playwright installation prompt ([`abc1234`])
+- Add CodeQL security scanning workflow ([`def5678`])
+
+### 🐛 Bug Fixes
+
+- Update @clack/prompts API compatibility ([`ghi9012`])
+
+### 🔒 Security
+
+- Update astro packages to patch vulnerabilities ([`jkl3456`])
+
+---
+
+### Installation
+npm install -g @cyberstrike-io/cli
+```
+
+### When It Runs
+
+| Trigger | Description |
+|---------|-------------|
+| Release created | Automatically updates the release notes |
+| Manual | Run with a specific tag via Actions tab |
+
+### Manual Trigger
+
+```bash
+# Generate changelog for a specific tag
+gh workflow run "Release: Auto Changelog" --field tag=v1.0.7
+```
+
+### Prerequisites
+
+For the best results, follow [Conventional Commits](https://www.conventionalcommits.org/) in your commit messages:
+
+```bash
+feat(cli): add new scan command          # → Features
+fix(auth): resolve token refresh issue   # → Bug Fixes
+fix(security): patch XSS vulnerability   # → Security
+perf(tui): optimize rendering            # → Performance
+docs: update getting started guide       # → Documentation
+chore(ci): update CodeQL action          # → CI/CD
 ```
 
 ---
