@@ -20,6 +20,7 @@ Cyberstrike uses a **trunk-based development** strategy:
 | PR Check: TypeScript Validation | `typecheck.yml` | On PR | TypeScript type checking |
 | PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
 | Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
+| PR: Auto Label | `auto-label.yml` | On PR | Automatic PR labeling |
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
 
@@ -546,6 +547,85 @@ bun update <package-name>
 
 # Or edit package.json and run
 bun install
+```
+
+---
+
+## 13. Automatic PR Labeling
+
+### Why Auto Label?
+
+Manual labeling is tedious and inconsistent. Auto Label provides:
+
+- **Consistency**: Every PR gets labeled the same way
+- **Filtering**: Easily filter PRs by type, scope, or package
+- **Changelog**: Labels drive automatic release notes generation
+- **Visibility**: Instantly see what a PR affects without reading the diff
+
+### How It Works
+
+The workflow runs on every PR and applies labels based on two criteria:
+
+**1. PR Title (Conventional Commits)**
+
+| Title Prefix | Label |
+|--------------|-------|
+| `feat:` | `feature` |
+| `fix:` | `bug` |
+| `docs:` | `documentation` |
+| `refactor:` | `refactor` |
+| `perf:` | `performance` |
+| `test:` | `testing` |
+| `chore:` | `chore` |
+| `ci:` | `ci` |
+
+**2. Scope in Title**
+
+| Scope | Label |
+|-------|-------|
+| `(cli)` | `cli` |
+| `(tui)` | `tui` |
+| `(sdk)` | `sdk` |
+| `(web)` | `web` |
+| `(mcp)` | `mcp` |
+| `(security)` | `security` |
+| `(deps)` | `dependencies` |
+
+**3. Files Changed**
+
+| Path | Label |
+|------|-------|
+| `packages/cyberstrike/` | `cli` |
+| `packages/web/` | `web` |
+| `packages/sdk/` | `sdk` |
+| `packages/desktop/` | `desktop` |
+| `docs/` or `*.md` | `documentation` |
+| `.github/` | `ci` |
+| `*test*` or `*spec*` | `testing` |
+
+**4. Special Cases**
+
+| Condition | Label |
+|-----------|-------|
+| Dependabot PR | `dependencies` + `automated` |
+| Title contains `breaking` or `!:` | `breaking-change` |
+| Title contains `urgent` | `priority-high` |
+
+### Example
+
+A PR titled `feat(cli): add new scan command` that modifies files in `packages/cyberstrike/` will get:
+- `feature` (from `feat:` prefix)
+- `cli` (from `(cli)` scope and file path)
+
+### Viewing Labels
+
+```bash
+# List all labels
+gh label list
+
+# Filter PRs by label
+gh pr list --label feature
+gh pr list --label bug
 ```
 
 ---
