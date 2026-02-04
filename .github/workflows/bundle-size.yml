@@ -1,0 +1,92 @@
+name: "PR Check: Bundle Size"
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: bundle-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bundle-size:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v6
+
+      - name: Setup Bun
+        uses: ./.github/actions/setup-bun
+
+      - name: Build CLI
+        working-directory: packages/cyberstrike
+        run: bun run build
+        env:
+          SKIP_INSTALL: "true"
+
+      - name: Measure bundle size
+        id: size
+        working-directory: packages/cyberstrike
+        run: |
+          if [ -d "dist" ]; then
+            SIZE=$(du -sb dist | cut -f1)
+            SIZE_MB=$(echo "scale=2; $SIZE / 1048576" | bc)
+            echo "bytes=$SIZE" >> $GITHUB_OUTPUT
+            echo "mb=$SIZE_MB" >> $GITHUB_OUTPUT
+            echo "Bundle size: ${SIZE_MB}MB ($SIZE bytes)"
+
+            # List largest files
+            echo ""
+            echo "Largest files:"
+            find dist -type f -exec du -b {} + | sort -rn | head -10
+          else
+            echo "No dist directory found"
+            echo "bytes=0" >> $GITHUB_OUTPUT
+            echo "mb=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment PR with bundle size
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const bytes = parseInt('${{ steps.size.outputs.bytes }}');
+            const mb = '${{ steps.size.outputs.mb }}';
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number
+            });
+            const existing = comments.find(c =>
+              c.user.login === 'github-actions[bot]' &&
+              c.body.includes('📦 Bundle Size')
+            );
+
+            const body = [
+              '## 📦 Bundle Size',
+              '',
+              `| Metric | Value |`,
+              `|--------|-------|`,
+              `| Total Size | **${mb} MB** |`,
+              `| Bytes | ${bytes.toLocaleString()} |`,
+              '',
+              '*Measured from `packages/cyberstrike/dist`*'
+            ].join('\n');
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body
+              });
+            }
