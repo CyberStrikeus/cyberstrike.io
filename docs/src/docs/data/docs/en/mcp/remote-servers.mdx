@@ -2,17 +2,60 @@
 title: Remote MCP Servers
 description: Connect to remote MCP servers over HTTP/SSE
 sidebar:
-  order: 3
+  order: 4
   label: Remote Servers
 ---
 
-Remote MCP servers provide tools and capabilities over HTTP, enabling access to hosted services and shared infrastructure.
+Remote MCP servers connect over HTTP/HTTPS, enabling access to hosted services and shared infrastructure. [Bolt](/docs/mcp/bolt) is the primary example of a remote MCP server for security tools.
 
-{/* TODO: Diagram - Remote MCP architecture */}
+<Aside variant="tip">
+  **Looking for security tools?** See [Bolt](/docs/mcp/bolt) for 100+ pre-installed Kali tools via Docker. This page covers general remote MCP configuration.
+</Aside>
+
+{/* MARP Slide - Remote Transport Options */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎞️ MARP SLIDE: remote-transport.md</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">HTTP, SSE, and WebSocket transport options</p>
+</div>
+
+{/* Diagram - Remote MCP architecture */}
 <div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
   <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📊 DIAGRAM: remote-mcp-architecture.mmd</p>
   <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Remote MCP server architecture</p>
 </div>
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Client["Cyberstrike"]
+        Agent[AI Agent]
+        MCPClient[MCP Client]
+    end
+
+    subgraph Network["Network"]
+        HTTP[HTTP/HTTPS]
+        SSE[SSE Stream]
+    end
+
+    subgraph Remote["Remote Server"]
+        Server[MCP Server]
+        Auth[Authentication]
+        Tools[Tools/Resources]
+    end
+
+    Agent --> MCPClient
+    MCPClient --> HTTP
+    HTTP --> Auth
+    Auth --> Server
+    Server --> Tools
+    Server -.-> SSE
+    SSE -.-> MCPClient
+
+    style Client fill:#3b82f6,color:#fff
+    style Network fill:#8b5cf6,color:#fff
+    style Remote fill:#10b981,color:#fff
+```
 
 ## Overview
 
@@ -462,6 +505,7 @@ Check:
 
 ## Related Documentation
 
-- [MCP Overview](/docs/mcp) - MCP basics
-- [Local Servers](/docs/mcp/local-servers) - Local MCP
+- [Bolt / MCP Overview](/docs/mcp) - Architecture and concepts
+- [Bolt](/docs/mcp/bolt) - Docker-based Kali tools (recommended)
+- [Local Servers](/docs/mcp/local-servers) - Local MCP servers
 - [OAuth Configuration](/docs/mcp/oauth) - OAuth setup

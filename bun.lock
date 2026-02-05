@@ -238,6 +238,7 @@
       "version": "0.1.0",
       "bin": {
         "mcp-kali": "./dist/index.js",
+        "mcp-kali-http": "./dist/http.js",
       },
       "dependencies": {
         "@modelcontextprotocol/sdk": "1.25.2",

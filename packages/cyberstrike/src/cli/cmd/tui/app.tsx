@@ -12,6 +12,7 @@ import { SyncProvider, useSync } from "@tui/context/sync"
 import { LocalProvider, useLocal } from "@tui/context/local"
 import { DialogModel, useConnected } from "@tui/component/dialog-model"
 import { DialogMcp } from "@tui/component/dialog-mcp"
+import { DialogBolt } from "@tui/component/dialog-bolt"
 import { DialogStatus } from "@tui/component/dialog-status"
 import { DialogThemeList } from "@tui/component/dialog-theme-list"
 import { DialogHelp } from "./ui/dialog-help"
@@ -404,6 +405,18 @@ function App() {
       },
       onSelect: () => {
         dialog.replace(() => <DialogMcp />)
+      },
+    },
+    {
+      title: "Bolt Servers",
+      value: "bolt.list",
+      category: "Agent",
+      slash: {
+        name: "bolt",
+        aliases: ["bolts", "kali"],
+      },
+      onSelect: () => {
+        dialog.replace(() => <DialogBolt />)
       },
     },
     {
