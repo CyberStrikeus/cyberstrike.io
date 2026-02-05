@@ -126,8 +126,8 @@ if (!skipInstall) {
   await $`bun install @opentui/core-darwin-x64@${OPENTUI_CORE_VERSION}`
   await $`bun install @opentui/core-darwin-arm64@${OPENTUI_CORE_VERSION}`
   await $`bun install @opentui/core-win32-x64@${OPENTUI_CORE_VERSION}`
-  // Build spinner package (its dist is not tracked in git)
-  await $`bun run --cwd ../spinner build`
+  // Install spinner from npm (workspace version doesn't have dist tracked in git)
+  await $`bun install cyberstrike-spinner@0.0.6`
 }
 for (const item of targets) {
   const name = [
