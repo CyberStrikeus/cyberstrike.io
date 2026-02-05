@@ -156,10 +156,34 @@ for (const item of targets) {
     platformAlias[`@opentui/core-${platform}`] = `@opentui/core-${targetPlatform}`
   }
 
+  // Plugin to resolve opentui dynamic imports to actual package paths
+  const opentuiResolverPlugin: import("bun").BunPlugin = {
+    name: "opentui-resolver",
+    setup(build) {
+      // Handle @opentui/core-* imports
+      build.onResolve({ filter: /^@opentui\/core-/ }, (args) => {
+        // Always resolve to target platform package
+        const pkgName = `@opentui/core-${targetPlatform}`
+        const pkgPath = path.resolve(dir, "node_modules", pkgName, "index.js")
+        if (fs.existsSync(pkgPath)) {
+          return { path: pkgPath }
+        }
+        // Try package.json main field
+        const pkgJsonPath = path.resolve(dir, "node_modules", pkgName, "package.json")
+        if (fs.existsSync(pkgJsonPath)) {
+          const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"))
+          const main = pkgJson.main || pkgJson.module || "index.js"
+          return { path: path.resolve(dir, "node_modules", pkgName, main) }
+        }
+        return undefined
+      })
+    },
+  }
+
   await Bun.build({
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
-    plugins: [solidPlugin],
+    plugins: [opentuiResolverPlugin, solidPlugin],
     sourcemap: "external",
     external: ["electron", "chromium-bidi"],
     alias: platformAlias,
