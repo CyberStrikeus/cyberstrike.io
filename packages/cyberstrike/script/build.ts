@@ -118,6 +118,7 @@ if (!skipInstall) {
   // Version references moved here since cli package.json no longer has dependencies
   const TUI_CORE_VERSION = "0.1.75"
   const PARCEL_WATCHER_VERSION = "2.5.1"
+  const OPENTUI_VERSION = "0.1.77"
   await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
   // Install spinner from npm (workspace version doesn't have dist tracked in git)
@@ -125,6 +126,11 @@ if (!skipInstall) {
   // Install tui-solid from npm and create alias for wrong package name in spinner
   await $`bun install @cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
   await $`bun install @cyberstrike/tui-solid@npm:@cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
+  // Install opentui native packages for all platforms (needed for cross-compilation)
+  await $`bun install @opentui/core-linux-x64@${OPENTUI_VERSION}`
+  await $`bun install @opentui/core-darwin-x64@${OPENTUI_VERSION}`
+  await $`bun install @opentui/core-darwin-arm64@${OPENTUI_VERSION}`
+  await $`bun install @opentui/core-win32-x64@${OPENTUI_VERSION}`
 }
 for (const item of targets) {
   const name = [
@@ -147,12 +153,29 @@ for (const item of targets) {
   const bunfsRoot = item.os === "win32" ? "B:/~BUN/root/" : "/$bunfs/root/"
   const workerRelativePath = path.relative(dir, parserWorker).replaceAll("\\", "/")
 
+  // Build alias map for cross-platform native modules
+  const platformAlias: Record<string, string> = {
+    // Fix wrong package name in spinner's bundled code
+    "@cyberstrike/tui-solid": "@cyberstrike-io/tui-solid",
+  }
+
+  // Add opentui core aliases for all platforms to resolve to target platform
+  const opentuiPlatforms = ["linux-x64", "darwin-x64", "darwin-arm64", "win32-x64"]
+  const targetPlatform = `${item.os}-${item.arch}`
+  for (const platform of opentuiPlatforms) {
+    if (platform !== targetPlatform) {
+      // Map other platforms to the target platform's native module
+      platformAlias[`@opentui/core-${platform}`] = `@opentui/core-${targetPlatform}`
+    }
+  }
+
   await Bun.build({
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
     plugins: [solidPlugin],
     sourcemap: "external",
     external: ["electron", "chromium-bidi"],
+    alias: platformAlias,
     compile: {
       autoloadBunfig: false,
       autoloadDotenv: false,
