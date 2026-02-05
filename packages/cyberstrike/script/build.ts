@@ -127,8 +127,7 @@ if (!skipInstall) {
   // Note: tui-core, tui-solid, and spinner are linked from workspace
 }
 for (const item of targets) {
-  const name = [
-    "cyberstrike",
+  const nameSuffix = [
     // changing to win32 flags npm for some reason
     item.os === "win32" ? "windows" : item.os,
     item.arch,
@@ -137,8 +136,10 @@ for (const item of targets) {
   ]
     .filter(Boolean)
     .join("-")
+  const name = `@cyberstrike-io/cli-${nameSuffix}`
+  const dirName = `cli-${nameSuffix}`
   console.log(`building ${name}`)
-  await $`mkdir -p dist/${name}/bin`
+  await $`mkdir -p dist/${dirName}/bin`
 
   const parserWorker = fs.realpathSync(path.resolve(dir, "./node_modules/@cyberstrike-io/tui-core/parser.worker.js"))
   const workerPath = "./src/cli/cmd/tui/worker.ts"
@@ -193,8 +194,8 @@ for (const item of targets) {
       //@ts-ignore (bun types aren't up to date)
       autoloadTsconfig: true,
       autoloadPackageJson: true,
-      target: name.replace("cyberstrike", "bun") as any,
-      outfile: `dist/${name}/bin/cyberstrike`,
+      target: `bun-${nameSuffix}` as any,
+      outfile: `dist/${dirName}/bin/cyberstrike`,
       execArgv: [`--user-agent=cyberstrike/${Script.version}`, "--use-system-ca", "--"],
       windows: {},
     },
@@ -208,8 +209,8 @@ for (const item of targets) {
     },
   })
 
-  await $`rm -rf ./dist/${name}/bin/tui`
-  await Bun.file(`dist/${name}/package.json`).write(
+  await $`rm -rf ./dist/${dirName}/bin/tui`
+  await Bun.file(`dist/${dirName}/package.json`).write(
     JSON.stringify(
       {
         name,

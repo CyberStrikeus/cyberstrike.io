@@ -8,22 +8,27 @@ const dir = fileURLToPath(new URL("..", import.meta.url))
 process.chdir(dir)
 
 const { binaries } = await import("./build.ts")
+
+// Smoke test - run the binary for current platform
 {
-  const name = `${pkg.name}-${process.platform}-${process.arch}`
-  console.log(`smoke test: running dist/${name}/bin/cyberstrike --version`)
-  await $`./dist/${name}/bin/cyberstrike --version`
+  const platformSuffix = `${process.platform}-${process.arch}`
+  const dirName = `cli-${platformSuffix}`
+  console.log(`smoke test: running dist/${dirName}/bin/cyberstrike --version`)
+  await $`./dist/${dirName}/bin/cyberstrike --version`
 }
 
-await $`mkdir -p ./dist/${pkg.name}`
-await $`cp -r ./bin ./dist/${pkg.name}/bin`
-await $`cp ./script/postinstall.mjs ./dist/${pkg.name}/postinstall.mjs`
+// Create main metapackage @cyberstrike-io/cli
+const mainPkgDir = "./dist/cli"
+await $`mkdir -p ${mainPkgDir}`
+await $`cp -r ./bin ${mainPkgDir}/bin`
+await $`cp ./script/postinstall.mjs ${mainPkgDir}/postinstall.mjs`
 
-await Bun.file(`./dist/${pkg.name}/package.json`).write(
+await Bun.file(`${mainPkgDir}/package.json`).write(
   JSON.stringify(
     {
-      name: pkg.name + "-ai",
+      name: "@cyberstrike-io/cli",
       bin: {
-        [pkg.name]: `./bin/${pkg.name}`,
+        cyberstrike: "./bin/cyberstrike",
       },
       scripts: {
         postinstall: "bun ./postinstall.mjs || node ./postinstall.mjs",
@@ -38,31 +43,38 @@ await Bun.file(`./dist/${pkg.name}/package.json`).write(
 
 const tags = [Script.channel]
 
-const tasks = Object.entries(binaries).map(async ([name]) => {
+// Publish platform-specific binaries
+const tasks = Object.entries(binaries).map(async ([name, version]) => {
+  // Extract directory name from package name (e.g., "@cyberstrike-io/cli-darwin-arm64" -> "cli-darwin-arm64")
+  const dirName = name.replace("@cyberstrike-io/", "")
   if (process.platform !== "win32") {
-    await $`chmod -R 755 .`.cwd(`./dist/${name}`)
+    await $`chmod -R 755 .`.cwd(`./dist/${dirName}`)
   }
-  await $`bun pm pack`.cwd(`./dist/${name}`)
+  await $`bun pm pack`.cwd(`./dist/${dirName}`)
   for (const tag of tags) {
-    await $`npm publish *.tgz --access public --tag ${tag}`.cwd(`./dist/${name}`)
+    await $`npm publish *.tgz --access public --tag ${tag}`.cwd(`./dist/${dirName}`)
   }
 })
 await Promise.all(tasks)
+
+// Publish main metapackage
 for (const tag of tags) {
-  await $`cd ./dist/${pkg.name} && bun pm pack && npm publish *.tgz --access public --tag ${tag}`
+  await $`cd ${mainPkgDir} && bun pm pack && npm publish *.tgz --access public --tag ${tag}`
 }
 
 if (!Script.preview) {
   // Create archives for GitHub release
-  for (const key of Object.keys(binaries)) {
-    if (key.includes("linux")) {
-      await $`tar -czf ../../${key}.tar.gz *`.cwd(`dist/${key}/bin`)
+  for (const name of Object.keys(binaries)) {
+    const dirName = name.replace("@cyberstrike-io/", "")
+    const archiveName = dirName // cli-darwin-arm64, cli-linux-x64, etc.
+    if (name.includes("linux")) {
+      await $`tar -czf ../../${archiveName}.tar.gz *`.cwd(`dist/${dirName}/bin`)
     } else {
-      await $`zip -r ../../${key}.zip *`.cwd(`dist/${key}/bin`)
+      await $`zip -r ../../${archiveName}.zip *`.cwd(`dist/${dirName}/bin`)
     }
   }
 
-  const image = "ghcr.io/cyberstrike/cyberstrike"
+  const image = "ghcr.io/cyberstrike-io/cli"
   const platforms = "linux/amd64,linux/arm64"
   const tags = [`${image}:${Script.version}`, `${image}:latest`]
   const tagFlags = tags.flatMap((t) => ["-t", t])
