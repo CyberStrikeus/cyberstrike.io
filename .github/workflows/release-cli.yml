@@ -80,8 +80,8 @@ jobs:
           CYBERSTRIKE_VERSION: ${{ inputs.version }}
           CYBERSTRIKE_API_KEY: ${{ secrets.CYBERSTRIKE_API_KEY }}
           AUR_KEY: ${{ secrets.AUR_KEY }}
-          GITHUB_TOKEN: ${{ secrets.SST_GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.SST_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SST_GITHUB_TOKEN || github.token }}
+          GH_TOKEN: ${{ secrets.SST_GITHUB_TOKEN || github.token }}
           NPM_CONFIG_PROVENANCE: false
 
       - uses: actions/upload-artifact@v6
