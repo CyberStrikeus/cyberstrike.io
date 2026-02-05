@@ -72,17 +72,22 @@ jobs:
       - name: Send Discord notification
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_URL: ${{ steps.release.outputs.url }}
+          RELEASE_PRERELEASE: ${{ steps.release.outputs.prerelease }}
+          RELEASE_DESCRIPTION: ${{ steps.release.outputs.description }}
         uses: actions/github-script@v7
         with:
           script: |
             const https = require('https');
             const url = require('url');
 
-            const tag = '${{ steps.release.outputs.tag }}';
-            const version = '${{ steps.release.outputs.version }}';
-            const releaseUrl = '${{ steps.release.outputs.url }}';
-            const prerelease = '${{ steps.release.outputs.prerelease }}' === 'true';
-            const description = `${{ steps.release.outputs.description }}`;
+            const tag = process.env.RELEASE_TAG;
+            const version = process.env.RELEASE_VERSION;
+            const releaseUrl = process.env.RELEASE_URL;
+            const prerelease = process.env.RELEASE_PRERELEASE === 'true';
+            const description = process.env.RELEASE_DESCRIPTION || '';
 
             const color = prerelease ? 0xFFA500 : 0x00D4AA;  // orange for pre-release, teal for stable
             const emoji = prerelease ? '🧪' : '🚀';
