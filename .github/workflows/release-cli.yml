@@ -83,6 +83,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.SST_GITHUB_TOKEN || github.token }}
           GH_TOKEN: ${{ secrets.SST_GITHUB_TOKEN || github.token }}
           NPM_CONFIG_PROVENANCE: false
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - uses: actions/upload-artifact@v6
         with:
