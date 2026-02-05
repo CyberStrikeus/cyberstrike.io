@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 
-// import { Script } from "@cyberstrike-io/script"
+import { Script } from "@cyberstrike-io/script"
 import { $ } from "bun"
 
-// if (!Script.preview) {
-// await $`gh release edit v${Script.version} --draft=false`
-// }
+// Publish the draft release - this triggers Discord notification workflow
+if (!Script.preview) {
+  await $`gh release edit v${Script.version} --draft=false`
+}
 
 await $`bun install`
 
