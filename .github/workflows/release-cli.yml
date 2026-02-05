@@ -46,7 +46,7 @@ jobs:
 
       - name: Install Cyberstrike
         if: inputs.bump || inputs.version
-        run: bun i -g cyberstrike@1.0.169
+        run: bun i -g cyberstrike@latest
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
