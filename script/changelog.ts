@@ -221,27 +221,26 @@ export async function buildNotes(from: string, to: string) {
 
   console.log("generating changelog since " + from)
 
-  const cyberstrike = await createCyberstrike({ port: 5044 })
   const notes: string[] = []
+  let cyberstrike: Awaited<ReturnType<typeof createCyberstrike>> | null = null
 
   try {
+    cyberstrike = await createCyberstrike({ port: 5044 })
     const lines = await generateChangelog(commits, cyberstrike)
     notes.push(...lines)
     console.log("---- Generated Changelog ----")
     console.log(notes.join("\n"))
     console.log("-----------------------------")
   } catch (error) {
-    if (error instanceof Error && error.name === "TimeoutError") {
-      console.log("Changelog generation timed out, using raw commits")
-      for (const commit of commits) {
-        const attribution = commit.author && !team.includes(commit.author) ? ` (@${commit.author})` : ""
-        notes.push(`- ${commit.message}${attribution}`)
-      }
-    } else {
-      throw error
+    // Fallback to raw commit messages if cyberstrike server fails or times out
+    const errorMsg = error instanceof Error ? error.message : String(error)
+    console.log(`Changelog AI generation failed (${errorMsg}), using raw commits`)
+    for (const commit of commits) {
+      const attribution = commit.author && !team.includes(commit.author) ? ` (@${commit.author})` : ""
+      notes.push(`- ${commit.message}${attribution}`)
     }
   } finally {
-    cyberstrike.server.close()
+    cyberstrike?.server.close()
   }
 
   const contributors = await getContributors(from, to)
