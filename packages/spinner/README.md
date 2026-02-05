@@ -1,4 +1,4 @@
-# @cyberstrike/spinner
+# cyberstrike-spinner
 
 A small & opinionated spinner library for terminal UIs built on [Cyberstrike TUI](https://github.com/CyberStrikeus/cyberstrike.io).
 
@@ -6,19 +6,19 @@ A small & opinionated spinner library for terminal UIs built on [Cyberstrike TUI
 
 - **Built-in Spinners** - Powered by [cli-spinners](https://github.com/sindresorhus/cli-spinners)
 - **Custom Spinners** - Create your own with custom frames and intervals
-- **SolidJS Support** - First-class SolidJS integration via @cyberstrike/tui-solid
+- **SolidJS Support** - First-class SolidJS integration via @cyberstrike-io/tui-solid
 - **Type-Safe** - Full TypeScript support
 
 ## Installation
 
 ```bash
-bun add @cyberstrike/spinner @cyberstrike/tui-core
+bun add cyberstrike-spinner @cyberstrike-io/tui-core
 ```
 
 For SolidJS support:
 
 ```bash
-bun add @cyberstrike/spinner @cyberstrike/tui-core @cyberstrike/tui-solid solid-js
+bun add cyberstrike-spinner @cyberstrike-io/tui-core @cyberstrike-io/tui-solid solid-js
 ```
 
 ## Usage
@@ -26,8 +26,8 @@ bun add @cyberstrike/spinner @cyberstrike/tui-core @cyberstrike/tui-solid solid-
 ### Basic Usage (Core)
 
 ```typescript
-import { createCliRenderer } from "@cyberstrike/tui-core";
-import { SpinnerRenderable } from "@cyberstrike/spinner";
+import { createCliRenderer } from "@cyberstrike-io/tui-core";
+import { SpinnerRenderable } from "cyberstrike-spinner";
 
 const renderer = await createCliRenderer();
 
@@ -46,8 +46,8 @@ import {
   BoxRenderable,
   createCliRenderer,
   TextRenderable,
-} from "@cyberstrike/tui-core";
-import { SpinnerRenderable } from "@cyberstrike/spinner";
+} from "@cyberstrike-io/tui-core";
+import { SpinnerRenderable } from "cyberstrike-spinner";
 
 const renderer = await createCliRenderer();
 
@@ -76,14 +76,14 @@ renderer.root.add(container);
 First, import the SolidJS extension:
 
 ```tsx
-import "@cyberstrike/spinner/solid";
+import "cyberstrike-spinner/solid";
 ```
 
 Then use the `<spinner>` component in your Cyberstrike TUI SolidJS app:
 
 ```tsx
-import { render } from "@cyberstrike/tui-solid";
-import "@cyberstrike/spinner/solid";
+import { render } from "@cyberstrike-io/tui-solid";
+import "cyberstrike-spinner/solid";
 
 function App() {
   return (
@@ -217,7 +217,7 @@ spinner.color = "#ff6432";
 The `color` property also accepts a `ColorGenerator` function for dynamic color effects:
 
 ```typescript
-import { SpinnerRenderable, type ColorGenerator } from "@cyberstrike/spinner";
+import { SpinnerRenderable, type ColorGenerator } from "cyberstrike-spinner";
 
 // Custom color generator
 const customColorGen: ColorGenerator = (
@@ -243,7 +243,7 @@ const spinner = new SpinnerRenderable(renderer, {
 Creates a pulsing effect that cycles through colors:
 
 ```typescript
-import { SpinnerRenderable, createPulse } from "@cyberstrike/spinner";
+import { SpinnerRenderable, createPulse } from "cyberstrike-spinner";
 
 const spinner = new SpinnerRenderable(renderer, {
   name: "dots",
@@ -261,7 +261,7 @@ const spinner = new SpinnerRenderable(renderer, {
 Creates a wave pattern that moves across characters:
 
 ```typescript
-import { SpinnerRenderable, createWave } from "@cyberstrike/spinner";
+import { SpinnerRenderable, createWave } from "cyberstrike-spinner";
 
 const spinner = new SpinnerRenderable(renderer, {
   name: "dots",
@@ -282,8 +282,8 @@ Check out the `examples/` directory for complete working examples:
 
 ## Peer Dependencies
 
-- `@cyberstrike/tui-core` (required)
-- `@cyberstrike/tui-solid` (optional, for SolidJS support)
+- `@cyberstrike-io/tui-core` (required)
+- `@cyberstrike-io/tui-solid` (optional, for SolidJS support)
 
 ## Development
 

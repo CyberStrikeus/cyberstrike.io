@@ -10282,7 +10282,7 @@ var CursorStateStruct = defineStruct([
 ]);
 
 // src/zig.ts
-var module = await import(`@opentui/core-${process.platform}-${process.arch}/index.ts`);
+var module = await import(`@opentui/core-${process.platform}-${process.arch}`);
 var targetLibPath = module.default;
 if (isBunfsPath(targetLibPath)) {
   targetLibPath = targetLibPath.replace("../", "");
