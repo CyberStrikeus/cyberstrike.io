@@ -121,8 +121,13 @@ if (!skipInstall) {
   const OPENTUI_CORE_VERSION = "0.1.77"
   await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
-  // Install opentui native modules for all platforms (needed for cross-compilation)
-  await $`bun install --os="*" --cpu="*" @opentui/core@${OPENTUI_CORE_VERSION}`
+  // Install opentui platform-specific native modules (needed for Bun.build bundling)
+  await $`bun install @opentui/core-linux-x64@${OPENTUI_CORE_VERSION}`
+  await $`bun install @opentui/core-darwin-x64@${OPENTUI_CORE_VERSION}`
+  await $`bun install @opentui/core-darwin-arm64@${OPENTUI_CORE_VERSION}`
+  await $`bun install @opentui/core-win32-x64@${OPENTUI_CORE_VERSION}`
+  // Build spinner package (its dist is not tracked in git)
+  await $`bun run --cwd ../spinner build`
 }
 for (const item of targets) {
   const name = [
