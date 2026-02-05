@@ -4,7 +4,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "type": "module",
-  "version": "0.1.75",
+  "version": "0.1.76",
   "description": "CyberstrikeTUI is a TypeScript library for building terminal user interfaces (TUIs)",
   "author": "Cyberstrike Team",
   "bugs": {

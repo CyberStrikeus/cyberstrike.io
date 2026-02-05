@@ -115,22 +115,16 @@ await $`rm -rf dist`
 
 const binaries: Record<string, string> = {}
 if (!skipInstall) {
-  // Version references moved here since cli package.json no longer has dependencies
-  const TUI_CORE_VERSION = "0.1.75"
+  // Install platform-specific native dependencies needed for cross-compilation
   const PARCEL_WATCHER_VERSION = "2.5.1"
   const OPENTUI_VERSION = "0.1.77"
-  await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
-  // Install spinner from npm (workspace version doesn't have dist tracked in git)
-  await $`bun install cyberstrike-spinner@0.0.6`
-  // Install tui-solid from npm and create alias for wrong package name in spinner
-  await $`bun install @cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
-  await $`bun install @cyberstrike/tui-solid@npm:@cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
   // Install opentui native packages for all platforms (needed for cross-compilation)
   await $`bun install @opentui/core-linux-x64@${OPENTUI_VERSION}`
   await $`bun install @opentui/core-darwin-x64@${OPENTUI_VERSION}`
   await $`bun install @opentui/core-darwin-arm64@${OPENTUI_VERSION}`
   await $`bun install @opentui/core-win32-x64@${OPENTUI_VERSION}`
+  // Note: tui-core, tui-solid, and spinner are linked from workspace
 }
 for (const item of targets) {
   const name = [
@@ -153,50 +147,19 @@ for (const item of targets) {
   const bunfsRoot = item.os === "win32" ? "B:/~BUN/root/" : "/$bunfs/root/"
   const workerRelativePath = path.relative(dir, parserWorker).replaceAll("\\", "/")
 
-  // Build alias map for cross-platform native modules and problematic imports
-  const platformAlias: Record<string, string> = {
-    // Fix wrong package name in spinner's bundled code
-    "@cyberstrike/tui-solid": "@cyberstrike-io/tui-solid",
-  }
-
-  // Add opentui core aliases for all platforms to resolve to target platform
+  // Build alias map for cross-platform native modules
   const opentuiPlatforms = ["linux-x64", "darwin-x64", "darwin-arm64", "win32-x64"]
   const targetPlatform = `${item.os}-${item.arch}`
+  const platformAlias: Record<string, string> = {}
   for (const platform of opentuiPlatforms) {
-    // Map all platform imports (with and without subpath) to target platform
+    // Map all platform imports to target platform for cross-compilation
     platformAlias[`@opentui/core-${platform}`] = `@opentui/core-${targetPlatform}`
-    platformAlias[`@opentui/core-${platform}/index.ts`] = `@opentui/core-${targetPlatform}`
-  }
-
-  // Bun plugin to resolve the problematic imports in bundled packages
-  const resolverPlugin: import("bun").BunPlugin = {
-    name: "native-module-resolver",
-    setup(build) {
-      // Resolve opentui dynamic imports with /index.ts subpath to main package's entry point
-      build.onResolve({ filter: /^@opentui\/core-.*\/index\.ts$/ }, (args) => {
-        const targetPkg = `@opentui/core-${targetPlatform}`
-        // Read the package.json to get the actual entry point
-        const pkgJsonPath = path.resolve(dir, "node_modules", targetPkg, "package.json")
-        const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"))
-        const entryPoint = pkgJson.main || pkgJson.module || "index.js"
-        const pkgPath = path.resolve(dir, "node_modules", targetPkg, entryPoint)
-        return { path: pkgPath }
-      })
-      // Resolve @cyberstrike/tui-solid to @cyberstrike-io/tui-solid
-      build.onResolve({ filter: /^@cyberstrike\/tui-solid$/ }, (args) => {
-        const pkgPath = path.resolve(dir, "node_modules", "@cyberstrike-io/tui-solid")
-        const pkgJsonPath = path.resolve(pkgPath, "package.json")
-        const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"))
-        const entryPoint = pkgJson.main || pkgJson.module || "index.js"
-        return { path: path.resolve(pkgPath, entryPoint) }
-      })
-    },
   }
 
   await Bun.build({
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
-    plugins: [resolverPlugin, solidPlugin],
+    plugins: [solidPlugin],
     sourcemap: "external",
     external: ["electron", "chromium-bidi"],
     alias: platformAlias,
