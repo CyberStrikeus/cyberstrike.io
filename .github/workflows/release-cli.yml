@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     if: github.repository == 'CyberStrikeus/cyberstrike.io'
     steps:
       - uses: actions/checkout@v6
@@ -104,11 +104,11 @@ jobs:
             target: x86_64-apple-darwin
           - host: macos-latest
             target: aarch64-apple-darwin
-          - host: blacksmith-4vcpu-windows-2025
+          - host: windows-latest
             target: x86_64-pc-windows-msvc
-          - host: blacksmith-4vcpu-ubuntu-2404
+          - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-          - host: blacksmith-4vcpu-ubuntu-2404-arm
+          - host: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
     runs-on: ${{ matrix.settings.host }}
     steps:
@@ -142,7 +142,7 @@ jobs:
       - uses: ./.github/actions/setup-bun
 
       - name: install dependencies (ubuntu only)
-        if: contains(matrix.settings.host, 'ubuntu')
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
@@ -173,7 +173,7 @@ jobs:
 
       # Fixes AppImage build issues, can be removed when https://github.com/tauri-apps/tauri/pull/12491 is released
       - name: Install tauri-cli from portable appimage branch
-        if: contains(matrix.settings.host, 'ubuntu')
+        if: runner.os == 'Linux'
         run: |
           cargo install tauri-cli --git https://github.com/tauri-apps/tauri --branch feat/truly-portable-appimage --force
           echo "Installed tauri-cli version:"
@@ -189,7 +189,7 @@ jobs:
           with: |
             projectPath: packages/desktop
             uploadWorkflowArtifacts: true
-            tauriScript: ${{ (contains(matrix.settings.host, 'ubuntu') && 'cargo tauri') || '' }}
+            tauriScript: ${{ (runner.os == 'Linux' && 'cargo tauri') || '' }}
             args: --target ${{ matrix.settings.target }} --config ./src-tauri/tauri.prod.conf.json --verbose
             updaterJsonPreferNsis: true
             releaseId: ${{ needs.publish.outputs.release }}
@@ -213,7 +213,7 @@ jobs:
       - publish
       - publish-tauri
     if: needs.publish.outputs.tag
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
