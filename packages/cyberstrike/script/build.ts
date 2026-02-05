@@ -168,16 +168,27 @@ for (const item of targets) {
     platformAlias[`@opentui/core-${platform}/index.ts`] = `@opentui/core-${targetPlatform}`
   }
 
-  // Bun plugin to resolve the problematic dynamic imports in bundled tui-core
+  // Bun plugin to resolve the problematic imports in bundled packages
   const resolverPlugin: import("bun").BunPlugin = {
     name: "native-module-resolver",
     setup(build) {
-      // Resolve opentui dynamic imports with /index.ts subpath to main package
+      // Resolve opentui dynamic imports with /index.ts subpath to main package's entry point
       build.onResolve({ filter: /^@opentui\/core-.*\/index\.ts$/ }, (args) => {
-        // Strip /index.ts and resolve to the target platform's package
         const targetPkg = `@opentui/core-${targetPlatform}`
-        const pkgPath = path.resolve(dir, "node_modules", targetPkg)
+        // Read the package.json to get the actual entry point
+        const pkgJsonPath = path.resolve(dir, "node_modules", targetPkg, "package.json")
+        const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"))
+        const entryPoint = pkgJson.main || pkgJson.module || "index.js"
+        const pkgPath = path.resolve(dir, "node_modules", targetPkg, entryPoint)
         return { path: pkgPath }
+      })
+      // Resolve @cyberstrike/tui-solid to @cyberstrike-io/tui-solid
+      build.onResolve({ filter: /^@cyberstrike\/tui-solid$/ }, (args) => {
+        const pkgPath = path.resolve(dir, "node_modules", "@cyberstrike-io/tui-solid")
+        const pkgJsonPath = path.resolve(pkgPath, "package.json")
+        const pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, "utf-8"))
+        const entryPoint = pkgJson.main || pkgJson.module || "index.js"
+        return { path: path.resolve(pkgPath, entryPoint) }
       })
     },
   }
