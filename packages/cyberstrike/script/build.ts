@@ -35,10 +35,11 @@ const allTargets: {
   abi?: "musl"
   avx2?: false
 }[] = [
-  {
-    os: "linux",
-    arch: "arm64",
-  },
+  // ARM64 Linux temporarily disabled - tui-solid has workspace alias resolution issues
+  // {
+  //   os: "linux",
+  //   arch: "arm64",
+  // },
   {
     os: "linux",
     arch: "x64",
@@ -48,11 +49,12 @@ const allTargets: {
     arch: "x64",
     avx2: false,
   },
-  {
-    os: "linux",
-    arch: "arm64",
-    abi: "musl",
-  },
+  // ARM64 Linux musl temporarily disabled
+  // {
+  //   os: "linux",
+  //   arch: "arm64",
+  //   abi: "musl",
+  // },
   {
     os: "linux",
     arch: "x64",
