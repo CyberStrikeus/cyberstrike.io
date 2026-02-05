@@ -121,8 +121,10 @@ if (!skipInstall) {
   await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
   // Install spinner from npm (workspace version doesn't have dist tracked in git)
-  // Note: opentui platform packages are installed via devDependencies in package.json
   await $`bun install cyberstrike-spinner@0.0.6`
+  // Install tui-solid from npm and create alias for wrong package name in spinner
+  await $`bun install @cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
+  await $`bun install @cyberstrike/tui-solid@npm:@cyberstrike-io/tui-solid@${TUI_CORE_VERSION}`
 }
 for (const item of targets) {
   const name = [
