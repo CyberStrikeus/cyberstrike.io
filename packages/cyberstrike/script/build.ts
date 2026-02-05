@@ -118,15 +118,10 @@ if (!skipInstall) {
   // Version references moved here since cli package.json no longer has dependencies
   const TUI_CORE_VERSION = "0.1.75"
   const PARCEL_WATCHER_VERSION = "2.5.1"
-  const OPENTUI_CORE_VERSION = "0.1.77"
   await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
-  // Install opentui platform-specific native modules (needed for Bun.build bundling)
-  await $`bun install @opentui/core-linux-x64@${OPENTUI_CORE_VERSION}`
-  await $`bun install @opentui/core-darwin-x64@${OPENTUI_CORE_VERSION}`
-  await $`bun install @opentui/core-darwin-arm64@${OPENTUI_CORE_VERSION}`
-  await $`bun install @opentui/core-win32-x64@${OPENTUI_CORE_VERSION}`
   // Install spinner from npm (workspace version doesn't have dist tracked in git)
+  // Note: opentui platform packages are installed via devDependencies in package.json
   await $`bun install cyberstrike-spinner@0.0.6`
 }
 for (const item of targets) {
