@@ -34,14 +34,14 @@ export async function loadAllTools(definitionsDir: string): Promise<Map<string, 
         }
 
         tools.set(validated.name, validated)
-        console.error(`[mcp-kali] Loaded tool: ${validated.name}`)
+        console.error(`[bolt] Loaded tool: ${validated.name}`)
       } catch (err) {
-        console.error(`[mcp-kali] Failed to parse ${filePath}:`, err)
+        console.error(`[bolt] Failed to parse ${filePath}:`, err)
       }
     }
   }
 
-  console.error(`[mcp-kali] Loaded ${tools.size} tools`)
+  console.error(`[bolt] Loaded ${tools.size} tools`)
   return tools
 }
 

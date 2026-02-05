@@ -421,6 +421,3 @@ export class DynamicRegistry {
     return { mostUsed, recentlyUsed }
   }
 }
-
-// Singleton instance
-export const registry = new DynamicRegistry()

@@ -1,0 +1,20 @@
+services:
+  mcp-kali:
+    build: .
+    command: ["node", "dist/http.js"]  # No --knock for local dev
+    ports:
+      - "3001:3001"
+      # - "49152-65535:49152-65535/udp"   # Rotating knock ports (disabled for local dev)
+    environment:
+      - MCP_ADMIN_TOKEN=${MCP_ADMIN_TOKEN}
+      - DATA_DIR=/data
+      - PORT=3001
+      - KNOCK_ENABLED=false
+    cap_add:
+      - NET_RAW       # for nmap SYN scans
+      - NET_ADMIN      # for iptables + network tools
+    volumes:
+      - kali-data:/data  # persistent keys + scan results
+
+volumes:
+  kali-data:
