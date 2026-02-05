@@ -153,7 +153,7 @@ for (const item of targets) {
   const bunfsRoot = item.os === "win32" ? "B:/~BUN/root/" : "/$bunfs/root/"
   const workerRelativePath = path.relative(dir, parserWorker).replaceAll("\\", "/")
 
-  // Build alias map for cross-platform native modules
+  // Build alias map for cross-platform native modules and problematic imports
   const platformAlias: Record<string, string> = {
     // Fix wrong package name in spinner's bundled code
     "@cyberstrike/tui-solid": "@cyberstrike-io/tui-solid",
@@ -163,16 +163,29 @@ for (const item of targets) {
   const opentuiPlatforms = ["linux-x64", "darwin-x64", "darwin-arm64", "win32-x64"]
   const targetPlatform = `${item.os}-${item.arch}`
   for (const platform of opentuiPlatforms) {
-    if (platform !== targetPlatform) {
-      // Map other platforms to the target platform's native module
-      platformAlias[`@opentui/core-${platform}`] = `@opentui/core-${targetPlatform}`
-    }
+    // Map all platform imports (with and without subpath) to target platform
+    platformAlias[`@opentui/core-${platform}`] = `@opentui/core-${targetPlatform}`
+    platformAlias[`@opentui/core-${platform}/index.ts`] = `@opentui/core-${targetPlatform}`
+  }
+
+  // Bun plugin to resolve the problematic dynamic imports in bundled tui-core
+  const resolverPlugin: import("bun").BunPlugin = {
+    name: "native-module-resolver",
+    setup(build) {
+      // Resolve opentui dynamic imports with /index.ts subpath to main package
+      build.onResolve({ filter: /^@opentui\/core-.*\/index\.ts$/ }, (args) => {
+        // Strip /index.ts and resolve to the target platform's package
+        const targetPkg = `@opentui/core-${targetPlatform}`
+        const pkgPath = path.resolve(dir, "node_modules", targetPkg)
+        return { path: pkgPath }
+      })
+    },
   }
 
   await Bun.build({
     conditions: ["browser"],
     tsconfig: "./tsconfig.json",
-    plugins: [solidPlugin],
+    plugins: [resolverPlugin, solidPlugin],
     sourcemap: "external",
     external: ["electron", "chromium-bidi"],
     alias: platformAlias,
