@@ -116,8 +116,11 @@ if (!skipInstall) {
   // Version references moved here since cli package.json no longer has dependencies
   const TUI_CORE_VERSION = "0.1.75"
   const PARCEL_WATCHER_VERSION = "2.5.1"
+  const OPENTUI_CORE_VERSION = "0.1.77"
   await $`bun install --os="*" --cpu="*" @cyberstrike-io/tui-core@${TUI_CORE_VERSION}`
   await $`bun install --os="*" --cpu="*" @parcel/watcher@${PARCEL_WATCHER_VERSION}`
+  // Install opentui native modules for all platforms (needed for cross-compilation)
+  await $`bun install --os="*" --cpu="*" @opentui/core@${OPENTUI_CORE_VERSION}`
 }
 for (const item of targets) {
   const name = [
