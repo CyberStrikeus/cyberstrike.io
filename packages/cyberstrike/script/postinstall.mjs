@@ -17,7 +17,7 @@ const packageJson = JSON.parse(fs.readFileSync(path.join(PACKAGE_DIR, "package.j
 const VERSION = packageJson.version
 
 // GitHub release URL base
-const GITHUB_RELEASE_BASE = "https://github.com/CyberStrikeus/cyberstrike/releases/download"
+const GITHUB_RELEASE_BASE = "https://github.com/CyberStrikeus/cyberstrike.io/releases/download"
 
 function detectPlatformAndArch() {
   let platform
@@ -51,8 +51,8 @@ function detectPlatformAndArch() {
 }
 
 function getDownloadUrl(platform, arch) {
-  const extension = platform === "darwin" ? "zip" : "tar.gz"
-  const filename = `cyberstrike-${platform}-${arch}.${extension}`
+  const extension = platform === "darwin" || platform === "windows" ? "zip" : "tar.gz"
+  const filename = `cli-${platform}-${arch}.${extension}`
   return `${GITHUB_RELEASE_BASE}/v${VERSION}/${filename}`
 }
 

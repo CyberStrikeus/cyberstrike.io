@@ -101,7 +101,7 @@ jobs:
               fields: [
                 {
                   name: '📦 Install',
-                  value: '`npm install -g cyberstrike-ai@' + version + '`',
+                  value: '`npm install -g @cyberstrike-io/cli@' + version + '`',
                   inline: false
                 },
                 {
@@ -118,7 +118,7 @@ jobs:
                   name: '🔗 Links',
                   value: [
                     `[Release Notes](${releaseUrl})`,
-                    `[npm](https://www.npmjs.com/package/cyberstrike-ai)`,
+                    `[npm](https://www.npmjs.com/package/@cyberstrike-io/cli)`,
                     `[GitHub](https://github.com/${{ github.repository }})`
                   ].join(' · '),
                   inline: false
