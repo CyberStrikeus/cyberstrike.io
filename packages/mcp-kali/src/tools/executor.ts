@@ -11,7 +11,7 @@ export async function executeTool(
   const command = buildCommand(tool, args)
   const startTime = Date.now()
 
-  console.error(`[mcp-kali] Executing: ${command}`)
+  console.error(`[bolt] Executing: ${command}`)
 
   return new Promise((resolve) => {
     const timeout = (tool.timeout || 300) * 1000 // Convert to ms

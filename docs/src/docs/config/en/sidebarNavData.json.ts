@@ -39,6 +39,10 @@ const sidebarNavData: DocsSidebarNavData = {
           id: "resources",
           title: "Resources",
         },
+        {
+          id: "mcp",
+          title: "Bolt / MCP",
+        },
       ],
     },
   ],

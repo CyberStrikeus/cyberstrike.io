@@ -2,17 +2,60 @@
 title: Local MCP Servers
 description: Configure locally running MCP servers for Cyberstrike
 sidebar:
-  order: 2
+  order: 3
   label: Local Servers
 ---
 
-Local MCP servers run on your machine, providing tools and capabilities without network latency or external dependencies.
+Local MCP servers run on your machine as child processes, communicating via stdio. This is an alternative to [Bolt](/docs/mcp/bolt) for users who prefer to run tools directly on their system.
 
-{/* TODO: Screenshot - Local MCP server configuration */}
+<Aside variant="tip">
+  **Prefer Bolt for security tools.** Local MCP requires manual tool installation. See [Bolt](/docs/mcp/bolt) for the recommended approach with 100+ pre-installed Kali tools.
+</Aside>
+
+{/* MARP Slide - Local vs Remote Architecture */}
+<div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
+  <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">🎞️ MARP SLIDE: local-architecture.md</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Local MCP stdio transport architecture</p>
+</div>
+
+{/* Screenshot - Local MCP server configuration */}
 <div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-8 my-6 text-center bg-gray-100 dark:bg-gray-800">
   <p className="text-gray-500 dark:text-gray-400 font-mono text-sm">📸 SCREENSHOT: local-mcp-config.png</p>
-  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Local MCP server configuration</p>
+  <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">Local MCP server configuration in cyberstrike.json</p>
 </div>
+
+## When to Use Local MCP
+
+Local MCP servers are best for:
+
+- **Offline environments** - No network access required
+- **Low latency** - Direct process communication
+- **Custom tools** - Your own MCP servers
+- **Privacy** - Data never leaves your machine
+
+## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Cyberstrike["Cyberstrike Process"]
+        Agent[AI Agent]
+        Client[MCP Client]
+    end
+
+    subgraph LocalMCP["Local MCP Server"]
+        Stdio[Stdio Transport]
+        Handler[Request Handler]
+        Tools[Tool Functions]
+    end
+
+    Agent --> Client
+    Client <-->|stdin/stdout| Stdio
+    Stdio --> Handler
+    Handler --> Tools
+
+    style Cyberstrike fill:#3b82f6,color:#fff
+    style LocalMCP fill:#10b981,color:#fff
+```
 
 ## Overview
 
@@ -475,6 +518,7 @@ Verify:
 
 ## Related Documentation
 
-- [MCP Overview](/docs/mcp) - MCP basics
-- [Remote Servers](/docs/mcp/remote-servers) - Remote MCP
+- [Bolt / MCP Overview](/docs/mcp) - Architecture and concepts
+- [Bolt](/docs/mcp/bolt) - Docker-based Kali tools (recommended)
+- [Remote Servers](/docs/mcp/remote-servers) - Remote MCP configuration
 - [Creating Servers](/docs/mcp/creating-servers) - Build custom servers
