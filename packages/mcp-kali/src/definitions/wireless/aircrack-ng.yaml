@@ -59,6 +59,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 examples:
   - "aircrack-ng -w wordlist.txt capture.cap"

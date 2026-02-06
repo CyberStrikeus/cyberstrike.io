@@ -74,6 +74,7 @@ parameters:
 
 requires_root: true
 timeout: 0
+interactive: true
 
 examples:
   - "responder -I eth0"

@@ -55,6 +55,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 examples:
   - "spiderfoot -l 127.0.0.1:5001"

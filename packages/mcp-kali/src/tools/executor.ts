@@ -1,6 +1,12 @@
 import { spawn } from "child_process"
 import { ToolDefinition, ToolResult, buildCommand } from "./types.js"
 
+// Default timeout: 5 minutes
+const DEFAULT_TIMEOUT_SECONDS = 300
+
+// Max timeout cap: 24 hours (safety limit for "unlimited" tools)
+const MAX_TIMEOUT_MS = 24 * 60 * 60 * 1000
+
 /**
  * Execute a tool with given arguments
  */
@@ -14,7 +20,16 @@ export async function executeTool(
   console.error(`[bolt] Executing: ${command}`)
 
   return new Promise((resolve) => {
-    const timeout = (tool.timeout || 300) * 1000 // Convert to ms
+    // Use ?? to properly handle timeout: 0 (meaning "no timeout")
+    // timeout: 0 → 0 (no timeout, will use MAX_TIMEOUT_MS as safety cap)
+    // timeout: undefined → DEFAULT_TIMEOUT_SECONDS
+    // timeout: 600 → 600
+    const configuredTimeout = (tool.timeout ?? DEFAULT_TIMEOUT_SECONDS) * 1000
+
+    // Apply max cap: even "unlimited" tools are capped at 24 hours
+    const timeout = configuredTimeout === 0
+      ? MAX_TIMEOUT_MS
+      : Math.min(configuredTimeout, MAX_TIMEOUT_MS)
 
     // Split command into parts
     const parts = parseCommand(command)

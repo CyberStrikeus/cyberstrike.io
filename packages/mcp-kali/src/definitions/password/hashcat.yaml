@@ -127,6 +127,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 command_template: "hashcat -m {hash_type} -a {attack_mode} {hash_file} {wordlist?} {mask?} {rules?} {increment?} {username?} {output?} {workload?} {force?} {show?}"
 
