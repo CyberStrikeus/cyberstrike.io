@@ -123,7 +123,7 @@ docker run -d \
   --name bolt \
   -p 3001:3001 \
   -e MCP_ADMIN_TOKEN=$(openssl rand -hex 32) \
-  ghcr.io/cyberstrike/bolt:latest
+  ghcr.io/cyberstrikeus/bolt:latest
 ```
 
 ### 2. Get the Admin Token
@@ -208,7 +208,7 @@ docker run -d \
   -e MCP_ADMIN_TOKEN=$(openssl rand -hex 32) \
   --cap-add NET_RAW \
   --cap-add NET_ADMIN \
-  ghcr.io/cyberstrike/bolt:latest
+  ghcr.io/cyberstrikeus/bolt:latest
 
 # View the admin token
 docker logs bolt
@@ -219,7 +219,7 @@ docker logs bolt
 ```yaml title="docker-compose.yml"
 services:
   bolt:
-    image: ghcr.io/cyberstrike/bolt:latest
+    image: ghcr.io/cyberstrikeus/bolt:latest
     ports:
       - "3001:3001"
     environment:
@@ -559,7 +559,7 @@ docker run -d \
   -p 3001:3001 \
   -p 49152-65535:49152-65535/udp \
   -e KNOCK_ENABLED=true \
-  ghcr.io/cyberstrike/bolt:latest node dist/http.js --knock
+  ghcr.io/cyberstrikeus/bolt:latest node dist/http.js --knock
 ```
 
 **How it works:**
