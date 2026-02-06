@@ -798,6 +798,57 @@ export namespace Config {
       ref: "KeybindsConfig",
     })
 
+  export const Timeout = z
+    .object({
+      mcp: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Default timeout in ms for MCP server connections and requests. Default: 30000 (30 seconds)"),
+      provider: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Default timeout in ms for provider API requests. Default: 300000 (5 minutes)"),
+      bash: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Default timeout in ms for bash command execution. Default: 120000 (2 minutes)"),
+      websearch: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Timeout in ms for web search requests. Default: 25000 (25 seconds)"),
+      codesearch: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Timeout in ms for code search requests. Default: 30000 (30 seconds)"),
+      webfetch: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Default timeout in ms for web fetch requests. Default: 30000 (30 seconds)"),
+      instruction: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe("Timeout in ms for fetching instruction files from URLs. Default: 15000 (15 seconds)"),
+    })
+    .strict()
+    .meta({
+      ref: "TimeoutConfig",
+    })
+  export type Timeout = z.infer<typeof Timeout>
+
   export const TUI = z.object({
     scroll_speed: z.number().min(0.001).optional().describe("TUI scroll speed"),
     scroll_acceleration: z
@@ -890,6 +941,7 @@ export namespace Config {
       logLevel: Log.Level.optional().describe("Log level"),
       tui: TUI.optional().describe("TUI specific settings"),
       server: Server.optional().describe("Server configuration for cyberstrike serve and web commands"),
+      timeout: Timeout.optional().describe("Timeout configuration for various operations"),
       command: z
         .record(z.string(), Command)
         .optional()

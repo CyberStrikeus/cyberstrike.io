@@ -16,9 +16,19 @@ import { Shell } from "@/shell/shell"
 
 import { BashArity } from "@/permission/arity"
 import { Truncate } from "./truncation"
+import { Config } from "../config/config"
 
 const MAX_METADATA_LENGTH = 30_000
-const DEFAULT_TIMEOUT = Flag.CYBERSTRIKE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS || 2 * 60 * 1000
+const FALLBACK_TIMEOUT = 2 * 60 * 1000 // 2 minutes
+
+async function getDefaultTimeout(): Promise<number> {
+  // Priority: env var > config > fallback
+  if (Flag.CYBERSTRIKE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS) {
+    return Flag.CYBERSTRIKE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS
+  }
+  const cfg = await Config.get()
+  return cfg.timeout?.bash ?? FALLBACK_TIMEOUT
+}
 
 export const log = Log.create({ service: "bash-tool" })
 
@@ -79,7 +89,7 @@ export const BashTool = Tool.define("bash", async () => {
       if (params.timeout !== undefined && params.timeout < 0) {
         throw new Error(`Invalid timeout value: ${params.timeout}. Timeout must be a positive number.`)
       }
-      const timeout = params.timeout ?? DEFAULT_TIMEOUT
+      const timeout = params.timeout ?? (await getDefaultTimeout())
       const tree = await parser().then((p) => p.parse(params.command))
       if (!tree) {
         throw new Error("Failed to parse command")

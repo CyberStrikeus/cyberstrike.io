@@ -26,7 +26,12 @@ import open from "open"
 
 export namespace MCP {
   const log = Log.create({ service: "mcp" })
-  const DEFAULT_TIMEOUT = 30_000
+  const DEFAULT_TIMEOUT = 30_000 // 30 seconds
+
+  async function getDefaultTimeout(): Promise<number> {
+    const cfg = await Config.get()
+    return cfg.timeout?.mcp ?? cfg.experimental?.mcp_timeout ?? DEFAULT_TIMEOUT
+  }
 
   export const Resource = z
     .object({
@@ -343,7 +348,8 @@ export namespace MCP {
       ]
 
       let lastError: Error | undefined
-      const connectTimeout = mcp.timeout ?? DEFAULT_TIMEOUT
+      const defaultTimeout = await getDefaultTimeout()
+      const connectTimeout = mcp.timeout ?? defaultTimeout
       for (const { name, transport } of transports) {
         try {
           const client = new Client({
@@ -423,7 +429,8 @@ export namespace MCP {
         log.info(`mcp stderr: ${chunk.toString()}`, { key })
       })
 
-      const connectTimeout = mcp.timeout ?? DEFAULT_TIMEOUT
+      const localDefaultTimeout = await getDefaultTimeout()
+      const connectTimeout = mcp.timeout ?? localDefaultTimeout
       try {
         const client = new Client({
           name: "cyberstrike",
@@ -463,7 +470,8 @@ export namespace MCP {
       }
     }
 
-    const result = await withTimeout(mcpClient.listTools(), mcp.timeout ?? DEFAULT_TIMEOUT).catch((err) => {
+    const listToolsTimeout = mcp.timeout ?? (await getDefaultTimeout())
+    const result = await withTimeout(mcpClient.listTools(), listToolsTimeout).catch((err) => {
       log.error("failed to get tools from client", { key, error: err })
       return undefined
     })
@@ -569,7 +577,7 @@ export namespace MCP {
     const cfg = await Config.get()
     const config = cfg.mcp ?? {}
     const clientsSnapshot = await clients()
-    const defaultTimeout = cfg.experimental?.mcp_timeout
+    const defaultTimeout = cfg.timeout?.mcp ?? cfg.experimental?.mcp_timeout
 
     for (const [clientName, client] of Object.entries(clientsSnapshot)) {
       // Only include tools from connected MCPs (skip disabled ones)
