@@ -39,10 +39,21 @@ function getChannelFromTag(ref: string): string | null {
   return tagMatch[2] || "latest"
 }
 
+// Extract channel from version string (e.g., "1.2.0-beta.1" -> "beta", "1.2.0" -> "latest")
+function getChannelFromVersion(version: string): string {
+  const match = version.match(/^(\d+\.\d+\.\d+)(?:-([a-zA-Z]+))?/)
+  if (match && match[2]) return match[2]
+  return "latest"
+}
+
 const CHANNEL = await (async () => {
   if (env.CYBERSTRIKE_CHANNEL) return env.CYBERSTRIKE_CHANNEL
   if (env.CYBERSTRIKE_BUMP) return "latest"
-  if (env.CYBERSTRIKE_VERSION && !env.CYBERSTRIKE_VERSION.startsWith("0.0.0-")) return "latest"
+
+  // If version is explicitly set, derive channel from it (e.g., "1.2.0-beta.1" -> "beta")
+  if (env.CYBERSTRIKE_VERSION) {
+    return getChannelFromVersion(env.CYBERSTRIKE_VERSION)
+  }
 
   // Check if we're running from a tag push (GITHUB_REF = refs/tags/v1.2.0-beta.1)
   if (env.GITHUB_REF?.startsWith("refs/tags/")) {
