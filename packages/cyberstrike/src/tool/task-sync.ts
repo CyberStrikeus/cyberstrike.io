@@ -8,8 +8,9 @@ import { ulid } from "ulid"
  * This ensures that when the AI uses TaskCreate/TaskUpdate, the progress is visible in the sidebar.
  */
 
-const TaskStatus = z.enum(["pending", "in_progress", "completed", "deleted"])
-const TaskPriority = z.enum(["high", "medium", "low"])
+// Valid status and priority values
+type TaskStatusType = "pending" | "in_progress" | "completed" | "deleted"
+type TaskPriorityType = "high" | "medium" | "low"
 
 // In-memory task storage (per session)
 const taskStorage = new Map<string, Map<string, TaskInfo>>()
@@ -18,8 +19,8 @@ interface TaskInfo {
   id: string
   subject: string
   description: string
-  status: z.infer<typeof TaskStatus>
-  priority: z.infer<typeof TaskPriority>
+  status: TaskStatusType
+  priority: TaskPriorityType
   activeForm?: string
   owner?: string
   blockedBy?: string[]
@@ -57,18 +58,19 @@ export const TaskCreateTool = Tool.define("task_create", {
     subject: z.string().describe("Brief title for the task"),
     description: z.string().describe("Detailed description of what needs to be done"),
     activeForm: z.string().optional().describe("Present continuous form shown when in_progress (e.g., 'Running tests')"),
-    priority: TaskPriority.optional().default("medium").describe("Task priority"),
+    priority: z.string().optional().describe("Task priority: high, medium, or low. Defaults to medium."),
   }),
   async execute(params, ctx) {
     const tasks = getSessionTasks(ctx.sessionID)
     const id = ulid()
 
+    const priority = (params.priority as TaskPriorityType) || "medium"
     const task: TaskInfo = {
       id,
       subject: params.subject,
       description: params.description,
       status: "pending",
-      priority: params.priority ?? "medium",
+      priority,
       activeForm: params.activeForm,
     }
 
@@ -87,11 +89,11 @@ export const TaskUpdateTool = Tool.define("task_update", {
   description: "Update a task's status or details. Changes appear in the sidebar's Todo list.",
   parameters: z.object({
     taskId: z.string().describe("The task ID to update"),
-    status: TaskStatus.optional().describe("New status: pending, in_progress, completed, or deleted"),
+    status: z.string().optional().describe("New status: pending, in_progress, completed, or deleted"),
     subject: z.string().optional().describe("New subject"),
     description: z.string().optional().describe("New description"),
     activeForm: z.string().optional().describe("New activeForm"),
-    priority: TaskPriority.optional().describe("New priority"),
+    priority: z.string().optional().describe("New priority: high, medium, or low"),
   }),
   async execute(params, ctx) {
     const tasks = getSessionTasks(ctx.sessionID)
@@ -113,11 +115,11 @@ export const TaskUpdateTool = Tool.define("task_update", {
       }
     }
 
-    if (params.status) task.status = params.status
+    if (params.status) task.status = params.status as TaskStatusType
     if (params.subject) task.subject = params.subject
     if (params.description) task.description = params.description
     if (params.activeForm) task.activeForm = params.activeForm
-    if (params.priority) task.priority = params.priority
+    if (params.priority) task.priority = params.priority as TaskPriorityType
 
     await syncToSidebar(ctx.sessionID)
 
