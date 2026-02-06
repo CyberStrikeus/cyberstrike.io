@@ -206,10 +206,24 @@ async function installPlaywright(): Promise<void> {
 }
 
 async function getPlaywright() {
+  // Helper to normalize ESM/CJS import differences
+  const normalizeImport = (mod: any) => {
+    // Handle ESM default export: { default: { chromium, ... } }
+    if (mod.default?.chromium) {
+      return mod.default
+    }
+    // Handle direct export: { chromium, ... }
+    if (mod.chromium) {
+      return mod
+    }
+    // Fallback for other structures
+    return mod.default || mod
+  }
+
   // First, try to import playwright
   if (await isPlaywrightInstalled()) {
     const pw = await import("playwright")
-    return pw
+    return normalizeImport(pw)
   }
 
   // Playwright not installed - prompt user
@@ -239,11 +253,9 @@ async function getPlaywright() {
   }
 
   // Clear require cache and try importing again
-  // Note: Dynamic imports are cached, so we need to use a workaround
   try {
-    // For Bun/Node ESM, we can try importing with a cache-busting query
     const pw = await import("playwright")
-    return pw
+    return normalizeImport(pw)
   } catch (e) {
     throw new Error(
       "Playwright was installed but could not be loaded. " +
