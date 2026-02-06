@@ -42,6 +42,7 @@ await Bun.file(`${mainPkgDir}/package.json`).write(
 )
 
 const tags = [Script.channel]
+const otp = process.env.NPM_OTP ? `--otp=${process.env.NPM_OTP}` : ""
 
 // Publish platform-specific binaries
 const tasks = Object.entries(binaries).map(async ([name, version]) => {
@@ -52,14 +53,14 @@ const tasks = Object.entries(binaries).map(async ([name, version]) => {
   }
   await $`bun pm pack`.cwd(`./dist/${dirName}`)
   for (const tag of tags) {
-    await $`npm publish *.tgz --access public --tag ${tag}`.cwd(`./dist/${dirName}`)
+    await $`npm publish *.tgz --access public --tag ${tag} ${otp}`.cwd(`./dist/${dirName}`)
   }
 })
 await Promise.all(tasks)
 
 // Publish main metapackage
 for (const tag of tags) {
-  await $`cd ${mainPkgDir} && bun pm pack && npm publish *.tgz --access public --tag ${tag}`
+  await $`cd ${mainPkgDir} && bun pm pack && npm publish *.tgz --access public --tag ${tag} ${otp}`
 }
 
 if (!Script.preview) {
