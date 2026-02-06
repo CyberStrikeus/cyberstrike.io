@@ -1,6 +1,9 @@
 import z from "zod"
 import { Tool } from "./tool"
 import DESCRIPTION from "./codesearch.txt"
+import { Config } from "../config/config"
+
+const DEFAULT_TIMEOUT = 30000 // 30 seconds
 
 const API_CONFIG = {
   BASE_URL: "https://mcp.exa.ai",
@@ -73,8 +76,11 @@ export const CodeSearchTool = Tool.define("codesearch", {
       },
     }
 
+    const config = await Config.get()
+    const timeout = config.timeout?.codesearch ?? DEFAULT_TIMEOUT
+
     const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 30000)
+    const timeoutId = setTimeout(() => controller.abort(), timeout)
 
     try {
       const headers: Record<string, string> = {

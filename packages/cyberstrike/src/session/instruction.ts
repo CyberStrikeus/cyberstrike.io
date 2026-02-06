@@ -10,6 +10,8 @@ import type { MessageV2 } from "./message-v2"
 
 const log = Log.create({ service: "instruction" })
 
+const DEFAULT_INSTRUCTION_TIMEOUT = 15000 // 15 seconds (increased from 5s)
+
 const FILES = [
   "AGENTS.md",
   "CLAUDE.md",
@@ -103,8 +105,9 @@ export namespace InstructionPrompt {
         }
       }
     }
+    const instructionTimeout = config.timeout?.instruction ?? DEFAULT_INSTRUCTION_TIMEOUT
     const fetches = urls.map((url) =>
-      fetch(url, { signal: AbortSignal.timeout(5000) })
+      fetch(url, { signal: AbortSignal.timeout(instructionTimeout) })
         .then((res) => (res.ok ? res.text() : ""))
         .catch(() => "")
         .then((x) => (x ? "Instructions from: " + url + "\n" + x : "")),

@@ -2,10 +2,16 @@ import z from "zod"
 import { Tool } from "./tool"
 import TurndownService from "turndown"
 import DESCRIPTION from "./webfetch.txt"
+import { Config } from "../config/config"
 
 const MAX_RESPONSE_SIZE = 5 * 1024 * 1024 // 5MB
 const DEFAULT_TIMEOUT = 30 * 1000 // 30 seconds
 const MAX_TIMEOUT = 120 * 1000 // 2 minutes
+
+async function getDefaultTimeout(): Promise<number> {
+  const cfg = await Config.get()
+  return cfg.timeout?.webfetch ?? DEFAULT_TIMEOUT
+}
 
 export const WebFetchTool = Tool.define("webfetch", {
   description: DESCRIPTION,
@@ -34,7 +40,8 @@ export const WebFetchTool = Tool.define("webfetch", {
       },
     })
 
-    const timeout = Math.min((params.timeout ?? DEFAULT_TIMEOUT / 1000) * 1000, MAX_TIMEOUT)
+    const configTimeout = await getDefaultTimeout()
+    const timeout = Math.min((params.timeout ?? configTimeout / 1000) * 1000, MAX_TIMEOUT)
 
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), timeout)

@@ -1,6 +1,9 @@
 import z from "zod"
 import { Tool } from "./tool"
 import DESCRIPTION from "./websearch.txt"
+import { Config } from "../config/config"
+
+const DEFAULT_TIMEOUT = 25000 // 25 seconds
 
 const API_CONFIG = {
   BASE_URL: "https://mcp.exa.ai",
@@ -91,8 +94,11 @@ export const WebSearchTool = Tool.define("websearch", async () => {
         },
       }
 
+      const config = await Config.get()
+      const timeout = config.timeout?.websearch ?? DEFAULT_TIMEOUT
+
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 25000)
+      const timeoutId = setTimeout(() => controller.abort(), timeout)
 
       try {
         const headers: Record<string, string> = {
