@@ -20,6 +20,11 @@ jobs:
       - name: Setup Bun
         uses: ./.github/actions/setup-bun
 
+      - name: Setup Git Identity
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Run tests with coverage
         working-directory: packages/cyberstrike
         run: bun test --coverage --coverage-reporter=lcov --coverage-dir=./coverage
