@@ -42,3 +42,24 @@ infra/enterprise.ts
 
 # Internal notes
 .cyberstrike/MEMORY.md
+
+# Large binary files (use CDN instead)
+*.mp4
+*.zip
+*.pma
+*.mov
+*.avi
+*.webm
+
+# Build artifacts / binaries
+**/opencode
+**/cyberstrike-bin
+*.tar.gz
+
+# Large test fixtures
+packages/cyberstrike/test/tool/fixtures/large-*
+
+# Browser cache/sessions
+**/.cyberstrike-browser-*
+**/GraphiteDawnCache/
+**/BrowserMetrics-*
