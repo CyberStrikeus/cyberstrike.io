@@ -22,11 +22,11 @@ export const WebFetchTool = Tool.define("webfetch", {
       .default("GET")
       .describe("HTTP method to use. Defaults to GET."),
     body: z
-      .union([z.string(), z.record(z.unknown())])
+      .union([z.string(), z.record(z.string(), z.any())])
       .optional()
       .describe("Request body. Objects are automatically serialized to JSON."),
     headers: z
-      .record(z.string())
+      .record(z.string(), z.string())
       .optional()
       .describe("Custom HTTP headers to include in the request."),
     format: z
