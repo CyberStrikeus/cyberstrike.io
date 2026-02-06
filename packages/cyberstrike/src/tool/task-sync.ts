@@ -111,7 +111,7 @@ export const TaskUpdateTool = Tool.define("task_update", {
       return {
         title: "Task not found",
         output: `Task ${params.taskId} not found`,
-        metadata: { error: true },
+        metadata: {},
       }
     }
 
@@ -126,7 +126,7 @@ export const TaskUpdateTool = Tool.define("task_update", {
     return {
       title: `Updated task: ${task.subject}`,
       output: `Task #${task.id.slice(-4)} updated: ${task.status}`,
-      metadata: { taskId: task.id, status: task.status },
+      metadata: {},
     }
   },
 })
@@ -169,14 +169,14 @@ export const TaskGetTool = Tool.define("task_get", {
       return {
         title: "Task not found",
         output: `Task ${params.taskId} not found`,
-        metadata: { error: true },
+        metadata: {},
       }
     }
 
     return {
       title: task.subject,
       output: JSON.stringify(task, null, 2),
-      metadata: task,
+      metadata: {},
     }
   },
 })
