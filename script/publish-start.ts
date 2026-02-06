@@ -79,7 +79,16 @@ process.chdir(dir)
 
 let output = `version=${Script.version}\n`
 
-if (!Script.preview) {
+// For tag-triggered releases, skip commit/tag creation but still create GitHub release
+if (Script.fromTag) {
+  // Tag already exists, just create the release
+  const prereleaseFlag = Script.preview ? "--prerelease" : ""
+  await $`gh release create v${Script.version} -d ${prereleaseFlag} --title "v${Script.version}" --notes ${notes.join("\n") || "No notable changes"} ./packages/cyberstrike/dist/*.zip ./packages/cyberstrike/dist/*.tar.gz`.nothrow()
+  const release = await $`gh release view v${Script.version} --json id,tagName`.json()
+  output += `release=${release.id}\n`
+  output += `tag=${release.tagName}\n`
+} else if (!Script.preview) {
+  // Manual/workflow_dispatch releases - create commit, tag, and release
   await $`git commit -am "release: v${Script.version}"`
   await $`git tag v${Script.version}`
   await $`git fetch origin`
