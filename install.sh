@@ -1,228 +1,158 @@
 #!/bin/bash
-#
-# Cyberstrike Installation Script
-# https://cyberstrike.io
-#
-# Usage:
-#   curl -fsSL https://cyberstrike.io/install.sh | bash
-#   wget -qO- https://cyberstrike.io/install.sh | bash
-#
-# Environment variables:
-#   CYBERSTRIKE_INSTALL_DIR - Installation directory (default: ~/.cyberstrike)
-#   CYBERSTRIKE_VERSION     - Specific version to install (default: latest)
-#
-
 set -e
+
+# Cyberstrike CLI Installer
+# Usage: curl -fsSL https://cyberstrike.io/install.sh | bash
+#
+# For Windows PowerShell, use:
+#   irm https://cyberstrike.io/install.ps1 | iex
+
+REPO="CyberStrikeus/cyberstrike.io"
+INSTALL_DIR="${CYBERSTRIKE_INSTALL_DIR:-$HOME/.local/bin}"
 
 # Colors
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Default values
-INSTALL_DIR="${CYBERSTRIKE_INSTALL_DIR:-$HOME/.cyberstrike}"
-BIN_DIR="$INSTALL_DIR/bin"
-VERSION="${CYBERSTRIKE_VERSION:-latest}"
-GITHUB_REPO="CyberStrikeus/cyberstrike.io"
+info() { echo -e "${GREEN}[INFO]${NC} $1"; }
+warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
+error() { echo -e "${RED}[ERROR]${NC} $1"; exit 1; }
 
-# Print banner
-print_banner() {
-    echo -e "${CYAN}"
-    echo "   ______      __              _____ __       _ __       "
-    echo "  / ____/_  __/ /_  ___  _____/ ___// /______(_) /_____  "
-    echo " / /   / / / / __ \/ _ \/ ___/\__ \/ __/ ___/ / //_/ _ \ "
-    echo "/ /___/ /_/ / /_/ /  __/ /   ___/ / /_/ /  / / ,< /  __/ "
-    echo "\____/\__, /_.___/\___/_/   /____/\__/_/  /_/_/|_|\___/  "
-    echo "     /____/                                              "
-    echo -e "${NC}"
-    echo -e "${BLUE}AI-powered penetration testing agent${NC}"
-    echo ""
-}
-
-# Detect OS and architecture
-detect_platform() {
-    OS="$(uname -s)"
-    ARCH="$(uname -m)"
-
-    case "$OS" in
-        Linux*)     PLATFORM="linux" ;;
-        Darwin*)    PLATFORM="darwin" ;;
-        MINGW*|MSYS*|CYGWIN*) PLATFORM="windows" ;;
-        *)          error "Unsupported operating system: $OS" ;;
+# Detect OS
+detect_os() {
+    case "$(uname -s)" in
+        Linux*)  echo "linux" ;;
+        Darwin*) echo "darwin" ;;
+        MINGW*|MSYS*|CYGWIN*)
+            echo ""
+            warn "You're running this in a Windows terminal emulator (Git Bash/MSYS/Cygwin)."
+            echo ""
+            echo -e "${CYAN}For native Windows, use PowerShell instead:${NC}"
+            echo ""
+            echo "  irm https://cyberstrike.io/install.ps1 | iex"
+            echo ""
+            echo -e "${CYAN}Or continue with this installer for the Unix-like environment.${NC}"
+            echo ""
+            read -p "Continue with Unix-style installation? [y/N]: " -r
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "Aborted. Use the PowerShell command above for native Windows."
+                exit 0
+            fi
+            echo "windows"
+            ;;
+        *) error "Unsupported operating system: $(uname -s)" ;;
     esac
+}
 
-    case "$ARCH" in
-        x86_64|amd64)   ARCH="x64" ;;
-        arm64|aarch64)  ARCH="arm64" ;;
-        *)              error "Unsupported architecture: $ARCH" ;;
+# Detect architecture
+detect_arch() {
+    case "$(uname -m)" in
+        x86_64|amd64) echo "x64" ;;
+        arm64|aarch64) echo "arm64" ;;
+        *) error "Unsupported architecture: $(uname -m)" ;;
     esac
-
-    echo -e "${GREEN}Detected platform:${NC} $PLATFORM-$ARCH"
-}
-
-# Print error and exit
-error() {
-    echo -e "${RED}Error: $1${NC}" >&2
-    exit 1
-}
-
-# Print warning
-warn() {
-    echo -e "${YELLOW}Warning: $1${NC}"
-}
-
-# Print info
-info() {
-    echo -e "${GREEN}$1${NC}"
-}
-
-# Check dependencies
-check_deps() {
-    local missing=()
-
-    for cmd in curl tar; do
-        if ! command -v "$cmd" &> /dev/null; then
-            missing+=("$cmd")
-        fi
-    done
-
-    if [ ${#missing[@]} -ne 0 ]; then
-        error "Missing required dependencies: ${missing[*]}"
-    fi
 }
 
 # Get latest version from GitHub
 get_latest_version() {
-    local latest
-    latest=$(curl -fsSL "https://api.github.com/repos/$GITHUB_REPO/releases/latest" | grep '"tag_name"' | sed -E 's/.*"v?([^"]+)".*/\1/')
-
-    if [ -z "$latest" ]; then
-        error "Failed to fetch latest version"
-    fi
-
-    echo "$latest"
+    curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
 }
 
-# Download and install
-install() {
-    # Get version
-    if [ "$VERSION" = "latest" ]; then
-        info "Fetching latest version..."
-        VERSION=$(get_latest_version)
+main() {
+    info "Installing Cyberstrike CLI..."
+
+    OS=$(detect_os)
+    ARCH=$(detect_arch)
+    VERSION=$(get_latest_version)
+
+    if [ -z "$VERSION" ]; then
+        VERSION="v1.0.1"
+        warn "Could not fetch latest version, using $VERSION"
     fi
 
-    info "Installing Cyberstrike v$VERSION..."
-
-    # Create directories
-    mkdir -p "$BIN_DIR"
+    info "Detected: $OS-$ARCH"
+    info "Version: $VERSION"
 
     # Construct download URL
-    local filename="cyberstrike-${PLATFORM}-${ARCH}.tar.gz"
-    local url="https://github.com/$GITHUB_REPO/releases/download/v$VERSION/$filename"
+    ASSET_NAME="cyberstrike-${OS}-${ARCH}.tar.gz"
+    DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/${ASSET_NAME}"
 
-    # Download
-    info "Downloading from $url..."
-    local tmp_dir
-    tmp_dir=$(mktemp -d)
-    trap "rm -rf $tmp_dir" EXIT
+    # Create install directory
+    mkdir -p "$INSTALL_DIR"
 
-    if ! curl -fsSL "$url" -o "$tmp_dir/$filename"; then
-        error "Failed to download Cyberstrike. Please check the version and try again."
+    # Download and extract
+    info "Downloading from $DOWNLOAD_URL..."
+    TEMP_DIR=$(mktemp -d)
+    TEMP_FILE="$TEMP_DIR/$ASSET_NAME"
+
+    if ! curl -fsSL "$DOWNLOAD_URL" -o "$TEMP_FILE"; then
+        error "Failed to download $DOWNLOAD_URL"
     fi
 
-    # Extract
     info "Extracting..."
-    tar -xzf "$tmp_dir/$filename" -C "$tmp_dir"
+    tar -xzf "$TEMP_FILE" -C "$TEMP_DIR"
 
-    # Install binary
-    if [ -f "$tmp_dir/cyberstrike" ]; then
-        mv "$tmp_dir/cyberstrike" "$BIN_DIR/cyberstrike"
-        chmod +x "$BIN_DIR/cyberstrike"
-    elif [ -f "$tmp_dir/cyberstrike.exe" ]; then
-        mv "$tmp_dir/cyberstrike.exe" "$BIN_DIR/cyberstrike.exe"
+    # Find and move binary
+    if [ -f "$TEMP_DIR/cyberstrike" ]; then
+        mv "$TEMP_DIR/cyberstrike" "$INSTALL_DIR/cyberstrike"
+    elif [ -f "$TEMP_DIR/bin/cyberstrike" ]; then
+        mv "$TEMP_DIR/bin/cyberstrike" "$INSTALL_DIR/cyberstrike"
     else
-        error "Binary not found in archive"
+        error "Could not find cyberstrike binary in archive"
     fi
 
-    info "Installed to $BIN_DIR/cyberstrike"
-}
+    chmod +x "$INSTALL_DIR/cyberstrike"
 
-# Add to PATH
-setup_path() {
-    local shell_config=""
-    local shell_name=""
+    # Cleanup
+    rm -rf "$TEMP_DIR"
 
-    # Detect shell
-    case "$SHELL" in
-        */bash)
-            shell_name="bash"
-            if [ -f "$HOME/.bashrc" ]; then
-                shell_config="$HOME/.bashrc"
-            elif [ -f "$HOME/.bash_profile" ]; then
-                shell_config="$HOME/.bash_profile"
-            fi
-            ;;
-        */zsh)
-            shell_name="zsh"
-            shell_config="$HOME/.zshrc"
-            ;;
-        */fish)
-            shell_name="fish"
-            shell_config="$HOME/.config/fish/config.fish"
-            ;;
-    esac
+    info "Installed to $INSTALL_DIR/cyberstrike"
 
-    # Check if already in PATH
-    if echo "$PATH" | grep -q "$BIN_DIR"; then
-        return
-    fi
-
-    if [ -n "$shell_config" ] && [ -f "$shell_config" ]; then
-        # Check if already added
-        if ! grep -q "CYBERSTRIKE" "$shell_config" 2>/dev/null; then
-            echo "" >> "$shell_config"
-            echo "# Cyberstrike" >> "$shell_config"
-            if [ "$shell_name" = "fish" ]; then
-                echo "set -gx PATH \$PATH $BIN_DIR" >> "$shell_config"
-            else
-                echo "export PATH=\"\$PATH:$BIN_DIR\"" >> "$shell_config"
-            fi
-            info "Added Cyberstrike to PATH in $shell_config"
-            warn "Run 'source $shell_config' or restart your terminal to use cyberstrike"
-        fi
-    else
-        warn "Could not detect shell config file."
+    # Check if install dir is in PATH
+    if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
+        warn "$INSTALL_DIR is not in your PATH"
         echo ""
-        echo "Add the following to your shell config:"
-        echo -e "  ${CYAN}export PATH=\"\$PATH:$BIN_DIR\"${NC}"
+
+        # Detect current shell
+        CURRENT_SHELL=$(basename "$SHELL")
+
+        # Check if running in WSL
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            echo "You're running in WSL (Windows Subsystem for Linux)."
+            echo ""
+        fi
+
+        echo "Add this line to your shell profile:"
+        echo ""
+
+        case "$CURRENT_SHELL" in
+            zsh)
+                echo "  # Add to ~/.zshrc:"
+                echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
+                ;;
+            fish)
+                echo "  # Add to ~/.config/fish/config.fish:"
+                echo "  set -gx PATH $INSTALL_DIR \$PATH"
+                ;;
+            *)
+                echo "  # Add to ~/.bashrc or ~/.profile:"
+                echo "  export PATH=\"$INSTALL_DIR:\$PATH\""
+                ;;
+        esac
+        echo ""
+        echo "Then reload your shell or run:"
+        echo "  source ~/.$CURRENT_SHELL""rc"
+        echo ""
     fi
-}
 
-# Print success message
-print_success() {
     echo ""
-    echo -e "${GREEN}Cyberstrike installed successfully!${NC}"
+    info "Cyberstrike CLI installed successfully!"
     echo ""
-    echo "Get started:"
-    echo -e "  ${CYAN}export ANTHROPIC_API_KEY=your_key_here${NC}"
-    echo -e "  ${CYAN}cyberstrike${NC}"
+    echo "  Run 'cyberstrike --help' to get started"
     echo ""
-    echo "Documentation: https://docs.cyberstrike.io"
-    echo "GitHub: https://github.com/$GITHUB_REPO"
-    echo ""
-}
-
-# Main
-main() {
-    print_banner
-    check_deps
-    detect_platform
-    install
-    setup_path
-    print_success
 }
 
 main "$@"
