@@ -30,6 +30,7 @@ import { PlanExitTool, PlanEnterTool } from "./plan"
 import { ApplyPatchTool } from "./apply_patch"
 import { MemorySearchTool, MemoryWriteTool, MemoryReadTool, MemoryContextTool } from "./memory"
 import { ToolSearchTool, LoadToolsTool, UnloadToolsTool, ListLoadedToolsTool } from "./tool-search"
+import { TaskCreateTool, TaskUpdateTool, TaskListTool, TaskGetTool } from "./task-sync"
 import { LazyToolRegistry } from "./lazy-registry"
 
 export namespace ToolRegistry {
@@ -121,6 +122,11 @@ export namespace ToolRegistry {
       MemoryWriteTool,
       MemoryReadTool,
       MemoryContextTool,
+      // Task tools that sync to sidebar's Todo list
+      TaskCreateTool,
+      TaskUpdateTool,
+      TaskListTool,
+      TaskGetTool,
       // Dynamic tool loading (ToolSearch pattern)
       // These meta-tools enable scaling to 100+ MCP tools without context overflow
       ToolSearchTool,
