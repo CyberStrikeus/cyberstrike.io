@@ -204,10 +204,11 @@ export const WebFetchTool = Tool.define("webfetch", {
             metadata: {},
           }
         } catch {
+          // Return raw content with a note that it's not valid JSON
           return {
-            output: content,
+            output: `[Note: Response is not valid JSON]\n\n${content}`,
             title,
-            metadata: { error: "Response is not valid JSON" },
+            metadata: {},
           }
         }
 
