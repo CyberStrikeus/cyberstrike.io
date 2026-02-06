@@ -17,10 +17,22 @@ export const WebFetchTool = Tool.define("webfetch", {
   description: DESCRIPTION,
   parameters: z.object({
     url: z.string().describe("The URL to fetch content from"),
+    method: z
+      .enum(["GET", "POST", "PUT", "DELETE", "PATCH"])
+      .default("GET")
+      .describe("HTTP method to use. Defaults to GET."),
+    body: z
+      .union([z.string(), z.record(z.unknown())])
+      .optional()
+      .describe("Request body. Objects are automatically serialized to JSON."),
+    headers: z
+      .record(z.string())
+      .optional()
+      .describe("Custom HTTP headers to include in the request."),
     format: z
-      .enum(["text", "markdown", "html"])
+      .enum(["text", "markdown", "html", "json"])
       .default("markdown")
-      .describe("The format to return the content in (text, markdown, or html). Defaults to markdown."),
+      .describe("The format to return the content in (text, markdown, html, or json). Defaults to markdown."),
     timeout: z.number().describe("Optional timeout in seconds (max 120)").optional(),
   }),
   async execute(params, ctx) {
@@ -35,8 +47,10 @@ export const WebFetchTool = Tool.define("webfetch", {
       always: ["*"],
       metadata: {
         url: params.url,
+        method: params.method,
         format: params.format,
         timeout: params.timeout,
+        hasBody: !!params.body,
       },
     })
 
@@ -58,25 +72,66 @@ export const WebFetchTool = Tool.define("webfetch", {
       case "html":
         acceptHeader = "text/html;q=1.0, application/xhtml+xml;q=0.9, text/plain;q=0.8, text/markdown;q=0.7, */*;q=0.1"
         break
+      case "json":
+        acceptHeader = "application/json;q=1.0, text/json;q=0.9, */*;q=0.1"
+        break
       default:
         acceptHeader =
           "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
     }
 
     const signal = AbortSignal.any([controller.signal, ctx.abort])
-    const headers = {
+
+    // Prepare request body
+    let requestBody: string | undefined
+    let contentTypeHeader: string | undefined
+    if (params.body !== undefined) {
+      if (typeof params.body === "object") {
+        requestBody = JSON.stringify(params.body)
+        contentTypeHeader = "application/json"
+      } else {
+        requestBody = params.body
+        // Try to detect if it's JSON
+        try {
+          JSON.parse(params.body)
+          contentTypeHeader = "application/json"
+        } catch {
+          contentTypeHeader = "text/plain"
+        }
+      }
+    }
+
+    // Build headers with defaults that can be overridden by custom headers
+    const defaultHeaders: Record<string, string> = {
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
       Accept: acceptHeader,
       "Accept-Language": "en-US,en;q=0.9",
     }
 
-    const initial = await fetch(params.url, { signal, headers })
+    if (contentTypeHeader) {
+      defaultHeaders["Content-Type"] = contentTypeHeader
+    }
+
+    // Merge custom headers (they take precedence)
+    const headers = { ...defaultHeaders, ...params.headers }
+
+    const fetchOptions: RequestInit = {
+      method: params.method,
+      signal,
+      headers,
+    }
+
+    if (requestBody !== undefined && params.method !== "GET") {
+      fetchOptions.body = requestBody
+    }
+
+    const initial = await fetch(params.url, fetchOptions)
 
     // Retry with honest UA if blocked by Cloudflare bot detection (TLS fingerprint mismatch)
     const response =
       initial.status === 403 && initial.headers.get("cf-mitigated") === "challenge"
-        ? await fetch(params.url, { signal, headers: { ...headers, "User-Agent": "cyberstrike" } })
+        ? await fetch(params.url, { ...fetchOptions, headers: { ...headers, "User-Agent": "cyberstrike" } })
         : initial
 
     clearTimeout(timeoutId)
@@ -138,6 +193,22 @@ export const WebFetchTool = Tool.define("webfetch", {
           output: content,
           title,
           metadata: {},
+        }
+
+      case "json":
+        try {
+          const json = JSON.parse(content)
+          return {
+            output: JSON.stringify(json, null, 2),
+            title,
+            metadata: {},
+          }
+        } catch {
+          return {
+            output: content,
+            title,
+            metadata: { error: "Response is not valid JSON" },
+          }
         }
 
       default:
