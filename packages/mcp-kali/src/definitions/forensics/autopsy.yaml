@@ -20,6 +20,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 examples:
   - "autopsy"

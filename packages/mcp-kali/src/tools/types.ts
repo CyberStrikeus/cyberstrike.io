@@ -45,6 +45,7 @@ export const ToolDefinition = z.object({
   requires_root: z.boolean().optional().default(false),
   timeout: z.number().optional().default(300), // Default 5 minutes
   output_parser: z.string().optional(), // Optional parser for structured output
+  interactive: z.boolean().optional().default(false), // Interactive/long-running tools run as background jobs
 })
 export type ToolDefinition = z.infer<typeof ToolDefinition>
 

@@ -25,6 +25,7 @@ parameters:
 
 requires_root: true
 timeout: 0
+interactive: true
 
 examples:
   - "gvm-cli socket --xml '<create_target><name>Target</name><hosts>192.168.1.0/24</hosts></create_target>'"

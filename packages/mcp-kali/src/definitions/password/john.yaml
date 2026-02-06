@@ -82,6 +82,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 examples:
   - "john --wordlist=/usr/share/wordlists/rockyou.txt hashes.txt"

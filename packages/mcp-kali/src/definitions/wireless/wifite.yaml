@@ -79,6 +79,7 @@ parameters:
 
 requires_root: true
 timeout: 0
+interactive: true
 
 examples:
   - "wifite"

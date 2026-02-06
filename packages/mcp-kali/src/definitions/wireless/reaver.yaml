@@ -78,6 +78,7 @@ parameters:
 
 requires_root: true
 timeout: 0
+interactive: true
 
 examples:
   - "reaver -i wlan0mon -b AA:BB:CC:DD:EE:FF -vv"

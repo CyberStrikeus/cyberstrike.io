@@ -8,6 +8,7 @@ import { executeTool, validateToolExists } from "./tools/executor.js"
 import { toJsonSchema } from "./tools/types.js"
 import { DynamicRegistry } from "./tools/registry.js"
 import { PRESETS, getPreset, getPresetsByCategory } from "./tools/presets.js"
+import { jobManager } from "./tools/jobs.js"
 
 /**
  * Create a configured MCP Server instance with all handlers registered.
@@ -159,6 +160,81 @@ export function createMcpServer(registry: DynamicRegistry): Server {
       inputSchema: {
         type: "object",
         properties: {},
+      },
+    })
+
+    // === JOB MANAGEMENT META-TOOLS ===
+
+    // 9. List jobs
+    mcpTools.push({
+      name: "kali_jobs",
+      description:
+        "List all background jobs. Interactive tools (metasploit, hashcat, wireshark, etc.) run as background jobs.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          status: {
+            type: "string",
+            enum: ["running", "completed", "failed", "cancelled"],
+            description: "Filter by job status (optional)",
+          },
+        },
+      },
+    })
+
+    // 10. Job status
+    mcpTools.push({
+      name: "kali_job_status",
+      description:
+        "Get detailed status and output of a specific background job.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          job_id: {
+            type: "string",
+            description: "Job ID returned from kali_job_start or interactive tool execution",
+          },
+        },
+        required: ["job_id"],
+      },
+    })
+
+    // 11. Job output
+    mcpTools.push({
+      name: "kali_job_output",
+      description:
+        "Get output from a background job, optionally from a specific line offset for streaming.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          job_id: {
+            type: "string",
+            description: "Job ID",
+          },
+          from_line: {
+            type: "integer",
+            description: "Start from this line number (for streaming new output)",
+            default: 0,
+          },
+        },
+        required: ["job_id"],
+      },
+    })
+
+    // 12. Cancel job
+    mcpTools.push({
+      name: "kali_job_cancel",
+      description:
+        "Cancel a running background job. Sends SIGTERM, then SIGKILL if needed.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          job_id: {
+            type: "string",
+            description: "Job ID to cancel",
+          },
+        },
+        required: ["job_id"],
       },
     })
 
@@ -471,6 +547,138 @@ export function createMcpServer(registry: DynamicRegistry): Server {
       }
     }
 
+    // === META-TOOL: List Jobs ===
+    if (name === "kali_jobs") {
+      const statusFilter = args?.status as "running" | "completed" | "failed" | "cancelled" | undefined
+      const jobs = jobManager.list(statusFilter)
+
+      if (jobs.length === 0) {
+        return {
+          content: [{
+            type: "text",
+            text: statusFilter
+              ? `No ${statusFilter} jobs found.`
+              : "No background jobs. Interactive tools like metasploit, hashcat, wireshark run as jobs.",
+          }],
+        }
+      }
+
+      const formatted = jobs.map((job) => {
+        const duration = job.endTime
+          ? `${((job.endTime - job.startTime) / 1000).toFixed(1)}s`
+          : `${((Date.now() - job.startTime) / 1000).toFixed(0)}s (running)`
+        const status = job.status === "running" ? "🟢 running" :
+                      job.status === "completed" ? "✓ completed" :
+                      job.status === "cancelled" ? "⊘ cancelled" : "✗ failed"
+        return `**${job.id}** - ${job.toolName} [${status}] (${duration})\n   \`${job.command.slice(0, 60)}${job.command.length > 60 ? "..." : ""}\``
+      }).join("\n\n")
+
+      return {
+        content: [{
+          type: "text",
+          text: `## Background Jobs\n\n${formatted}\n\n_Use \`kali_job_status\` or \`kali_job_output\` to see details_`,
+        }],
+      }
+    }
+
+    // === META-TOOL: Job Status ===
+    if (name === "kali_job_status") {
+      const jobId = args?.job_id as string
+      if (!jobId) {
+        return {
+          content: [{ type: "text", text: "Missing job_id parameter" }],
+          isError: true,
+        }
+      }
+
+      const job = jobManager.getStatus(jobId)
+      if (!job) {
+        return {
+          content: [{ type: "text", text: `Job ${jobId} not found` }],
+          isError: true,
+        }
+      }
+
+      const duration = job.endTime
+        ? `${((job.endTime - job.startTime) / 1000).toFixed(1)}s`
+        : `${((Date.now() - job.startTime) / 1000).toFixed(0)}s (running)`
+
+      let response = `## Job ${job.id}\n\n`
+      response += `**Tool:** ${job.toolName}\n`
+      response += `**Status:** ${job.status}\n`
+      response += `**Duration:** ${duration}\n`
+      response += `**PID:** ${job.pid || "N/A"}\n`
+      response += `**Command:** \`${job.command}\`\n`
+
+      if (job.exitCode !== undefined) {
+        response += `**Exit Code:** ${job.exitCode}\n`
+      }
+
+      if (job.error) {
+        response += `\n**Error:** ${job.error}\n`
+      }
+
+      // Show last 20 lines of output
+      const outputLines = job.output.split("\n")
+      const lastLines = outputLines.slice(-20).join("\n")
+      if (lastLines) {
+        response += `\n### Output (last 20 lines)\n\`\`\`\n${lastLines}\n\`\`\``
+      }
+
+      return {
+        content: [{ type: "text", text: response }],
+      }
+    }
+
+    // === META-TOOL: Job Output ===
+    if (name === "kali_job_output") {
+      const jobId = args?.job_id as string
+      const fromLine = (args?.from_line as number) || 0
+
+      if (!jobId) {
+        return {
+          content: [{ type: "text", text: "Missing job_id parameter" }],
+          isError: true,
+        }
+      }
+
+      const result = jobManager.getOutput(jobId, fromLine)
+      if (!result) {
+        return {
+          content: [{ type: "text", text: `Job ${jobId} not found` }],
+          isError: true,
+        }
+      }
+
+      return {
+        content: [{
+          type: "text",
+          text: `## Job ${jobId} Output (lines ${fromLine}-${result.totalLines})\n\n\`\`\`\n${result.output || "(no new output)"}\n\`\`\`\n\n_Total lines: ${result.totalLines}_`,
+        }],
+      }
+    }
+
+    // === META-TOOL: Cancel Job ===
+    if (name === "kali_job_cancel") {
+      const jobId = args?.job_id as string
+      if (!jobId) {
+        return {
+          content: [{ type: "text", text: "Missing job_id parameter" }],
+          isError: true,
+        }
+      }
+
+      const result = jobManager.cancel(jobId)
+
+      return {
+        content: [{
+          type: "text",
+          text: result.success ? `✓ ${result.message}` : `✗ ${result.message}`,
+        }],
+        isError: !result.success,
+      }
+    }
+
     // === KALI TOOL EXECUTION ===
     if (name.startsWith("kali_")) {
       const toolName = name.replace("kali_", "").replace(/_/g, "-")
@@ -515,7 +723,19 @@ export function createMcpServer(registry: DynamicRegistry): Server {
       // Record usage for recommendations
       registry.recordUsage(toolName)
 
-      // Execute the tool
+      // Interactive tools run as background jobs
+      if (tool.interactive) {
+        const jobResult = await jobManager.start(tool, (args as Record<string, unknown>) || {})
+
+        return {
+          content: [{
+            type: "text",
+            text: `## ${tool.name} - Started as Background Job\n\n${jobResult.message}\n\n**This is an interactive/long-running tool.** Use these commands to manage it:\n- \`kali_job_status\` - Check job status and output\n- \`kali_job_output\` - Get streaming output\n- \`kali_job_cancel\` - Stop the job\n- \`kali_jobs\` - List all jobs`,
+          }],
+        }
+      }
+
+      // Execute the tool normally
       const result = await executeTool(tool, (args as Record<string, unknown>) || {})
 
       const status = result.success ? "✓ Success" : "✗ Failed"

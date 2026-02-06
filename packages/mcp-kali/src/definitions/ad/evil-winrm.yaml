@@ -65,6 +65,7 @@ parameters:
 
 requires_root: false
 timeout: 0
+interactive: true
 
 examples:
   - "evil-winrm -i 192.168.1.1 -u administrator -p 'Password123'"
