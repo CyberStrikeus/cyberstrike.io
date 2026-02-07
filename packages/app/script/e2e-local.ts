@@ -83,6 +83,35 @@ const runnerEnv = {
   PLAYWRIGHT_PORT: String(webPort),
 } satisfies Record<string, string>
 
+// Ensure models snapshot exists (with cyberstrike provider for E2E)
+const snapshotPath = path.join(cyberstrikeDir, "src", "provider", "models-snapshot.ts")
+const snapshotExists = await fs.access(snapshotPath).then(
+  () => true,
+  () => false,
+)
+if (!snapshotExists) {
+  const data: any = await fetch("https://models.dev/api.json").then((r) => r.json())
+  if (data.opencode && !data.cyberstrike) {
+    const nano = data.opencode.models["gpt-5-nano"]
+    if (nano) {
+      nano.release_date = new Date().toISOString().split("T")[0]
+      data.cyberstrike = {
+        id: "cyberstrike",
+        env: ["CYBERSTRIKE_API_KEY"],
+        npm: "@ai-sdk/openai-compatible",
+        api: data.opencode.api,
+        name: "Cyberstrike",
+        models: { "gpt-5-nano": nano },
+      }
+    }
+  }
+  await fs.writeFile(
+    snapshotPath,
+    "// Auto-generated for E2E\nexport const snapshot = " + JSON.stringify(data) + " as const\n",
+  )
+  console.log("Generated models-snapshot.ts with cyberstrike provider")
+}
+
 const seed = Bun.spawn(["bun", "script/seed-e2e.ts"], {
   cwd: cyberstrikeDir,
   env: serverEnv,
