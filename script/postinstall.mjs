@@ -39,14 +39,13 @@ function getPlatformInfo() {
 
 function isRealBinary(path) {
   try {
-    const stats = statSync(path);
-    // Real binary is > 1MB, placeholder is < 1KB
-    if (stats.size < 10000) {
+    // Read the file content and check size + content in one pass to avoid TOCTOU race
+    const content = readFileSync(path);
+    if (content.length < 10000) {
       return false;
     }
-    // Also check if it's not a shell script placeholder
-    const content = readFileSync(path, 'utf8').slice(0, 100);
-    if (content.includes('Run: npm run postinstall') || content.includes('#!/bin/sh')) {
+    const head = content.slice(0, 100).toString('utf8');
+    if (head.includes('Run: npm run postinstall') || head.includes('#!/bin/sh')) {
       return false;
     }
     return true;

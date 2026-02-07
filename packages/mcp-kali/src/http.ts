@@ -155,11 +155,17 @@ const activePairingCodes = new Map<string, PairingCode>()
  */
 function generatePairingCode(): string {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" // no ambiguous chars (0/O, 1/I)
-  const bytes = crypto.randomBytes(6)
+  const limit = 256 - (256 % chars.length)
   let code = ""
-  for (let i = 0; i < 6; i++) {
-    code += chars[bytes[i] % chars.length]
-    if (i === 2) code += "-"
+  while (code.replace("-", "").length < 6) {
+    const bytes = crypto.randomBytes(6 - code.replace("-", "").length)
+    for (const byte of bytes) {
+      if (byte < limit) {
+        code += chars[byte % chars.length]
+        if (code.replace("-", "").length === 3 && !code.includes("-")) code += "-"
+        if (code.replace("-", "").length === 6) break
+      }
+    }
   }
   return code
 }
