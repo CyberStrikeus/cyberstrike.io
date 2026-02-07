@@ -84,12 +84,9 @@ const runnerEnv = {
 } satisfies Record<string, string>
 
 // Ensure models snapshot exists (with cyberstrike provider for E2E)
+// Use exclusive create (wx) to avoid TOCTOU race and skip if already present
 const snapshotPath = path.join(cyberstrikeDir, "src", "provider", "models-snapshot.ts")
-const snapshotExists = await fs.access(snapshotPath).then(
-  () => true,
-  () => false,
-)
-if (!snapshotExists) {
+try {
   const data: any = await fetch("https://models.dev/api.json").then((r) => r.json())
   if (data.opencode && !data.cyberstrike) {
     const nano = data.opencode.models["gpt-5-nano"]
@@ -108,8 +105,11 @@ if (!snapshotExists) {
   await fs.writeFile(
     snapshotPath,
     "// Auto-generated for E2E\nexport const snapshot = " + JSON.stringify(data) + " as const\n",
+    { flag: "wx" },
   )
   console.log("Generated models-snapshot.ts with cyberstrike provider")
+} catch (e: any) {
+  if (e?.code !== "EEXIST") throw e
 }
 
 const seed = Bun.spawn(["bun", "script/seed-e2e.ts"], {
