@@ -1,17 +1,52 @@
 # Cyberstrike CI/CD Guide
 
-This document explains the Cyberstrike project's CI/CD pipeline and release processes.
+This document explains the Cyberstrike project's CI/CD pipeline, Git branching strategy, and release processes.
 
 ---
 
 ## Overview
 
-Cyberstrike uses a **trunk-based development** strategy:
+Cyberstrike uses a **simplified Git Flow** branching strategy with tag-based releases:
 
-- Single main branch: `main`
+- **`main`** — Production-ready code. Protected branch. Only receives merges from `dev` via PR.
+- **`dev`** — Integration branch (default). All feature branches merge here first.
+- **`feat/*`, `fix/*`** — Short-lived branches cut from `dev` for individual changes.
+- **`hotfix/*`** — Emergency fixes cut from `main`, merged to both `main` and `dev`.
 - Tag-based releases: `v1.0.7`, `v1.0.8-beta.1`
-- PRs are automatically checked
-- Production deploy via separate branch
+
+```
+main ──────────●──────────────────●──────── (stable releases only)
+               ↑                  ↑
+dev ───●───●───●───●───●───●──●───●──────── (integration, default branch)
+       ↑   ↑       ↑       ↑
+       │   │       │       └── feat/wstg-skills
+       │   │       └── feat/mcp-update
+       │   └── fix/browser-tool
+       └── fix/ci-workflow
+```
+
+### Why This Strategy?
+
+Previously we used trunk-based development (everything merged directly to `main`). This caused problems:
+
+1. **No safety net** — A bad commit on `main` immediately affected the stable branch
+2. **No integration testing** — Features went straight to production without testing alongside other changes
+3. **No collaboration workflow** — Multiple developers couldn't work independently and merge safely
+4. **No beta path** — No way to accumulate features, test them together, then release
+
+The simplified Git Flow gives us:
+- **`dev`** as a staging area where features are integrated and tested together
+- **`main`** stays stable — only tested, approved code gets promoted
+- **Feature branches** let multiple developers work in parallel without conflicts
+- **Beta releases** from `dev` let us test before going to production
+- **Hotfix path** for critical bugs that can't wait for the next release cycle
+
+### Branch Protection
+
+| Branch | Direct Push | Force Push | Merge Method | Who Merges |
+|--------|------------|------------|--------------|------------|
+| `main` | Blocked | Blocked | PR only (from `dev` or `hotfix/*`) | Maintainers |
+| `dev` | Allowed (small fixes) | Blocked | PR preferred, direct push OK | All developers |
 
 ### Workflows
 
@@ -19,35 +54,163 @@ Cyberstrike uses a **trunk-based development** strategy:
 |----------|------|---------|-------------|
 | PR Check: TypeScript Validation | `typecheck.yml` | On PR | TypeScript type checking |
 | PR Check: Run Tests | `test.yml` | On PR | Linux + Windows tests |
-| PR Check: Code Coverage | `coverage.yml` | Push, PR | Test coverage reports |
-| Security: CodeQL Analysis | `security-scan.yml` | Push, PR, Weekly | Static code security analysis |
+| PR Check: Code Coverage | `coverage.yml` | Push to main/dev, PR | Test coverage reports |
+| Security: CodeQL Analysis | `security-scan.yml` | Push to main/dev, PR, Weekly | Static code security analysis |
 | PR: Auto Label | `auto-label.yml` | On PR | Automatic PR labeling |
 | Release: Auto Changelog | `auto-changelog.yml` | On Release | Automatic release notes |
 | PR Check: Bundle Size | `bundle-size.yml` | On PR | CLI bundle size tracking |
 | PR Check: Lighthouse CI | `lighthouse.yml` | On PR (docs/web) | Web performance testing |
 | Release: CLI to npm + Desktop to GitHub | `release-cli.yml` | `v*` tag | npm and GitHub release |
 | Deploy: SST to Cloudflare | `deploy.yml` | `production` push | Backend deployment |
-| Community: Update Contributors | `contributors.yml` | Push to main | Auto-generate CONTRIBUTORS.md |
+| Community: Update Contributors | `contributors.yml` | Push to main/dev | Auto-generate CONTRIBUTORS.md |
 | Community: Discord Notify | `notify-discord.yml` | On Release | Discord release announcements |
 | Community: Discord Blog Notify | `notify-discord-blog.yml` | Cron (30m) | Discord blog post announcements |
 
 ### Automated Dependencies
 
-| Tool | File | Schedule | Description |
-|------|------|----------|-------------|
-| Dependabot | `dependabot.yml` | Weekly (Monday) | Automatic dependency updates |
+| Tool | File | Target Branch | Schedule | Description |
+|------|------|---------------|----------|-------------|
+| Dependabot | `dependabot.yml` | `dev` | Weekly (Monday) | Automatic dependency updates |
+
+> **Note:** Dependabot PRs target `dev`, not `main`. This ensures dependency updates are tested in the integration branch before reaching production.
 
 ---
 
-## 1. Daily Development
+## 1. Git Branching Strategy (Detailed)
 
-Regular development happens on the `main` branch. Pushes don't trigger any workflow.
+### 1.1 Branch Types
+
+#### `main` — Production Branch
+- Always contains stable, released code
+- Protected: no direct pushes, no force pushes
+- Only updated via:
+  - PR from `dev` (regular releases)
+  - PR from `hotfix/*` (emergency fixes)
+- Release tags (`v*`) are created from `main`
+
+#### `dev` — Integration Branch (Default)
+- Where all feature work merges first
+- The default branch on GitHub (PRs target here by default)
+- Should always be in a "buildable" state
+- Beta releases are tagged from `dev`
+- Dependabot PRs target `dev`
+
+#### `feat/*` — Feature Branches
+- Cut from `dev`, merged back to `dev` via PR
+- Naming: `feat/short-description` (e.g., `feat/wstg-agent-skills`)
+- Deleted after merge
+- Short-lived: ideally merged within days, not weeks
+
+#### `fix/*` — Bug Fix Branches
+- Cut from `dev`, merged back to `dev` via PR
+- Naming: `fix/short-description` (e.g., `fix/browser-crash`)
+- For non-critical bugs found during development
+
+#### `hotfix/*` — Emergency Fix Branches
+- Cut from `main`, merged to **both** `main` AND `dev`
+- Naming: `hotfix/short-description` (e.g., `hotfix/auth-bypass`)
+- Only for critical bugs in production that can't wait
+
+### 1.2 Daily Development Workflow
 
 ```bash
-# Write code
+# 1. Make sure you're on dev and up to date
+git checkout dev
+git pull origin dev
+
+# 2. Create a feature branch
+git checkout -b feat/my-new-feature
+
+# 3. Develop (make commits)
 git add .
-git commit -m "feat: add new feature"
-git push origin main
+git commit -m "feat(browser): add screenshot capture"
+
+# 4. Push and create PR (targets dev by default)
+git push origin feat/my-new-feature
+gh pr create --title "feat(browser): add screenshot capture" --body "Description..."
+
+# 5. After review and CI passes, merge to dev
+gh pr merge --squash
+
+# 6. Clean up
+git checkout dev
+git pull origin dev
+git branch -d feat/my-new-feature
+```
+
+### 1.3 Release Workflow
+
+```bash
+# 1. Ensure dev is stable (all tests pass, features working)
+git checkout dev
+git pull origin dev
+
+# 2. Optional: tag a beta from dev for testing
+git tag v1.1.0-beta.1
+git push origin v1.1.0-beta.1
+
+# 3. When beta is validated, create PR from dev → main
+gh pr create --base main --title "release: v1.1.0" --body "Release notes..."
+
+# 4. Merge to main
+gh pr merge --merge
+
+# 5. Tag the stable release from main
+git checkout main
+git pull origin main
+git tag v1.1.0
+git push origin v1.1.0
+```
+
+### 1.4 Hotfix Workflow
+
+```bash
+# 1. Cut hotfix branch from main
+git checkout main
+git pull origin main
+git checkout -b hotfix/critical-auth-bug
+
+# 2. Fix the bug
+git add .
+git commit -m "fix(critical): patch authentication bypass"
+
+# 3. PR to main
+git push origin hotfix/critical-auth-bug
+gh pr create --base main --title "hotfix: patch auth bypass"
+
+# 4. After merge to main, also merge to dev
+git checkout dev
+git pull origin dev
+git merge main
+git push origin dev
+```
+
+### 1.5 For External Contributors
+
+External contributors should:
+
+1. **Fork** the repository on GitHub
+2. **Clone** their fork locally
+3. Create a **feature branch** from `dev`
+4. Push to their fork
+5. Open a **PR targeting `dev`** on the main repo
+
+```bash
+# Fork on GitHub first, then:
+git clone https://github.com/YOUR_USERNAME/cyberstrike.io.git
+cd cyberstrike.io
+git remote add upstream https://github.com/CyberStrikeus/cyberstrike.io.git
+
+# Stay in sync
+git fetch upstream
+git checkout dev
+git merge upstream/dev
+
+# Create feature branch
+git checkout -b feat/my-contribution
+# ... work ...
+git push origin feat/my-contribution
+# Open PR on GitHub targeting CyberStrikeus/cyberstrike.io:dev
 ```
 
 ### Commit Message Format (Conventional Commits)
@@ -81,13 +244,14 @@ git commit -m "chore: bump version to 1.0.7"
 
 ## 2. Pull Request Process
 
-Automated checks run when PRs are opened via feature branches.
+All PRs target `dev` by default (since `dev` is the default branch). PRs to `main` are only for releases and hotfixes.
 
 ### Steps
 
 ```bash
-# 1. Create feature branch
-git checkout -b feature/new-feature
+# 1. Create feature branch from dev
+git checkout dev && git pull origin dev
+git checkout -b feat/new-feature
 
 # 2. Develop
 # ... write code ...
@@ -95,9 +259,9 @@ git checkout -b feature/new-feature
 # 3. Commit and push
 git add .
 git commit -m "feat: new feature description"
-git push origin feature/new-feature
+git push origin feat/new-feature
 
-# 4. Open PR on GitHub
+# 4. Open PR on GitHub (targets dev automatically)
 gh pr create --title "feat: new feature" --body "Description..."
 ```
 
@@ -110,12 +274,12 @@ These workflows run when a PR is opened:
 | PR Check: TypeScript Validation | Type errors | ~1 min |
 | PR Check: Run Tests (Linux + Windows) | E2E tests | ~5 min |
 
-A ✅ or ❌ indicator appears on the PR. Don't merge until all checks pass.
+A checkmark or X indicator appears on the PR. Don't merge until all checks pass.
 
 ### PR Merge
 
 ```bash
-# Squash merge (recommended)
+# Squash merge (recommended for feature branches)
 gh pr merge --squash
 
 # Or use GitHub UI "Squash and merge"
@@ -127,28 +291,30 @@ gh pr merge --squash
 
 ### 3.1 Stable Release (e.g., v1.0.7)
 
-Used for production-ready versions.
+Used for production-ready versions. Code must be on `main`.
 
 ```bash
-# 1. Update version (package.json)
-# Update version field in packages/cyberstrike/package.json
+# 1. Create PR from dev → main
+gh pr create --base main --title "release: v1.0.7" --body "## Changes\n- ..."
 
-# 2. Commit
-git add .
-git commit -m "chore: bump version to 1.0.7"
+# 2. Merge to main (after review)
+gh pr merge --merge
+
+# 3. Update version (package.json) on main
+git checkout main && git pull origin main
+# Edit packages/cyberstrike/package.json
+git add . && git commit -m "chore: bump version to 1.0.7"
 git push origin main
 
-# 3. Create tag
+# 4. Create tag (triggers release workflow)
 git tag v1.0.7
-
-# 4. Push tag (triggers workflow)
 git push origin v1.0.7
 ```
 
 **Result:**
-- ✅ `@cyberstrike-io/cli@1.0.7` published to npm (`latest` tag)
-- ✅ GitHub Release created
-- ✅ Desktop binaries (Windows, macOS, Linux) attached
+- `@cyberstrike-io/cli@1.0.7` published to npm (`latest` tag)
+- GitHub Release created
+- Desktop binaries (Windows, macOS, Linux) attached
 
 **User installation:**
 ```bash
@@ -159,16 +325,18 @@ npm install -g @cyberstrike-io/cli@1.0.7
 
 ### 3.2 Beta Release (e.g., v1.0.8-beta.1)
 
-Used for early test versions.
+Used for early test versions. Tagged from `dev`.
 
 ```bash
+# Tag from dev branch
+git checkout dev && git pull origin dev
 git tag v1.0.8-beta.1
 git push origin v1.0.8-beta.1
 ```
 
 **Result:**
-- ✅ `@cyberstrike-io/cli@1.0.8-beta.1` published to npm (`beta` tag)
-- ✅ GitHub Pre-release created
+- `@cyberstrike-io/cli@1.0.8-beta.1` published to npm (`beta` tag)
+- GitHub Pre-release created
 
 **User installation:**
 ```bash
@@ -177,24 +345,25 @@ npm install -g @cyberstrike-io/cli@beta
 
 ### 3.3 Other Pre-release Types
 
-| Type | Tag Format | npm Tag | Usage |
-|------|------------|---------|-------|
-| Alpha | `v1.0.8-alpha.1` | `alpha` | Early development, unstable |
-| Beta | `v1.0.8-beta.1` | `beta` | Feature-complete, testing phase |
-| RC | `v1.0.8-rc.1` | `rc` | Release candidate, final testing |
-| Stable | `v1.0.8` | `latest` | Production-ready |
+| Type | Tag Format | npm Tag | Tagged From | Usage |
+|------|------------|---------|-------------|-------|
+| Alpha | `v1.0.8-alpha.1` | `alpha` | `dev` or feature branch | Early development, unstable |
+| Beta | `v1.0.8-beta.1` | `beta` | `dev` | Feature-complete, testing phase |
+| RC | `v1.0.8-rc.1` | `rc` | `dev` | Release candidate, final testing |
+| Stable | `v1.0.8` | `latest` | `main` | Production-ready |
 
 ```bash
-# Alpha release
+# Alpha release (from dev)
 git tag v1.0.8-alpha.1 && git push origin v1.0.8-alpha.1
 
-# Beta release
+# Beta release (from dev)
 git tag v1.0.8-beta.1 && git push origin v1.0.8-beta.1
 
-# Release candidate
+# Release candidate (from dev)
 git tag v1.0.8-rc.1 && git push origin v1.0.8-rc.1
 
-# Stable release
+# Stable release (from main only)
+git checkout main
 git tag v1.0.8 && git push origin v1.0.8
 ```
 
@@ -308,20 +477,26 @@ git push origin v1.0.8
 
 ## 8. Best Practices
 
-### Do's ✅
+### Do's
 
-- Ensure tests pass before every release
+- Always branch from `dev` for new work (`feat/*`, `fix/*`)
+- Always create PRs — even for small changes (builds good habits)
+- Ensure tests pass before merging any PR
+- Tag beta releases from `dev` before promoting to `main`
 - Follow semantic versioning rules
-- Write meaningful commit messages
-- Increment MAJOR version for breaking changes
-- Test beta versions before production release
+- Write meaningful commit messages using conventional commits
+- Sync `dev` with `main` after hotfixes (`git merge main` on dev)
+- Delete feature branches after merging
 
-### Don'ts ❌
+### Don'ts
 
-- Don't force push directly to `main`
-- Don't release without testing
+- Don't push directly to `main` — always use PRs
+- Don't force push to `main` or `dev`
+- Don't tag stable releases from `dev` — only from `main`
+- Don't release without testing (beta first, then stable)
 - Don't reuse the same version number
 - Don't leave npm tokens in code
+- Don't let feature branches live longer than 1-2 weeks
 
 ---
 
@@ -330,18 +505,29 @@ git push origin v1.0.8
 ### Scenario 1: Bug Fix Release
 
 ```bash
-# 1. Fix the bug
+# 1. Create fix branch from dev
+git checkout dev && git pull origin dev
+git checkout -b fix/login-timeout
+
+# 2. Fix the bug
 git add .
 git commit -m "fix(auth): resolve login timeout issue"
-git push origin main
+git push origin fix/login-timeout
 
-# 2. Increment patch version
-# package.json: "version": "1.0.6" → "1.0.7"
-git add .
-git commit -m "chore: bump version to 1.0.7"
-git push origin main
+# 3. PR to dev, merge after CI passes
+gh pr create --title "fix(auth): resolve login timeout" --body "Fixes #42"
+gh pr merge --squash
 
-# 3. Release
+# 4. When ready to release: PR from dev → main
+git checkout dev && git pull origin dev
+gh pr create --base main --title "release: v1.0.7"
+gh pr merge --merge
+
+# 5. Tag and release from main
+git checkout main && git pull origin main
+# Update package.json version
+git add . && git commit -m "chore: bump version to 1.0.7"
+git push origin main
 git tag v1.0.7
 git push origin v1.0.7
 ```
@@ -349,48 +535,76 @@ git push origin v1.0.7
 ### Scenario 2: New Feature + Beta Testing
 
 ```bash
-# 1. Develop feature
+# 1. Develop feature on a branch
+git checkout dev && git pull origin dev
+git checkout -b feat/screenshot-capture
 git add .
 git commit -m "feat(browser): add screenshot capture"
-git push origin main
+git push origin feat/screenshot-capture
 
-# 2. Beta release
+# 2. PR to dev, merge after CI passes
+gh pr create --title "feat(browser): add screenshot capture"
+gh pr merge --squash
+
+# 3. Beta release from dev
+git checkout dev && git pull origin dev
 git tag v1.1.0-beta.1
 git push origin v1.1.0-beta.1
 
-# 3. Get feedback, fix issues
+# 4. Get feedback, fix issues on another branch
+git checkout -b fix/screenshot-quality
 git add .
 git commit -m "fix(browser): improve screenshot quality"
-git push origin main
+git push origin fix/screenshot-quality
+gh pr create --title "fix(browser): improve screenshot quality"
+gh pr merge --squash
 
-# 4. Second beta
+# 5. Second beta from dev
+git checkout dev && git pull origin dev
 git tag v1.1.0-beta.2
 git push origin v1.1.0-beta.2
 
-# 5. Stable release
-# package.json: "version": "1.1.0"
-git add .
-git commit -m "chore: bump version to 1.1.0"
+# 6. When beta is validated, promote to main
+gh pr create --base main --title "release: v1.1.0"
+gh pr merge --merge
+
+# 7. Stable release from main
+git checkout main && git pull origin main
+# Update package.json version
+git add . && git commit -m "chore: bump version to 1.1.0"
 git push origin main
 git tag v1.1.0
 git push origin v1.1.0
 ```
 
-### Scenario 3: Hotfix
+### Scenario 3: Hotfix (Critical Production Bug)
 
 ```bash
-# Quick fix for critical bug
-git add .
-git commit -m "fix(critical): patch security vulnerability"
-git push origin main
+# 1. Cut hotfix branch from main (not dev!)
+git checkout main && git pull origin main
+git checkout -b hotfix/auth-bypass
 
-# Immediate release
-# package.json: "version": "1.0.8"
+# 2. Fix the critical bug
 git add .
-git commit -m "chore: bump version to 1.0.8"
+git commit -m "fix(critical): patch authentication bypass vulnerability"
+git push origin hotfix/auth-bypass
+
+# 3. PR to main (fast-track, skip dev)
+gh pr create --base main --title "hotfix: patch auth bypass"
+gh pr merge --merge
+
+# 4. Immediate release from main
+git checkout main && git pull origin main
+# Update package.json version
+git add . && git commit -m "chore: bump version to 1.0.8"
 git push origin main
 git tag v1.0.8
 git push origin v1.0.8
+
+# 5. IMPORTANT: Sync the fix back to dev
+git checkout dev && git pull origin dev
+git merge main
+git push origin dev
 ```
 
 ---

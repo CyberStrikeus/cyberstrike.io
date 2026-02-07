@@ -210,7 +210,7 @@ export namespace Agent {
         native: true,
         color: "red",
         prompt: PROMPT_WEB_APPLICATION,
-        skills: ["owasp-wstg", "sql-injection"], // Preload security testing knowledge
+        skills: ["wstg-recon-config", "wstg-auth-session", "wstg-injection", "wstg-logic-client-api"], // Preload WSTG testing knowledge
         permission: PermissionNext.merge(
           defaults,
           PermissionNext.fromConfig({
@@ -276,7 +276,7 @@ export namespace Agent {
         native: true,
         color: "green",
         prompt: PROMPT_BUG_HUNTER,
-        skills: ["recon-methodology", "owasp-wstg"], // Preload recon and testing knowledge
+        skills: ["recon-methodology", "wstg-recon-config", "wstg-injection"], // Preload recon and testing knowledge
         permission: PermissionNext.merge(
           defaults,
           PermissionNext.fromConfig({
