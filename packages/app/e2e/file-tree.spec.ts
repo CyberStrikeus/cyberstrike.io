@@ -18,8 +18,11 @@ test("file tree can expand folders and open a file", async ({ page, gotoSession 
   await expect(node("app")).toBeVisible()
   await node("app").click()
 
-  await expect(node("src")).toBeVisible()
-  await node("src").click()
+  // Scope "src" to within app's collapsible to avoid matching root "src/"
+  const appCollapsible = node("app").locator('xpath=ancestor::*[@data-component="collapsible"][1]')
+  const srcNode = appCollapsible.getByRole("button", { name: "src", exact: true })
+  await expect(srcNode).toBeVisible()
+  await srcNode.click()
 
   await expect(node("components")).toBeVisible()
   await node("components").click()

@@ -75,6 +75,8 @@ jobs:
             if (data.opencode && !data.cyberstrike) {
               const nano = data.opencode.models['gpt-5-nano']
               if (nano) {
+                // Set release_date to today so model appears in 'latest' filter
+                nano.release_date = new Date().toISOString().split('T')[0]
                 data.cyberstrike = {
                   id: 'cyberstrike',
                   env: ['CYBERSTRIKE_API_KEY'],
