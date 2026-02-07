@@ -1,24 +1,16 @@
 name: "Release: CLI to npm + Desktop to GitHub"
-run-name: "${{ github.event_name == 'push' && format('Release {0}', github.ref_name) || format('Release {0}', inputs.bump || inputs.version) }}"
+run-name: "${{ github.event_name == 'push' && format('Release {0}', github.ref_name) || format('Release {0}', inputs.version || 'today') }}"
 
-# Industry best practice: Tag-based releases
-# To release: git tag v1.0.7 && git push origin v1.0.7
+# CalVer releases: vYYYY.M.DD (e.g., v2026.2.7)
+# To release: git tag v2026.2.7 && git push origin v2026.2.7
 on:
   push:
     tags:
-      - 'v*'  # Triggers on v1.0.0, v1.0.1-beta, etc.
+      - 'v*'  # Triggers on v2026.2.7, v2026.2.7-2, v2026.2.7-beta, etc.
   workflow_dispatch:
     inputs:
-      bump:
-        description: "Bump major, minor, or patch"
-        required: false
-        type: choice
-        options:
-          - major
-          - minor
-          - patch
       version:
-        description: "Override version (optional, e.g., 1.0.7)"
+        description: "Override version (optional, default: today's date)"
         required: false
         type: string
 
@@ -45,7 +37,7 @@ jobs:
       - uses: ./.github/actions/setup-bun
 
       - name: Install Cyberstrike
-        if: inputs.bump || inputs.version
+        if: inputs.version
         run: bun i -g cyberstrike@latest
 
       - name: Login to GitHub Container Registry
@@ -76,7 +68,6 @@ jobs:
         id: publish
         run: ./script/publish-start.ts
         env:
-          CYBERSTRIKE_BUMP: ${{ inputs.bump }}
           CYBERSTRIKE_VERSION: ${{ inputs.version }}
           CYBERSTRIKE_API_KEY: ${{ secrets.CYBERSTRIKE_API_KEY }}
           AUR_KEY: ${{ secrets.AUR_KEY }}
