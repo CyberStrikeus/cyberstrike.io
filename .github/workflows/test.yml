@@ -109,6 +109,17 @@ jobs:
           done
           exit 1
 
+      - name: Generate models snapshot
+        if: matrix.settings.name != 'windows'
+        working-directory: packages/cyberstrike
+        run: |
+          bun -e "
+            const json = await fetch('https://models.dev/api.json').then(x => x.text())
+            await Bun.write('src/provider/models-snapshot.ts',
+              '// Auto-generated for CI\nexport const snapshot = ' + json + ' as const\n')
+            console.log('Generated models-snapshot.ts')
+          "
+
       - name: run
         working-directory: ${{ matrix.settings.workdir }}
         run: ${{ matrix.settings.command }}
