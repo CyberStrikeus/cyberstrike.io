@@ -42,6 +42,57 @@ const seed = async () => {
       }
       await Session.updateMessage(message)
       await Session.updatePart(part)
+
+      // Seed an assistant message with token usage for context panel tests
+      const assistantMessageID = Identifier.descending("message")
+      const assistantPartID = Identifier.descending("part")
+      const stepFinishPartID = Identifier.descending("part")
+      const assistantMessage = {
+        id: assistantMessageID,
+        sessionID: session.id,
+        role: "assistant" as const,
+        time: { created: now + 1 },
+        parentID: messageID,
+        modelID,
+        providerID,
+        mode: "chat",
+        agent: "build",
+        path: { cwd: dir, root: dir },
+        cost: 0.0003,
+        tokens: {
+          input: 150,
+          output: 50,
+          reasoning: 0,
+          cache: { read: 0, write: 0 },
+        },
+      }
+      const assistantPart = {
+        id: assistantPartID,
+        sessionID: session.id,
+        messageID: assistantMessageID,
+        type: "text" as const,
+        text: "Seeded assistant response for E2E testing.",
+        time: { start: now + 1 },
+      }
+      const stepFinishPart = {
+        id: stepFinishPartID,
+        sessionID: session.id,
+        messageID: assistantMessageID,
+        type: "step-finish" as const,
+        reason: "stop",
+        cost: 0.0003,
+        tokens: {
+          input: 150,
+          output: 50,
+          reasoning: 0,
+          cache: { read: 0, write: 0 },
+        },
+        time: { start: now + 2 },
+      }
+      await Session.updateMessage(assistantMessage)
+      await Session.updatePart(assistantPart)
+      await Session.updatePart(stepFinishPart)
+
       await Project.update({ projectID: Instance.project.id, name: "E2E Project" })
     },
   })

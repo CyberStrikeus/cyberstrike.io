@@ -25,6 +25,31 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
+      - name: Generate models snapshot
+        working-directory: packages/cyberstrike
+        run: |
+          bun -e "
+            const data = await fetch('https://models.dev/api.json').then(x => x.json())
+            if (data.opencode && !data.cyberstrike) {
+              const nano = data.opencode.models['gpt-5-nano']
+              if (nano) {
+                nano.release_date = new Date().toISOString().split('T')[0]
+                data.cyberstrike = {
+                  id: 'cyberstrike',
+                  env: ['CYBERSTRIKE_API_KEY'],
+                  npm: '@ai-sdk/openai-compatible',
+                  api: data.opencode.api,
+                  name: 'Cyberstrike',
+                  models: { 'gpt-5-nano': nano }
+                }
+              }
+            }
+            const json = JSON.stringify(data)
+            await Bun.write('src/provider/models-snapshot.ts',
+              '// Auto-generated for CI\nexport const snapshot = ' + json + ' as const\n')
+            console.log('Generated models-snapshot.ts with cyberstrike provider')
+          "
+
       - name: Run tests with coverage
         working-directory: packages/cyberstrike
         run: bun test --coverage --coverage-reporter=lcov --coverage-dir=./coverage
