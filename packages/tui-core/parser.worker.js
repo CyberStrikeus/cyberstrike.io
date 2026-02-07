@@ -184,7 +184,7 @@ class ParserWorker {
       try {
         await mkdir2(path2.join(this.tsDataPath, "languages"), { recursive: true });
         await mkdir2(path2.join(this.tsDataPath, "queries"), { recursive: true });
-        let { default: treeWasm } = await import("web-tree-sitter/tree-sitter.wasm", {
+        let { default: treeWasm } = await import("web-tree-sitter/web-tree-sitter.wasm", {
           with: { type: "wasm" }
         });
         if (isBunfsPath(treeWasm)) {
