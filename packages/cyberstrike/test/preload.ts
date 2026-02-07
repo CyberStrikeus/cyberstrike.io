@@ -6,7 +6,7 @@ import fs from "fs/promises"
 import fsSync from "fs"
 import { afterAll } from "bun:test"
 
-const dir = path.join(os.tmpdir(), "cyberstrike-test-data-" + process.pid)
+const dir = path.join(os.tmpdir(), "cyberstrike-test-data-" + crypto.randomUUID())
 await fs.mkdir(dir, { recursive: true })
 afterAll(() => {
   fsSync.rmSync(dir, { recursive: true, force: true })

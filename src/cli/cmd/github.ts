@@ -781,10 +781,24 @@ export const GithubRunCommand = cmd({
           const tag = m[0]
           const url = m[1]
           const start = m.index
-          const filename = path.basename(url)
+
+          // Validate URL origin to prevent SSRF
+          let parsedUrl: URL
+          try {
+            parsedUrl = new URL(url)
+          } catch {
+            console.error(`Invalid URL: ${url}`)
+            continue
+          }
+          if (parsedUrl.origin !== "https://github.com" || !parsedUrl.pathname.startsWith("/user-attachments/")) {
+            console.error(`Skipping non-GitHub attachment URL: ${url}`)
+            continue
+          }
+
+          const filename = path.basename(parsedUrl.pathname)
 
           // Download image
-          const res = await fetch(url, {
+          const res = await fetch(parsedUrl.href, {
             headers: {
               Authorization: `Bearer ${appToken}`,
               Accept: "application/vnd.github.v3+json",

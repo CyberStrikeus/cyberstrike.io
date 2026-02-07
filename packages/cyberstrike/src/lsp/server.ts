@@ -1013,7 +1013,12 @@ export namespace LSPServer {
       }
       await fs.rm(archive, { force: true })
 
-      const bin = path.join(Global.Path.bin, "clangd_" + tag, "bin", "clangd" + ext)
+      const bin = path.resolve(Global.Path.bin, "clangd_" + tag, "bin", "clangd" + ext)
+      // Validate binary path stays within expected directory to prevent path traversal
+      if (!bin.startsWith(path.resolve(Global.Path.bin) + path.sep)) {
+        log.error("Invalid clangd binary path", { bin })
+        return
+      }
       if (!(await Bun.file(bin).exists())) {
         log.error("Failed to extract clangd binary")
         return

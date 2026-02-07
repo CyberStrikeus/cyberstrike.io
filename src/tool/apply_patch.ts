@@ -90,13 +90,10 @@ export const ApplyPatchTool = Tool.define("apply_patch", {
         }
 
         case "update": {
-          // Check if file exists for update
-          const stats = await fs.stat(filePath).catch(() => null)
-          if (!stats || stats.isDirectory()) {
+          // Read file directly - will throw if missing or is directory
+          const oldContent = await fs.readFile(filePath, "utf-8").catch(() => {
             throw new Error(`apply_patch verification failed: Failed to read file to update: ${filePath}`)
-          }
-
-          const oldContent = await fs.readFile(filePath, "utf-8")
+          })
           let newContent = oldContent
 
           // Apply the update chunks to get new content
