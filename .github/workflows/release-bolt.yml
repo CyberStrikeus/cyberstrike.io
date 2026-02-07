@@ -5,7 +5,7 @@
 #   - Manual dispatch
 #   - Release published
 #
-# Publishes to: ghcr.io/cyberstrike/bolt:latest (and :vX.Y.Z on release)
+# Publishes to: ghcr.io/cyberstrike/bolt:latest (and :vYYYY.M.DD on release)
 
 name: "Bolt: Build & Publish Docker Image"
 
@@ -56,10 +56,8 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # For releases: use semver tags (v1.0.0 -> 1.0.0, 1.0, 1, latest)
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            # For releases: use the tag directly (CalVer: v2026.2.7 -> 2026.2.7)
+            type=raw,value={{tag}},enable=${{ github.event_name == 'release' }}
             # For main branch: use 'latest'
             type=raw,value=latest,enable={{is_default_branch}}
             # For manual dispatch: use input tag

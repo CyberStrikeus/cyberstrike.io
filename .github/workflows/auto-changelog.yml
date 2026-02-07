@@ -33,7 +33,7 @@ jobs:
           echo "current=$TAG" >> $GITHUB_OUTPUT
 
           # Find the previous tag
-          PREVIOUS=$(git tag --sort=-version:refname | grep -A 1 "^$TAG$" | tail -1)
+          PREVIOUS=$(git tag --sort=-creatordate | grep -A 1 "^$TAG$" | tail -1)
           if [ "$PREVIOUS" = "$TAG" ]; then
             # No previous tag found, use first commit
             PREVIOUS=$(git rev-list --max-parents=0 HEAD)
