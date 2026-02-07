@@ -17,7 +17,7 @@ jobs:
       matrix:
         settings:
           - name: linux
-            host: blacksmith-4vcpu-ubuntu-2404
+            host: ubuntu-latest
             playwright: bunx playwright install --with-deps
             workdir: .
             command: |
@@ -64,6 +64,34 @@ jobs:
             printf '%s\n' "XDG_CONFIG_HOME=${{ runner.temp }}/cyberstrike-e2e/config" >> "$GITHUB_ENV"
             printf '%s\n' "XDG_STATE_HOME=${{ runner.temp }}/cyberstrike-e2e/state" >> "$GITHUB_ENV"
           fi
+
+      - name: Generate models snapshot
+        if: matrix.settings.name != 'windows'
+        working-directory: packages/cyberstrike
+        run: |
+          bun -e "
+            const data = await fetch('https://models.dev/api.json').then(x => x.json())
+            // Inject cyberstrike provider for E2E tests (mirrors opencode with free gpt-5-nano)
+            if (data.opencode && !data.cyberstrike) {
+              const nano = data.opencode.models['gpt-5-nano']
+              if (nano) {
+                // Set release_date to today so model appears in 'latest' filter
+                nano.release_date = new Date().toISOString().split('T')[0]
+                data.cyberstrike = {
+                  id: 'cyberstrike',
+                  env: ['CYBERSTRIKE_API_KEY'],
+                  npm: '@ai-sdk/openai-compatible',
+                  api: data.opencode.api,
+                  name: 'Cyberstrike',
+                  models: { 'gpt-5-nano': nano }
+                }
+              }
+            }
+            const json = JSON.stringify(data)
+            await Bun.write('src/provider/models-snapshot.ts',
+              '// Auto-generated for CI\nexport const snapshot = ' + json + ' as const\n')
+            console.log('Generated models-snapshot.ts with cyberstrike provider')
+          "
 
       - name: Seed cyberstrike data
         if: matrix.settings.name != 'windows'

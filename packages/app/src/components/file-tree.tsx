@@ -1,8 +1,8 @@
 import { useFile } from "@/context/file"
-import { Collapsible } from "@cyberstrike/ui/collapsible"
-import { FileIcon } from "@cyberstrike/ui/file-icon"
-import { Icon } from "@cyberstrike/ui/icon"
-import { Tooltip } from "@cyberstrike/ui/tooltip"
+import { Collapsible } from "@cyberstrike-io/ui/collapsible"
+import { FileIcon } from "@cyberstrike-io/ui/file-icon"
+import { Icon } from "@cyberstrike-io/ui/icon"
+import { Tooltip } from "@cyberstrike-io/ui/tooltip"
 import {
   createEffect,
   createMemo,
@@ -15,7 +15,7 @@ import {
   type ParentProps,
 } from "solid-js"
 import { Dynamic } from "solid-js/web"
-import type { FileNode } from "@cyberstrike/sdk/v2"
+import type { FileNode } from "@cyberstrike-io/sdk/v2"
 
 type Filter = {
   files: Set<string>

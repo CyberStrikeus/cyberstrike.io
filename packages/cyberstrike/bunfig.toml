@@ -1,4 +1,4 @@
-preload = ["@cyberstrike/tui-solid/preload"]
+preload = ["@cyberstrike-io/tui-solid/preload"]
 
 [test]
 preload = ["./test/preload.ts"]
