@@ -3,15 +3,16 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="Cyberstrike logo">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="CyberStrike logo" width="300">
     </picture>
   </a>
 </p>
-<p align="center">开源的 AI Coding Agent。</p>
+<p align="center"><strong>AI驱动的自主渗透测试代理框架。</strong></p>
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/blob/dev/LICENSE"><img alt="License" src="https://img.shields.io/github/license/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -32,101 +33,161 @@
   <a href="README.br.md">Português (Brasil)</a>
 </p>
 
-[![Cyberstrike Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CyberStrikeus/docs/main/public/docs/images/gifs/g01-first-run.gif" alt="CyberStrike Demo" width="700">
+</p>
 
 ---
 
-### 安装
+## 什么是CyberStrike？
+
+CyberStrike 是一个开源的、AI驱动的渗透测试框架，使用自主代理执行安全评估。它集成了15+个AI提供商和专业的安全测试代理，用于自动化漏洞发现。
+
+## 安装
 
 ```bash
-# 直接安装 (YOLO)
+# 快速安装
 curl -fsSL https://cyberstrike.io/install | bash
 
-# 软件包管理器
-npm i -g cyberstrike@latest        # 也可使用 bun/pnpm/yarn
-scoop install cyberstrike             # Windows
-choco install cyberstrike             # Windows
-brew install cyberstrike/tap/cyberstrike # macOS 和 Linux（推荐，始终保持最新）
-brew install cyberstrike              # macOS 和 Linux（官方 brew formula，更新频率较低）
-paru -S cyberstrike-bin               # Arch Linux
-mise use -g cyberstrike               # 任意系统
-nix run nixpkgs#cyberstrike           # 或用 github:cyberstrike/cyberstrike 获取最新 dev 分支
+# 包管理器
+npm i -g cyberstrike@latest        # 或 bun/pnpm/yarn
+brew install cyberstrike/tap/cyberstrike # macOS 和 Linux（推荐）
+
+# 从源码安装
+git clone https://github.com/CyberStrikeus/cyberstrike.io.git
+cd cyberstrike.io && bun install && bun dev
 ```
 
-> [!TIP]
-> 安装前请先移除 0.1.x 之前的旧版本。
+## 桌面应用
 
-### 桌面应用程序 (BETA)
+适用于 macOS、Windows 和 Linux。从[发布页面](https://github.com/CyberStrikeus/cyberstrike.io/releases)下载或访问 [cyberstrike.io/download](https://cyberstrike.io/download)。
 
-Cyberstrike 也提供桌面版应用。可直接从 [发布页 (releases page)](https://github.com/CyberStrikeus/cyberstrike.io/releases) 或 [cyberstrike.io/download](https://cyberstrike.io/download) 下载。
+| 平台              | 下载                                 |
+| --------------------- | ---------------------------------------- |
+| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg`  |
+| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`      |
+| Windows               | `cyberstrike-desktop-windows-x64.exe`     |
+| Linux                 | `.deb`、`.rpm` 或 AppImage              |
 
-| 平台                  | 下载文件                              |
-| --------------------- | ------------------------------------- |
-| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg` |
-| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`     |
-| Windows               | `cyberstrike-desktop-windows-x64.exe`    |
-| Linux                 | `.deb`、`.rpm` 或 AppImage            |
+## 渗透测试代理
+
+CyberStrike 包含4个专业的渗透测试代理：
+
+### web-application
+遵循 OWASP/WSTG 方法论的Web应用程序安全测试：
+- OWASP Top 10（A01-A10）覆盖
+- 跨12个类别的120+个WSTG测试用例
+- SQL注入、XSS、CSRF、XXE、SSTI 检测
+- API安全测试（REST、GraphQL）
+- 认证和授权绕过
+
+### cloud-security
+云基础设施安全评估：
+- AWS（IAM、S3、EC2、Lambda、RDS）
+- Azure（AD、Blob Storage、RBAC、Key Vault）
+- GCP（IAM、GCS、Compute、Cloud Functions）
+- CIS基准合规性检查
+- 云权限提升路径
+
+### internal-network
+内部网络和Active Directory专家：
+- 网络枚举和服务发现
+- AD攻击（Kerberoasting、AS-REP Roasting）
+- 凭证攻击（密码喷射、Pass-the-Hash）
+- 横向移动（DCOM、WMI、PSExec）
+- 权限提升（Windows、Linux、域）
+
+### bug-hunter
+漏洞赏金猎人方法论：
+- 资产发现和子域名枚举
+- 历史数据分析（Wayback、GAU）
+- JavaScript分析以查找端点和密钥
+- 漏洞链以实现最大影响
+- 平台策略（HackerOne、Bugcrowd）
+
+## 知识库
+
+内置的WSTG（Web安全测试指南）检查清单位于 `knowledge/web-application/`：
+
+| 类别    | 测试数 | 描述            |
+|-------------|-------|------------------------|
+| WSTG-INFO   | 10    | 信息收集  |
+| WSTG-CONF   | 13    | 配置测试  |
+| WSTG-IDNT   | 5     | 身份管理    |
+| WSTG-ATHN   | 11    | 认证测试 |
+| WSTG-AUTHZ  | 7     | 授权测试  |
+| WSTG-SESS   | 11    | 会话管理     |
+| WSTG-INPV   | 29    | 输入验证       |
+| WSTG-ERRH   | 2     | 错误处理         |
+| WSTG-CRYP   | 4     | 密码学           |
+| WSTG-BUSL   | 10    | 业务逻辑         |
+| WSTG-CLNT   | 14    | 客户端测试    |
+| WSTG-APIT   | 4     | API测试            |
+
+**总计：120+个自动化测试用例**
+
+## 使用方法
 
 ```bash
-# macOS (Homebrew Cask)
-brew install --cask cyberstrike-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/cyberstrike-desktop
+# 启动Web应用程序渗透测试
+cyberstrike --agent web-application
+> "测试 https://target.com 的SQL注入漏洞，遵循 WSTG-INPV-05"
+
+# 运行侦察
+cyberstrike --agent bug-hunter
+> "枚举 target.com 的子域名"
+
+# 云安全审计
+cyberstrike --agent cloud-security
+> "审计我的AWS账户是否存在S3存储桶配置错误"
+
+# 内部网络渗透测试
+cyberstrike --agent internal-network
+> "对域执行Kerberoasting攻击"
 ```
 
-#### 安装目录
+## 工具集成
 
-安装脚本按照以下优先级决定安装路径：
+CyberStrike 代理利用行业标准的安全工具：
 
-1. `$CYBERSTRIKE_INSTALL_DIR` - 自定义安装目录
-2. `$XDG_BIN_DIR` - 符合 XDG 基础目录规范的路径
-3. `$HOME/bin` - 如果存在或可创建的用户二进制目录
-4. `$HOME/.cyberstrike/bin` - 默认备用路径
+| 类别   | 工具                                |
+|------------|--------------------------------------|
+| 网络    | nmap、masscan、netcat                |
+| Web        | nuclei、sqlmap、ffuf、nikto、burp    |
+| 云      | prowler、scoutsuite、pacu            |
+| AD/Windows | bloodhound、netexec、kerbrute        |
+| 侦察      | subfinder、amass、httpx、gau         |
+| OSINT      | theHarvester、shodan、censys         |
 
-```bash
-# 示例
-CYBERSTRIKE_INSTALL_DIR=/usr/local/bin curl -fsSL https://cyberstrike.io/install | bash
-XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
-```
+### MCP Kali 集成
 
-### Agents
+CyberStrike 包含一个MCP服务器（`packages/mcp-kali`），通过动态工具加载访问100+个Kali Linux工具，每个会话节省150K+个令牌。
 
-Cyberstrike 内置两种 Agent，可用 `Tab` 键快速切换：
+## 架构
 
-- **build** - 默认模式，具备完整权限，适合开发工作
-- **plan** - 只读模式，适合代码分析与探索
-  - 默认拒绝修改文件
-  - 运行 bash 命令前会询问
-  - 便于探索未知代码库或规划改动
+- **运行时**: Bun，快速执行
+- **语言**: TypeScript，类型安全
+- **UI**: Solid.js + TUI 终端界面
+- **AI**: Vercel AI SDK，支持15+个提供商（Anthropic、OpenAI、Google、Azure、AWS Bedrock 等）
+- **MCP**: 模型上下文协议，可扩展的工具集成
 
-另外还包含一个 **general** 子 Agent，用于复杂搜索和多步任务，内部使用，也可在消息中输入 `@general` 调用。
+## 文档
 
-了解更多 [Agents](https://cyberstrike.io/docs/agents) 相关信息。
+完整文档请访问 [docs.cyberstrike.io](https://docs.cyberstrike.io)。
 
-### 文档
+## 贡献
 
-更多配置说明请查看我们的 [**官方文档**](https://cyberstrike.io/docs)。
+有兴趣贡献吗？在提交Pull Request之前，请阅读我们的[贡献指南](./CONTRIBUTING.md)。
 
-### 参与贡献
+## 许可证
 
-如有兴趣贡献代码，请在提交 PR 前阅读 [贡献指南 (Contributing Docs)](./CONTRIBUTING.md)。
-
-### 基于 Cyberstrike 进行开发
-
-如果你在项目名中使用了 “cyberstrike”（如 “cyberstrike-dashboard” 或 “cyberstrike-mobile”），请在 README 里注明该项目不是 Cyberstrike 团队官方开发，且不存在隶属关系。
-
-### 常见问题 (FAQ)
-
-#### 这和 Claude Code 有什么不同？
-
-功能上很相似，关键差异：
-
-- 100% 开源。
-- 不绑定特定提供商。推荐使用 [Cyberstrike Arsenal](https://cyberstrike.io/arsenal) 的模型，但也可搭配 Claude、OpenAI、Google 甚至本地模型。模型迭代会缩小差异、降低成本，因此保持 provider-agnostic 很重要。
-- 内置 LSP 支持。
-- 聚焦终端界面 (TUI)。Cyberstrike 由 Neovim 爱好者和 [terminal.shop](https://terminal.shop) 的创建者打造，会持续探索终端的极限。
-- 客户端/服务器架构。可在本机运行，同时用移动设备远程驱动。TUI 只是众多潜在客户端之一。
+[MIT](./LICENSE)
 
 ---
 
-**加入我们的社区** [Discord](https://discord.gg/cyberstrike) | [X.com](https://x.com/cyberstrike)
+<p align="center">
+  <a href="https://cyberstrike.io">网站</a> |
+  <a href="https://docs.cyberstrike.io">文档</a> |
+  <a href="https://discord.gg/cyberstrike">Discord</a> |
+  <a href="https://x.com/cyberstrike">X.com</a>
+</p>
