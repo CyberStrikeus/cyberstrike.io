@@ -92,7 +92,7 @@ jobs:
               if (path.startsWith('packages/mcp-kali/')) labels.add('mcp');
 
               // Documentation
-              if (path.startsWith('docs/') || path.endsWith('.md') || path.endsWith('.mdx')) {
+              if (path.startsWith('packages/web/') || path.endsWith('.md') || path.endsWith('.mdx')) {
                 labels.add('documentation');
               }
 
