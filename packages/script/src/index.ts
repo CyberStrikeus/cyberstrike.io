@@ -86,7 +86,14 @@ const VERSION = await (async () => {
     if (versionFromTag) return versionFromTag
   }
 
-  // If preview and not from tag, generate timestamp-based version
+  // For local builds (not CI), use package.json version as fallback
+  if (!process.env.CI) {
+    const pkgPath = path.resolve(import.meta.dir, "../../cyberstrike/package.json")
+    const pkg = await Bun.file(pkgPath).json().catch(() => null)
+    if (pkg?.version) return pkg.version
+  }
+
+  // If preview and in CI, generate timestamp-based version for preview channels
   if (IS_PREVIEW) return `0.0.0-${CHANNEL}-${new Date().toISOString().slice(0, 16).replace(/[-:T]/g, "")}`
 
   const version = await fetch("https://registry.npmjs.org/cyberstrike/latest")
