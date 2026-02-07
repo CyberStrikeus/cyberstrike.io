@@ -3,15 +3,16 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="Cyberstrike logo">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="CyberStrike 로고" width="300">
     </picture>
   </a>
 </p>
-<p align="center">오픈 소스 AI 코딩 에이전트.</p>
+<p align="center"><strong>AI 기반 자율 침투 테스트 에이전트 프레임워크.</strong></p>
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/blob/dev/LICENSE"><img alt="License" src="https://img.shields.io/github/license/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -32,102 +33,161 @@
   <a href="README.br.md">Português (Brasil)</a>
 </p>
 
-[![Cyberstrike Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CyberStrikeus/docs/main/public/docs/images/gifs/g01-first-run.gif" alt="CyberStrike 데모" width="700">
+</p>
 
 ---
 
-### 설치
+## CyberStrike란?
+
+CyberStrike는 자율 에이전트를 사용하여 보안 평가를 수행하는 오픈소스 AI 기반 침투 테스트 프레임워크입니다. 15개 이상의 AI 프로바이더와 전문화된 보안 테스트 에이전트를 통합하여 취약점을 자동으로 발견합니다.
+
+## 설치
 
 ```bash
-# YOLO
+# 빠른 설치
 curl -fsSL https://cyberstrike.io/install | bash
 
-# 패키지 매니저
-npm i -g cyberstrike@latest        # bun/pnpm/yarn 도 가능
-scoop install cyberstrike             # Windows
-choco install cyberstrike             # Windows
-brew install cyberstrike/tap/cyberstrike # macOS 및 Linux (권장, 항상 최신)
-brew install cyberstrike              # macOS 및 Linux (공식 brew formula, 업데이트 빈도 낮음)
-paru -S cyberstrike-bin               # Arch Linux
-mise use -g cyberstrike               # 어떤 OS든
-nix run nixpkgs#cyberstrike           # 또는 github:cyberstrike/cyberstrike 로 최신 dev 브랜치
+# 패키지 관리자
+npm i -g cyberstrike@latest        # 또는 bun/pnpm/yarn
+brew install cyberstrike/tap/cyberstrike # macOS 및 Linux (권장)
+
+# 소스에서 설치
+git clone https://github.com/CyberStrikeus/cyberstrike.io.git
+cd cyberstrike.io && bun install && bun dev
 ```
 
-> [!TIP]
-> 설치 전에 0.1.x 보다 오래된 버전을 제거하세요.
+### 데스크톱 앱
 
-### 데스크톱 앱 (BETA)
+macOS, Windows 및 Linux에서 사용할 수 있습니다. [릴리스 페이지](https://github.com/CyberStrikeus/cyberstrike.io/releases) 또는 [cyberstrike.io/download](https://cyberstrike.io/download)에서 다운로드하세요.
 
-Cyberstrike 는 데스크톱 앱으로도 제공됩니다. [releases page](https://github.com/CyberStrikeus/cyberstrike.io/releases) 에서 직접 다운로드하거나 [cyberstrike.io/download](https://cyberstrike.io/download) 를 이용하세요.
+| 플랫폼                  | 다운로드                                   |
+| --------------------- | ---------------------------------------- |
+| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg`  |
+| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`      |
+| Windows               | `cyberstrike-desktop-windows-x64.exe`     |
+| Linux                 | `.deb`, `.rpm` 또는 AppImage              |
 
-| 플랫폼                | 다운로드                              |
-| --------------------- | ------------------------------------- |
-| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg` |
-| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`     |
-| Windows               | `cyberstrike-desktop-windows-x64.exe`    |
-| Linux                 | `.deb`, `.rpm`, 또는 AppImage         |
+## 침투 테스트 에이전트
+
+CyberStrike에는 4개의 전문화된 침투 테스트 에이전트가 포함되어 있습니다:
+
+### web-application
+OWASP/WSTG 방법론을 따르는 웹 애플리케이션 보안 테스트:
+- OWASP Top 10 (A01-A10) 범위
+- 12개 카테고리에 걸친 120개 이상의 WSTG 테스트 케이스
+- SQL 인젝션, XSS, CSRF, XXE, SSTI 탐지
+- API 보안 테스트 (REST, GraphQL)
+- 인증 및 권한 부여 우회
+
+### cloud-security
+클라우드 인프라 보안 평가:
+- AWS (IAM, S3, EC2, Lambda, RDS)
+- Azure (AD, Blob Storage, RBAC, Key Vault)
+- GCP (IAM, GCS, Compute, Cloud Functions)
+- CIS 벤치마크 준수 검사
+- 클라우드 권한 상승 경로
+
+### internal-network
+내부 네트워크 및 Active Directory 전문가:
+- 네트워크 열거 및 서비스 탐지
+- AD 공격 (Kerberoasting, AS-REP Roasting)
+- 자격 증명 공격 (Password Spraying, Pass-the-Hash)
+- 측면 이동 (DCOM, WMI, PSExec)
+- 권한 상승 (Windows, Linux, Domain)
+
+### bug-hunter
+버그 바운티 헌팅 방법론:
+- 자산 발견 및 서브도메인 열거
+- 과거 데이터 분석 (Wayback, GAU)
+- 엔드포인트 및 시크릿을 위한 JavaScript 분석
+- 최대 영향을 위한 취약점 체인
+- 플랫폼 전략 (HackerOne, Bugcrowd)
+
+## 지식 베이스
+
+`knowledge/web-application/`에 내장된 WSTG (웹 보안 테스팅 가이드) 체크리스트:
+
+| 카테고리      | 테스트 수 | 설명                  |
+|-------------|---------|----------------------|
+| WSTG-INFO   | 10      | 정보 수집              |
+| WSTG-CONF   | 13      | 구성 테스트            |
+| WSTG-IDNT   | 5       | 신원 관리              |
+| WSTG-ATHN   | 11      | 인증 테스트            |
+| WSTG-AUTHZ  | 7       | 권한 부여 테스트        |
+| WSTG-SESS   | 11      | 세션 관리              |
+| WSTG-INPV   | 29      | 입력 유효성 검사        |
+| WSTG-ERRH   | 2       | 오류 처리              |
+| WSTG-CRYP   | 4       | 암호화                |
+| WSTG-BUSL   | 10      | 비즈니스 로직          |
+| WSTG-CLNT   | 14      | 클라이언트 측 테스트    |
+| WSTG-APIT   | 4       | API 테스트            |
+
+**총 120개 이상의 자동화된 테스트 케이스**
+
+## 사용법
 
 ```bash
-# macOS (Homebrew)
-brew install --cask cyberstrike-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/cyberstrike-desktop
+# 웹 애플리케이션 침투 테스트 시작
+cyberstrike --agent web-application
+> "WSTG-INPV-05에 따라 https://target.com의 SQL 인젝션을 테스트하세요"
+
+# 정찰 실행
+cyberstrike --agent bug-hunter
+> "target.com의 서브도메인을 열거하세요"
+
+# 클라우드 보안 감사
+cyberstrike --agent cloud-security
+> "S3 버킷 잘못된 구성에 대해 내 AWS 계정을 감사하세요"
+
+# 내부 네트워크 침투 테스트
+cyberstrike --agent internal-network
+> "도메인에 대해 Kerberoasting 공격을 수행하세요"
 ```
 
-#### 설치 디렉터리
+## 도구 통합
 
-설치 스크립트는 설치 경로를 다음 우선순위로 결정합니다.
+CyberStrike 에이전트는 업계 표준 보안 도구를 활용합니다:
 
-1. `$CYBERSTRIKE_INSTALL_DIR` - 사용자 지정 설치 디렉터리
-2. `$XDG_BIN_DIR` - XDG Base Directory Specification 준수 경로
-3. `$HOME/bin` - 표준 사용자 바이너리 디렉터리 (존재하거나 생성 가능할 경우)
-4. `$HOME/.cyberstrike/bin` - 기본 폴백
+| 카테고리     | 도구                                    |
+|------------|--------------------------------------|
+| 네트워크    | nmap, masscan, netcat                |
+| 웹         | nuclei, sqlmap, ffuf, nikto, burp    |
+| 클라우드    | prowler, scoutsuite, pacu            |
+| AD/Windows | bloodhound, netexec, kerbrute        |
+| 정찰       | subfinder, amass, httpx, gau         |
+| OSINT      | theHarvester, shodan, censys         |
 
-```bash
-# 예시
-CYBERSTRIKE_INSTALL_DIR=/usr/local/bin curl -fsSL https://cyberstrike.io/install | bash
-XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
-```
+### MCP Kali 통합
 
-### Agents
+CyberStrike에는 동적 도구 로딩을 통해 100개 이상의 Kali Linux 도구에 액세스할 수 있는 MCP 서버 (`packages/mcp-kali`)가 포함되어 있어 세션당 150K 이상의 토큰을 절약합니다.
 
-Cyberstrike 에는 내장 에이전트 2개가 있으며 `Tab` 키로 전환할 수 있습니다.
+## 아키텍처
 
-- **build** - 기본값, 개발 작업을 위한 전체 권한 에이전트
-- **plan** - 분석 및 코드 탐색을 위한 읽기 전용 에이전트
-  - 기본적으로 파일 편집을 거부
-  - bash 명령 실행 전에 권한을 요청
-  - 낯선 코드베이스를 탐색하거나 변경을 계획할 때 적합
+- **런타임**: 빠른 실행을 위한 Bun
+- **언어**: 타입 안전성을 위한 TypeScript
+- **UI**: 터미널 인터페이스를 위한 Solid.js + TUI
+- **AI**: 15개 이상의 프로바이더 지원을 제공하는 Vercel AI SDK (Anthropic, OpenAI, Google, Azure, AWS Bedrock 등)
+- **MCP**: 확장 가능한 도구 통합을 위한 Model Context Protocol
 
-또한 복잡한 검색과 여러 단계 작업을 위한 **general** 서브 에이전트가 포함되어 있습니다.
-내부적으로 사용되며, 메시지에서 `@general` 로 호출할 수 있습니다.
+## 문서
 
-[agents](https://cyberstrike.io/docs/agents) 에 대해 더 알아보세요.
+전체 문서는 [docs.cyberstrike.io](https://docs.cyberstrike.io)에서 확인할 수 있습니다.
 
-### 문서
+## 기여하기
 
-Cyberstrike 설정에 대한 자세한 내용은 [**문서**](https://cyberstrike.io/docs) 를 참고하세요.
+기여에 관심이 있으신가요? 풀 리퀘스트를 제출하기 전에 [기여 가이드](./CONTRIBUTING.md)를 읽어주세요.
 
-### 기여하기
+## 라이선스
 
-Cyberstrike 에 기여하고 싶다면, Pull Request 를 제출하기 전에 [contributing docs](./CONTRIBUTING.md) 를 읽어주세요.
-
-### Cyberstrike 기반으로 만들기
-
-Cyberstrike 와 관련된 프로젝트를 진행하면서 이름에 "cyberstrike"(예: "cyberstrike-dashboard" 또는 "cyberstrike-mobile") 를 포함한다면, README 에 해당 프로젝트가 Cyberstrike 팀이 만든 것이 아니며 어떤 방식으로도 우리와 제휴되어 있지 않다는 점을 명시해 주세요.
-
-### FAQ
-
-#### Claude Code 와는 무엇이 다른가요?
-
-기능 면에서는 Claude Code 와 매우 유사합니다. 주요 차이점은 다음과 같습니다.
-
-- 100% 오픈 소스
-- 특정 제공자에 묶여 있지 않습니다. [Cyberstrike Arsenal](https://cyberstrike.io/arsenal) 을 통해 제공하는 모델을 권장하지만, Cyberstrike 는 Claude, OpenAI, Google 또는 로컬 모델과도 사용할 수 있습니다. 모델이 발전하면서 격차는 줄고 가격은 내려가므로 provider-agnostic 인 것이 중요합니다.
-- 기본으로 제공되는 LSP 지원
-- TUI 에 집중. Cyberstrike 는 neovim 사용자와 [terminal.shop](https://terminal.shop) 제작자가 만들었으며, 터미널에서 가능한 것의 한계를 밀어붙입니다.
-- 클라이언트/서버 아키텍처. 예를 들어 Cyberstrike 를 내 컴퓨터에서 실행하면서 모바일 앱으로 원격 조작할 수 있습니다. 즉, TUI 프런트엔드는 가능한 여러 클라이언트 중 하나일 뿐입니다.
+[MIT](./LICENSE)
 
 ---
 
-**커뮤니티에 참여하기** [Discord](https://discord.gg/cyberstrike) | [X.com](https://x.com/cyberstrike)
+<p align="center">
+  <a href="https://cyberstrike.io">웹사이트</a> |
+  <a href="https://docs.cyberstrike.io">문서</a> |
+  <a href="https://discord.gg/cyberstrike">Discord</a> |
+  <a href="https://x.com/cyberstrike">X.com</a>
+</p>

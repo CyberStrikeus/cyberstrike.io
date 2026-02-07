@@ -3,15 +3,16 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="Cyberstrike logo">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="CyberStrike logo" width="300">
     </picture>
   </a>
 </p>
-<p align="center">Den open source AI-kodeagent.</p>
+<p align="center"><strong>AI-drevet autonomt penetrationstestagent-framework.</strong></p>
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/blob/dev/LICENSE"><img alt="License" src="https://img.shields.io/github/license/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -32,102 +33,161 @@
   <a href="README.br.md">Português (Brasil)</a>
 </p>
 
-[![Cyberstrike Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CyberStrikeus/docs/main/public/docs/images/gifs/g01-first-run.gif" alt="CyberStrike Demo" width="700">
+</p>
 
 ---
 
-### Installation
+## Hvad er CyberStrike?
+
+CyberStrike er et open-source, AI-drevet penetrationstestframework, der bruger autonome agenter til at udføre sikkerhedsvurderinger. Det integrerer 15+ AI-udbydere med specialiserede sikkerhedstestagenter til automatiseret sårbarheds-opdagelse.
+
+## Installation
 
 ```bash
-# YOLO
+# Hurtig installation
 curl -fsSL https://cyberstrike.io/install | bash
 
 # Pakkehåndteringer
 npm i -g cyberstrike@latest        # eller bun/pnpm/yarn
-scoop install cyberstrike             # Windows
-choco install cyberstrike             # Windows
-brew install cyberstrike/tap/cyberstrike # macOS og Linux (anbefalet, altid up to date)
-brew install cyberstrike              # macOS og Linux (officiel brew formula, opdateres sjældnere)
-paru -S cyberstrike-bin               # Arch Linux
-mise use -g cyberstrike               # alle OS
-nix run nixpkgs#cyberstrike           # eller github:cyberstrike/cyberstrike for nyeste dev-branch
+brew install cyberstrike/tap/cyberstrike # macOS & Linux (anbefalet)
+
+# Fra kildekode
+git clone https://github.com/CyberStrikeus/cyberstrike.io.git
+cd cyberstrike.io && bun install && bun dev
 ```
 
-> [!TIP]
-> Fjern versioner ældre end 0.1.x før installation.
+### Desktop-app
 
-### Desktop-app (BETA)
+Tilgængelig til macOS, Windows og Linux. Download fra [releases-siden](https://github.com/CyberStrikeus/cyberstrike.io/releases) eller [cyberstrike.io/download](https://cyberstrike.io/download).
 
-Cyberstrike findes også som desktop-app. Download direkte fra [releases-siden](https://github.com/CyberStrikeus/cyberstrike.io/releases) eller [cyberstrike.io/download](https://cyberstrike.io/download).
+| Platform              | Download                                 |
+| --------------------- | ---------------------------------------- |
+| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg`  |
+| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`      |
+| Windows               | `cyberstrike-desktop-windows-x64.exe`     |
+| Linux                 | `.deb`, `.rpm`, eller AppImage           |
 
-| Platform              | Download                              |
-| --------------------- | ------------------------------------- |
-| macOS (Apple Silicon) | `cyberstrike-desktop-darwin-aarch64.dmg` |
-| macOS (Intel)         | `cyberstrike-desktop-darwin-x64.dmg`     |
-| Windows               | `cyberstrike-desktop-windows-x64.exe`    |
-| Linux                 | `.deb`, `.rpm`, eller AppImage        |
+## Pentest-agenter
+
+CyberStrike inkluderer 4 specialiserede penetrationstestagenter:
+
+### web-application
+Webapplikationssikkerhedstest efter OWASP/WSTG-metodik:
+- OWASP Top 10 (A01-A10) dækning
+- 120+ WSTG-testcases på tværs af 12 kategorier
+- SQL Injection, XSS, CSRF, XXE, SSTI-detektion
+- API-sikkerhedstest (REST, GraphQL)
+- Autentificerings- og autorisationsomgåelse
+
+### cloud-security
+Sikkerhedsvurdering af cloud-infrastruktur:
+- AWS (IAM, S3, EC2, Lambda, RDS)
+- Azure (AD, Blob Storage, RBAC, Key Vault)
+- GCP (IAM, GCS, Compute, Cloud Functions)
+- CIS Benchmark-compliance-tjek
+- Cloud-privilegieeskaleringsforløb
+
+### internal-network
+Internt netværk & Active Directory-specialist:
+- Netværksenumeration og serviceopdagelse
+- AD-angreb (Kerberoasting, AS-REP Roasting)
+- Credential-angreb (Password Spraying, Pass-the-Hash)
+- Lateral movement (DCOM, WMI, PSExec)
+- Privilegieeskalering (Windows, Linux, Domain)
+
+### bug-hunter
+Bug bounty hunting-metodik:
+- Asset-opdagelse og subdomain-enumeration
+- Historisk dataanalyse (Wayback, GAU)
+- JavaScript-analyse til endpoints og secrets
+- Sårbarheds-chaining for maksimal impact
+- Platformstrategier (HackerOne, Bugcrowd)
+
+## Vidensbase
+
+Indbyggede WSTG (Web Security Testing Guide) tjeklister i `knowledge/web-application/`:
+
+| Kategori    | Tests | Beskrivelse               |
+|-------------|-------|---------------------------|
+| WSTG-INFO   | 10    | Informationsindsamling    |
+| WSTG-CONF   | 13    | Konfigurationstest        |
+| WSTG-IDNT   | 5     | Identitetshåndtering      |
+| WSTG-ATHN   | 11    | Autentificeringstest      |
+| WSTG-AUTHZ  | 7     | Autorisationstest         |
+| WSTG-SESS   | 11    | Sessionshåndtering        |
+| WSTG-INPV   | 29    | Inputvalidering           |
+| WSTG-ERRH   | 2     | Fejlhåndtering            |
+| WSTG-CRYP   | 4     | Kryptografi               |
+| WSTG-BUSL   | 10    | Forretningslogik          |
+| WSTG-CLNT   | 14    | Client-side-test          |
+| WSTG-APIT   | 4     | API-test                  |
+
+**I alt: 120+ automatiserede testcases**
+
+## Brug
 
 ```bash
-# macOS (Homebrew)
-brew install --cask cyberstrike-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/cyberstrike-desktop
+# Start webapplikations-pentest
+cyberstrike --agent web-application
+> "Test https://target.com for SQL injection efter WSTG-INPV-05"
+
+# Kør reconnaissance
+cyberstrike --agent bug-hunter
+> "Enumerer subdomains for target.com"
+
+# Cloud-sikkerhedsaudit
+cyberstrike --agent cloud-security
+> "Auditer min AWS-konto for S3-bucket fejlkonfigurationer"
+
+# Internt netværks-pentest
+cyberstrike --agent internal-network
+> "Udfør Kerberoasting-angreb på domænet"
 ```
 
-#### Installationsmappe
+## Værktøjsintegrationer
 
-Installationsscriptet bruger følgende prioriteringsrækkefølge for installationsstien:
+CyberStrike-agenter udnytter industristandard sikkerhedsværktøjer:
 
-1. `$CYBERSTRIKE_INSTALL_DIR` - Tilpasset installationsmappe
-2. `$XDG_BIN_DIR` - Sti der følger XDG Base Directory Specification
-3. `$HOME/bin` - Standard bruger-bin-mappe (hvis den findes eller kan oprettes)
-4. `$HOME/.cyberstrike/bin` - Standard fallback
+| Kategori   | Værktøjer                            |
+|------------|--------------------------------------|
+| Netværk    | nmap, masscan, netcat                |
+| Web        | nuclei, sqlmap, ffuf, nikto, burp    |
+| Cloud      | prowler, scoutsuite, pacu            |
+| AD/Windows | bloodhound, netexec, kerbrute        |
+| Recon      | subfinder, amass, httpx, gau         |
+| OSINT      | theHarvester, shodan, censys         |
 
-```bash
-# Eksempler
-CYBERSTRIKE_INSTALL_DIR=/usr/local/bin curl -fsSL https://cyberstrike.io/install | bash
-XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
-```
+### MCP Kali-integration
 
-### Agents
+CyberStrike inkluderer en MCP-server (`packages/mcp-kali`) med adgang til 100+ Kali Linux-værktøjer gennem dynamisk værktøjsindlæsning, hvilket sparer 150K+ tokens pr. session.
 
-Cyberstrike har to indbyggede agents, som du kan skifte mellem med `Tab`-tasten.
+## Arkitektur
 
-- **build** - Standard, agent med fuld adgang til udviklingsarbejde
-- **plan** - Skrivebeskyttet agent til analyse og kodeudforskning
-  - Afviser filredigering som standard
-  - Spørger om tilladelse før bash-kommandoer
-  - Ideel til at udforske ukendte kodebaser eller planlægge ændringer
+- **Runtime**: Bun til hurtig eksekvering
+- **Sprog**: TypeScript til typesikkerhed
+- **UI**: Solid.js + TUI til terminalinterface
+- **AI**: Vercel AI SDK med 15+ udbydersupport (Anthropic, OpenAI, Google, Azure, AWS Bedrock og flere)
+- **MCP**: Model Context Protocol til udvidelig værktøjsintegration
 
-Derudover findes der en **general**-subagent til komplekse søgninger og flertrinsopgaver.
-Den bruges internt og kan kaldes via `@general` i beskeder.
+## Dokumentation
 
-Læs mere om [agents](https://cyberstrike.io/docs/agents).
+Fuld dokumentation tilgængelig på [docs.cyberstrike.io](https://docs.cyberstrike.io).
 
-### Dokumentation
+## Bidrag
 
-For mere info om konfiguration af Cyberstrike, [**se vores docs**](https://cyberstrike.io/docs).
+Interesseret i at bidrage? Læs venligst vores [bidragsguide](./CONTRIBUTING.md) før du indsender en pull request.
 
-### Bidrag
+## Licens
 
-Hvis du vil bidrage til Cyberstrike, så læs vores [contributing docs](./CONTRIBUTING.md) før du sender en pull request.
-
-### Bygget på Cyberstrike
-
-Hvis du arbejder på et projekt der er relateret til Cyberstrike og bruger "cyberstrike" som en del af navnet; f.eks. "cyberstrike-dashboard" eller "cyberstrike-mobile", så tilføj en note i din README, der tydeliggør at projektet ikke er bygget af Cyberstrike-teamet og ikke er tilknyttet os på nogen måde.
-
-### FAQ
-
-#### Hvordan adskiller dette sig fra Claude Code?
-
-Det minder meget om Claude Code i forhold til funktionalitet. Her er de vigtigste forskelle:
-
-- 100% open source
-- Ikke låst til en udbyder. Selvom vi anbefaler modellerne via [Cyberstrike Arsenal](https://cyberstrike.io/arsenal); kan Cyberstrike bruges med Claude, OpenAI, Google eller endda lokale modeller. Efterhånden som modeller udvikler sig vil forskellene mindskes og priserne falde, så det er vigtigt at være provider-agnostic.
-- LSP-support out of the box
-- Fokus på TUI. Cyberstrike er bygget af neovim-brugere og skaberne af [terminal.shop](https://terminal.shop); vi vil skubbe grænserne for hvad der er muligt i terminalen.
-- Klient/server-arkitektur. Det kan f.eks. lade Cyberstrike køre på din computer, mens du styrer den eksternt fra en mobilapp. Det betyder at TUI-frontend'en kun er en af de mulige clients.
+[MIT](./LICENSE)
 
 ---
 
-**Bliv en del af vores community** [Discord](https://discord.gg/cyberstrike) | [X.com](https://x.com/cyberstrike)
+<p align="center">
+  <a href="https://cyberstrike.io">Website</a> |
+  <a href="https://docs.cyberstrike.io">Docs</a> |
+  <a href="https://discord.gg/cyberstrike">Discord</a> |
+  <a href="https://x.com/cyberstrike">X.com</a>
+</p>

@@ -3,15 +3,16 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="Cyberstrike logo">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="CyberStrike logo" width="300">
     </picture>
   </a>
 </p>
-<p align="center">Открытый AI-агент для программирования.</p>
+<p align="center"><strong>Автономный фреймворк агентов для тестирования на проникновение на базе ИИ.</strong></p>
 <p align="center">
   <a href="https://cyberstrike.io/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
   <a href="https://www.npmjs.com/package/cyberstrike"><img alt="npm" src="https://img.shields.io/npm/v/cyberstrike?style=flat-square" /></a>
-  <a href="https://github.com/CyberStrikeus/cyberstrike.io/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/cyberstrike/cyberstrike/publish.yml?style=flat-square&branch=dev" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
+  <a href="https://github.com/CyberStrikeus/cyberstrike.io/blob/dev/LICENSE"><img alt="License" src="https://img.shields.io/github/license/CyberStrikeus/cyberstrike.io?style=flat-square" /></a>
 </p>
 
 <p align="center">
@@ -32,33 +33,34 @@
   <a href="README.br.md">Português (Brasil)</a>
 </p>
 
-[![Cyberstrike Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://cyberstrike.io)
+<p align="center">
+  <img src="https://raw.githubusercontent.com/CyberStrikeus/docs/main/public/docs/images/gifs/g01-first-run.gif" alt="CyberStrike Demo" width="700">
+</p>
 
 ---
 
-### Установка
+## Что такое CyberStrike?
+
+CyberStrike — это фреймворк с открытым исходным кодом для тестирования на проникновение на базе искусственного интеллекта, который использует автономных агентов для проведения оценки безопасности. Он интегрирует более 15 провайдеров ИИ со специализированными агентами для автоматического обнаружения уязвимостей.
+
+## Установка
 
 ```bash
-# YOLO
+# Быстрая установка
 curl -fsSL https://cyberstrike.io/install | bash
 
 # Менеджеры пакетов
 npm i -g cyberstrike@latest        # или bun/pnpm/yarn
-scoop install cyberstrike             # Windows
-choco install cyberstrike             # Windows
-brew install cyberstrike/tap/cyberstrike # macOS и Linux (рекомендуем, всегда актуально)
-brew install cyberstrike              # macOS и Linux (официальная формула brew, обновляется реже)
-paru -S cyberstrike-bin               # Arch Linux
-mise use -g cyberstrike               # любая ОС
-nix run nixpkgs#cyberstrike           # или github:cyberstrike/cyberstrike для самой свежей ветки dev
+brew install cyberstrike/tap/cyberstrike # macOS и Linux (рекомендуется)
+
+# Из исходников
+git clone https://github.com/CyberStrikeus/cyberstrike.io.git
+cd cyberstrike.io && bun install && bun dev
 ```
 
-> [!TIP]
-> Перед установкой удалите версии старше 0.1.x.
+### Десктопное приложение
 
-### Десктопное приложение (BETA)
-
-Cyberstrike также доступен как десктопное приложение. Скачайте его со [страницы релизов](https://github.com/CyberStrikeus/cyberstrike.io/releases) или с [cyberstrike.io/download](https://cyberstrike.io/download).
+Доступно для macOS, Windows и Linux. Скачайте со [страницы релизов](https://github.com/CyberStrikeus/cyberstrike.io/releases) или [cyberstrike.io/download](https://cyberstrike.io/download).
 
 | Платформа             | Загрузка                              |
 | --------------------- | ------------------------------------- |
@@ -67,67 +69,125 @@ Cyberstrike также доступен как десктопное прилож
 | Windows               | `cyberstrike-desktop-windows-x64.exe`    |
 | Linux                 | `.deb`, `.rpm` или AppImage           |
 
+## Агенты пентеста
+
+CyberStrike включает 4 специализированных агента для тестирования на проникновение:
+
+### web-application
+Тестирование безопасности веб-приложений по методологии OWASP/WSTG:
+- Покрытие OWASP Top 10 (A01-A10)
+- Более 120 тестовых случаев WSTG в 12 категориях
+- Обнаружение SQL-инъекций, XSS, CSRF, XXE, SSTI
+- Тестирование безопасности API (REST, GraphQL)
+- Обход аутентификации и авторизации
+
+### cloud-security
+Оценка безопасности облачной инфраструктуры:
+- AWS (IAM, S3, EC2, Lambda, RDS)
+- Azure (AD, Blob Storage, RBAC, Key Vault)
+- GCP (IAM, GCS, Compute, Cloud Functions)
+- Проверки соответствия CIS Benchmark
+- Пути повышения привилегий в облаке
+
+### internal-network
+Специалист по внутренним сетям и Active Directory:
+- Перечисление сети и обнаружение сервисов
+- Атаки на AD (Kerberoasting, AS-REP Roasting)
+- Атаки на учетные данные (Password Spraying, Pass-the-Hash)
+- Латеральное перемещение (DCOM, WMI, PSExec)
+- Повышение привилегий (Windows, Linux, Domain)
+
+### bug-hunter
+Методология поиска багов в рамках bug bounty:
+- Обнаружение активов и перечисление поддоменов
+- Анализ исторических данных (Wayback, GAU)
+- Анализ JavaScript для поиска endpoints и секретов
+- Построение цепочек уязвимостей для максимального эффекта
+- Стратегии для платформ (HackerOne, Bugcrowd)
+
+## База знаний
+
+Встроенные чеклисты WSTG (Web Security Testing Guide) в `knowledge/web-application/`:
+
+| Категория   | Тестов | Описание                      |
+|-------------|--------|-------------------------------|
+| WSTG-INFO   | 10     | Сбор информации               |
+| WSTG-CONF   | 13     | Тестирование конфигурации     |
+| WSTG-IDNT   | 5      | Управление идентификацией     |
+| WSTG-ATHN   | 11     | Тестирование аутентификации   |
+| WSTG-AUTHZ  | 7      | Тестирование авторизации      |
+| WSTG-SESS   | 11     | Управление сессиями           |
+| WSTG-INPV   | 29     | Валидация входных данных      |
+| WSTG-ERRH   | 2      | Обработка ошибок              |
+| WSTG-CRYP   | 4      | Криптография                  |
+| WSTG-BUSL   | 10     | Бизнес-логика                 |
+| WSTG-CLNT   | 14     | Клиентское тестирование       |
+| WSTG-APIT   | 4      | Тестирование API              |
+
+**Всего: более 120 автоматизированных тестовых случаев**
+
+## Использование
+
 ```bash
-# macOS (Homebrew)
-brew install --cask cyberstrike-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/cyberstrike-desktop
+# Начать пентест веб-приложения
+cyberstrike --agent web-application
+> "Протестируй https://target.com на SQL-инъекции согласно WSTG-INPV-05"
+
+# Запустить разведку
+cyberstrike --agent bug-hunter
+> "Перечисли поддомены для target.com"
+
+# Аудит облачной безопасности
+cyberstrike --agent cloud-security
+> "Проверь мой аккаунт AWS на неправильные конфигурации S3-корзин"
+
+# Пентест внутренней сети
+cyberstrike --agent internal-network
+> "Выполни атаку Kerberoasting на домен"
 ```
 
-#### Каталог установки
+## Интеграция инструментов
 
-Скрипт установки выбирает путь установки в следующем порядке приоритета:
+Агенты CyberStrike используют стандартные инструменты безопасности:
 
-1. `$CYBERSTRIKE_INSTALL_DIR` - Пользовательский каталог установки
-2. `$XDG_BIN_DIR` - Путь, совместимый со спецификацией XDG Base Directory
-3. `$HOME/bin` - Стандартный каталог пользовательских бинарников (если существует или можно создать)
-4. `$HOME/.cyberstrike/bin` - Fallback по умолчанию
+| Категория  | Инструменты                          |
+|------------|--------------------------------------|
+| Сеть       | nmap, masscan, netcat                |
+| Веб        | nuclei, sqlmap, ffuf, nikto, burp    |
+| Облако     | prowler, scoutsuite, pacu            |
+| AD/Windows | bloodhound, netexec, kerbrute        |
+| Разведка   | subfinder, amass, httpx, gau         |
+| OSINT      | theHarvester, shodan, censys         |
 
-```bash
-# Примеры
-CYBERSTRIKE_INSTALL_DIR=/usr/local/bin curl -fsSL https://cyberstrike.io/install | bash
-XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://cyberstrike.io/install | bash
-```
+### Интеграция MCP Kali
 
-### Agents
+CyberStrike включает MCP-сервер (`packages/mcp-kali`) с доступом к более чем 100 инструментам Kali Linux через динамическую загрузку инструментов, что экономит более 150 тысяч токенов за сессию.
 
-В Cyberstrike есть два встроенных агента, между которыми можно переключаться клавишей `Tab`.
+## Архитектура
 
-- **build** - По умолчанию, агент с полным доступом для разработки
-- **plan** - Агент только для чтения для анализа и изучения кода
-  - По умолчанию запрещает редактирование файлов
-  - Запрашивает разрешение перед выполнением bash-команд
-  - Идеален для изучения незнакомых кодовых баз или планирования изменений
+- **Runtime**: Bun для быстрого выполнения
+- **Язык**: TypeScript для типобезопасности
+- **UI**: Solid.js + TUI для терминального интерфейса
+- **AI**: Vercel AI SDK с поддержкой более 15 провайдеров (Anthropic, OpenAI, Google, Azure, AWS Bedrock и другие)
+- **MCP**: Model Context Protocol для расширяемой интеграции инструментов
 
-Также включен сабагент **general** для сложных поисков и многошаговых задач.
-Он используется внутренне и может быть вызван в сообщениях через `@general`.
+## Документация
 
-Подробнее об [agents](https://cyberstrike.io/docs/agents).
+Полная документация доступна на [docs.cyberstrike.io](https://docs.cyberstrike.io).
 
-### Документация
+## Вклад
 
-Больше информации о том, как настроить Cyberstrike: [**наши docs**](https://cyberstrike.io/docs).
+Хотите внести вклад? Пожалуйста, прочитайте наше [руководство по участию](./CONTRIBUTING.md) перед отправкой pull request.
 
-### Вклад
+## Лицензия
 
-Если вы хотите внести вклад в Cyberstrike, прочитайте [contributing docs](./CONTRIBUTING.md) перед тем, как отправлять pull request.
-
-### Разработка на базе Cyberstrike
-
-Если вы делаете проект, связанный с Cyberstrike, и используете "cyberstrike" как часть имени (например, "cyberstrike-dashboard" или "cyberstrike-mobile"), добавьте примечание в README, чтобы уточнить, что проект не создан командой Cyberstrike и не аффилирован с нами.
-
-### FAQ
-
-#### Чем это отличается от Claude Code?
-
-По возможностям это очень похоже на Claude Code. Вот ключевые отличия:
-
-- 100% open source
-- Не привязано к одному провайдеру. Мы рекомендуем модели из [Cyberstrike Arsenal](https://cyberstrike.io/arsenal); но Cyberstrike можно использовать с Claude, OpenAI, Google или даже локальными моделями. По мере развития моделей разрыв будет сокращаться, а цены падать, поэтому важна независимость от провайдера.
-- Поддержка LSP из коробки
-- Фокус на TUI. Cyberstrike построен пользователями neovim и создателями [terminal.shop](https://terminal.shop); мы будем раздвигать границы того, что возможно в терминале.
-- Архитектура клиент/сервер. Например, это позволяет запускать Cyberstrike на вашем компьютере, а управлять им удаленно из мобильного приложения. Это значит, что TUI-фронтенд - лишь один из возможных клиентов.
+[MIT](./LICENSE)
 
 ---
 
-**Присоединяйтесь к нашему сообществу** [Discord](https://discord.gg/cyberstrike) | [X.com](https://x.com/cyberstrike)
+<p align="center">
+  <a href="https://cyberstrike.io">Website</a> |
+  <a href="https://docs.cyberstrike.io">Docs</a> |
+  <a href="https://discord.gg/cyberstrike">Discord</a> |
+  <a href="https://x.com/cyberstrike">X.com</a>
+</p>
