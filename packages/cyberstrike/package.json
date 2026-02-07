@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "version": "0.1.0",
+  "version": "0.0.0-dev",
   "name": "cyberstrike",
   "description": "AI-powered penetration testing and security assessment CLI",
   "type": "module",
