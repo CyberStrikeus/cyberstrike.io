@@ -65,6 +65,32 @@ jobs:
             printf '%s\n' "XDG_STATE_HOME=${{ runner.temp }}/cyberstrike-e2e/state" >> "$GITHUB_ENV"
           fi
 
+      - name: Generate models snapshot
+        if: matrix.settings.name != 'windows'
+        working-directory: packages/cyberstrike
+        run: |
+          bun -e "
+            const data = await fetch('https://models.dev/api.json').then(x => x.json())
+            // Inject cyberstrike provider for E2E tests (mirrors opencode with free gpt-5-nano)
+            if (data.opencode && !data.cyberstrike) {
+              const nano = data.opencode.models['gpt-5-nano']
+              if (nano) {
+                data.cyberstrike = {
+                  id: 'cyberstrike',
+                  env: ['CYBERSTRIKE_API_KEY'],
+                  npm: '@ai-sdk/openai-compatible',
+                  api: data.opencode.api,
+                  name: 'Cyberstrike',
+                  models: { 'gpt-5-nano': nano }
+                }
+              }
+            }
+            const json = JSON.stringify(data)
+            await Bun.write('src/provider/models-snapshot.ts',
+              '// Auto-generated for CI\nexport const snapshot = ' + json + ' as const\n')
+            console.log('Generated models-snapshot.ts with cyberstrike provider')
+          "
+
       - name: Seed cyberstrike data
         if: matrix.settings.name != 'windows'
         working-directory: packages/cyberstrike
@@ -108,17 +134,6 @@ jobs:
             sleep 1
           done
           exit 1
-
-      - name: Generate models snapshot
-        if: matrix.settings.name != 'windows'
-        working-directory: packages/cyberstrike
-        run: |
-          bun -e "
-            const json = await fetch('https://models.dev/api.json').then(x => x.text())
-            await Bun.write('src/provider/models-snapshot.ts',
-              '// Auto-generated for CI\nexport const snapshot = ' + json + ' as const\n')
-            console.log('Generated models-snapshot.ts')
-          "
 
       - name: run
         working-directory: ${{ matrix.settings.workdir }}
