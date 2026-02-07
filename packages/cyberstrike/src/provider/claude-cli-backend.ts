@@ -32,6 +32,12 @@ const MODEL_ALIASES: Record<string, string> = {
   "opus-4-5": "opus",
   "opus-4.5": "opus",
   opus: "opus",
+  // Opus 4.6
+  "claude-opus-4-6": "opus",
+  "claude-opus-4.6": "opus",
+  "claude-opus-4-6-20250514": "opus",
+  "opus-4-6": "opus",
+  "opus-4.6": "opus",
   // Sonnet 4.5
   "claude-sonnet-4-5": "sonnet",
   "claude-sonnet-4.5": "sonnet",
