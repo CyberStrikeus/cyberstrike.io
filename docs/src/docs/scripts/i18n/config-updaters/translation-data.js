@@ -137,8 +137,7 @@ export async function updateTranslationData(localeConfig, logOptions) {
     // --- BEGIN localeMap/languageSwitcherMap update logic ---
     // Helper to update a map object in the file
     function updateLocaleMapObject(translationData, mapName, localeSet, valueFn) {
-        // eslint-disable-next-line no-useless-escape
-        const mapRegex = new RegExp(`export const ${mapName} = ({[\s\S]*?}) as const;`, "m");
+        const mapRegex = new RegExp(`export const ${mapName} = ({[\\s\\S]*?}) as const;`, "m");
         const match = translationData.match(mapRegex);
         if (!match)
             return translationData;

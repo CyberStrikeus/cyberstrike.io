@@ -7,17 +7,15 @@ import { join } from "path";
  * @param replacement: replacement text to replace each regex match with
  */
 export function replaceInFiles(path, regex, replacement, logging = false) {
-    const files = fs.readdirSync(path);
-    for (const file of files) {
-        const filePath = join(path, file);
-        const stats = fs.statSync(filePath);
-        if (stats.isDirectory()) {
+    const entries = fs.readdirSync(path, { withFileTypes: true });
+    for (const entry of entries) {
+        const filePath = join(path, entry.name);
+        if (entry.isDirectory()) {
             // Recursively process subdirectories
             replaceInFiles(filePath, regex, replacement);
         }
         else {
             try {
-                // console.log("processing file", filePath);
                 // Read file content
                 const content = fs.readFileSync(filePath, "utf-8");
                 // Create regex object from string
