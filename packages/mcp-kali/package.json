@@ -18,7 +18,7 @@
     "docker:run": "docker run -p 3001:3001 -e MCP_ADMIN_TOKEN=${MCP_ADMIN_TOKEN} -v mcp-kali-data:/data mcp-kali"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.25.2",
+    "@modelcontextprotocol/sdk": "1.26.0",
     "yaml": "^2.3.4",
     "zod": "^3.22.4"
   },
