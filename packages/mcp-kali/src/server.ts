@@ -9,6 +9,7 @@ import { toJsonSchema } from "./tools/types.js"
 import { DynamicRegistry } from "./tools/registry.js"
 import { PRESETS, getPreset, getPresetsByCategory } from "./tools/presets.js"
 import { jobManager } from "./tools/jobs.js"
+import { logger } from "./logging/index.js"
 
 /**
  * Create a configured MCP Server instance with all handlers registered.
@@ -248,7 +249,9 @@ export function createMcpServer(registry: DynamicRegistry): Server {
     }
 
     const loadedCount = registry.getLoadedToolNames().length
-    console.error(`[bolt] Returning ${mcpTools.length} tools (8 meta + ${loadedCount} loaded)`)
+    logger.debug("MCP tools list requested", {
+      metadata: { totalTools: mcpTools.length, metaTools: 8, loadedTools: loadedCount },
+    })
 
     return { tools: mcpTools }
   })
@@ -257,7 +260,9 @@ export function createMcpServer(registry: DynamicRegistry): Server {
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params
 
-    console.error(`[bolt] Tool call: ${name}`)
+    logger.debug("MCP tool call received", {
+      metadata: { toolName: name },
+    })
 
     // === META-TOOL: Search ===
     if (name === "kali_search") {

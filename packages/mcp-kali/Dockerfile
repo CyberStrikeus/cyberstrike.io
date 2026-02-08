@@ -69,9 +69,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nuclei \
     # Utilities
     testssl.sh \
-    # Firewall (for port knocking)
-    iptables \
+    # TLS / Let's Encrypt
+    openssl \
+    socat \
   && rm -rf /var/lib/apt/lists/*
+
+# Install acme.sh for automatic Let's Encrypt certificates
+RUN curl https://get.acme.sh | sh -s email=noreply@bolt.local \
+  && ln -s /root/.acme.sh/acme.sh /usr/local/bin/acme.sh
 
 # Create app directory
 WORKDIR /app
@@ -91,15 +96,29 @@ RUN mkdir -p /data
 ENV PORT=3001
 ENV HOST=0.0.0.0
 ENV DATA_DIR=/data
-ENV KNOCK_ENABLED=true
 ENV NODE_ENV=production
 
+# TLS / Let's Encrypt configuration
+ENV TLS_ENABLED=false
+ENV TLS_AUTO_CERT=false
+ENV TLS_DOMAIN=""
+ENV TLS_EMAIL=""
+
+# Expose common ports (actual port is configurable via PORT env var)
+# HTTP: 3001 (default), 8080, 8000, 3000
+# HTTPS: 443 (default), 8443
 EXPOSE 3001
-# Knock ports are derived from bolt key, rotate every minute in range 49152-65535
-EXPOSE 49152-65535/udp
+EXPOSE 443
+EXPOSE 8080
+EXPOSE 8443
 
-# Health check
+# Health check (supports both http and https)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD curl -f http://localhost:3001/health || exit 1
+  CMD curl -f -k $([ "$TLS_ENABLED" = "true" ] && echo "https" || echo "http")://localhost:${PORT:-3001}/health || exit 1
 
-CMD ["node", "dist/http.js", "--knock"]
+# Copy entrypoint script
+COPY docker-entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["node", "dist/http.js"]

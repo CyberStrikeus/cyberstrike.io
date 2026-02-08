@@ -26,7 +26,6 @@ export namespace McpAuth {
     clientPrivateKey: z.string(),
     serverPublicKey: z.string(),
     serverFingerprint: z.string(),
-    boltKey: z.string().optional(), // For port knocking
   })
   export type Ed25519Credentials = z.infer<typeof Ed25519Credentials>
 

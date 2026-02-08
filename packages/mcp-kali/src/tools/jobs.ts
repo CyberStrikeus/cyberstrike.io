@@ -1,6 +1,7 @@
 import { spawn, ChildProcess } from "child_process"
 import { ToolDefinition, ToolResult, buildCommand } from "./types.js"
 import crypto from "crypto"
+import { logger } from "../logging/index.js"
 
 /**
  * Job status enum
@@ -59,7 +60,11 @@ export class JobManager {
     const command = buildCommand(tool, args)
     const jobId = this.generateJobId()
 
-    console.error(`[jobs] Starting job ${jobId}: ${command}`)
+    logger.audit({
+      event: "job_started",
+      message: "Background job started",
+      metadata: { jobId, toolName: tool.name, command },
+    })
 
     const job: Job = {
       id: jobId,
@@ -120,7 +125,16 @@ export class JobManager {
             job.error = `Process exited with code ${code}`
           }
 
-          console.error(`[jobs] Job ${jobId} ${job.status} (exit code: ${code})`)
+          logger.audit({
+            event: code === 0 ? "job_completed" : "job_failed",
+            message: `Background job ${job.status}`,
+            metadata: {
+              jobId,
+              exitCode: code,
+              duration: job.endTime - job.startTime,
+              toolName: job.toolName,
+            },
+          })
         }
         this.processes.delete(jobId)
       })
@@ -132,9 +146,10 @@ export class JobManager {
           job.error = err.message
           job.endTime = Date.now()
           job.output = this.getFullOutput(jobId)
+
+          logger.error(err, "Background job error")
         }
         this.processes.delete(jobId)
-        console.error(`[jobs] Job ${jobId} error: ${err.message}`)
       })
 
       // Unref to allow parent process to exit independently
@@ -225,7 +240,11 @@ export class JobManager {
     job.endTime = Date.now()
     job.output = this.getFullOutput(jobId)
 
-    console.error(`[jobs] Job ${jobId} cancelled`)
+    logger.audit({
+      event: "job_cancelled",
+      message: "Background job cancelled",
+      metadata: { jobId, toolName: job.toolName },
+    })
 
     return { success: true, message: `Job ${jobId} cancelled` }
   }
@@ -326,11 +345,12 @@ export class JobManager {
     for (const jobId of toDelete) {
       this.jobs.delete(jobId)
       this.outputBuffers.delete(jobId)
-      console.error(`[jobs] Cleaned up old job: ${jobId}`)
     }
 
     if (toDelete.length > 0) {
-      console.error(`[jobs] Cleaned up ${toDelete.length} old jobs`)
+      logger.info("Cleaned up old background jobs", {
+        metadata: { count: toDelete.length, jobIds: toDelete },
+      })
     }
   }
 }

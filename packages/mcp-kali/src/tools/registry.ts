@@ -1,4 +1,5 @@
 import { ToolDefinition, LazyToolInfo } from "./types.js"
+import { logger } from "../logging/index.js"
 
 /**
  * Dynamic Tool Registry
@@ -48,8 +49,12 @@ export class DynamicRegistry {
       keywords: tool.keywords,
     }))
 
-    console.error(`[registry] Initialized with ${tools.size} tools`)
-    console.error(`[registry] Index size: ~${JSON.stringify(this.toolIndex).length} bytes`)
+    logger.info("Tool registry initialized", {
+      metadata: {
+        toolCount: tools.size,
+        indexSize: JSON.stringify(this.toolIndex).length,
+      },
+    })
   }
 
   /**
@@ -130,7 +135,11 @@ export class DynamicRegistry {
       warning = `Warning: ${this.loadedTools.size} tools loaded. Consider unloading unused tools to save context.`
     }
 
-    console.error(`[registry] Loaded: ${loaded.join(", ")}`)
+    logger.audit({
+      event: "tools_loaded",
+      message: "Tools loaded into registry",
+      metadata: { loaded, failed, totalLoaded: this.loadedTools.size },
+    })
     return { loaded, failed, warning }
   }
 
@@ -150,7 +159,11 @@ export class DynamicRegistry {
       }
     }
 
-    console.error(`[registry] Unloaded: ${unloaded.join(", ")}`)
+    logger.audit({
+      event: "tools_unloaded",
+      message: "Tools unloaded from registry",
+      metadata: { unloaded, notLoaded, remainingLoaded: this.loadedTools.size },
+    })
     return { unloaded, notLoaded }
   }
 
@@ -160,7 +173,11 @@ export class DynamicRegistry {
   unloadAll(): number {
     const count = this.loadedTools.size
     this.loadedTools.clear()
-    console.error(`[registry] Unloaded all ${count} tools`)
+    logger.audit({
+      event: "tools_unloaded_all",
+      message: "All tools unloaded from registry",
+      metadata: { count },
+    })
     return count
   }
 
@@ -265,7 +282,13 @@ export class DynamicRegistry {
       }
     }
 
-    console.error(`[registry] Usage recorded: ${toolName}`)
+    logger.debug("Tool usage recorded", {
+      metadata: {
+        toolName,
+        useCount: this.useCount.get(toolName),
+        loadedTools: this.loadedTools.size,
+      },
+    })
   }
 
   /**

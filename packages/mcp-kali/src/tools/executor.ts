@@ -1,5 +1,7 @@
 import { spawn } from "child_process"
 import { ToolDefinition, ToolResult, buildCommand } from "./types.js"
+import { logger } from "../logging/index.js"
+import crypto from "node:crypto"
 
 // Default timeout: 5 minutes
 const DEFAULT_TIMEOUT_SECONDS = 300
@@ -17,7 +19,16 @@ export async function executeTool(
   const command = buildCommand(tool, args)
   const startTime = Date.now()
 
-  console.error(`[bolt] Executing: ${command}`)
+  // Log tool execution start
+  const argsHash = crypto.createHash("sha256").update(JSON.stringify(args)).digest("hex").slice(0, 8)
+  logger.toolCall({
+    toolName: tool.name,
+    toolArgs: args,
+    argsHash,
+    startTime: new Date(startTime).toISOString(),
+    message: "Tool execution started",
+    metadata: { command },
+  })
 
   return new Promise((resolve) => {
     // Use ?? to properly handle timeout: 0 (meaning "no timeout")
@@ -63,12 +74,27 @@ export async function executeTool(
     })
 
     proc.on("error", (err) => {
-      resolve({
+      const duration = Date.now() - startTime
+      const result = {
         success: false,
         output: stdout,
         error: `Failed to execute command: ${err.message}`,
-        duration: Date.now() - startTime,
+        duration,
+      }
+
+      logger.toolResult({
+        toolName: tool.name,
+        duration,
+        exitCode: -1,
+        success: false,
+        outputSize: stdout.length,
+        outputPreview: stdout.slice(0, 200),
+        endTime: new Date().toISOString(),
+        message: "Tool execution failed",
+        metadata: { error: err.message },
       })
+
+      resolve(result)
     })
 
     proc.on("close", (code) => {
@@ -80,13 +106,26 @@ export async function executeTool(
         output += stderr ? `\n\nSTDERR:\n${stderr}` : ""
       }
 
-      resolve({
+      const result = {
         success: code === 0,
         output: output || "(no output)",
         exitCode: code ?? undefined,
         duration,
         error: code !== 0 ? `Command exited with code ${code}` : undefined,
+      }
+
+      logger.toolResult({
+        toolName: tool.name,
+        duration,
+        exitCode: code ?? -1,
+        success: code === 0,
+        outputSize: output.length,
+        outputPreview: output.slice(0, 200),
+        endTime: new Date().toISOString(),
+        message: "Tool execution completed",
       })
+
+      resolve(result)
     })
 
     // Handle timeout

@@ -312,19 +312,6 @@ export namespace MCP {
       const ed25519Creds = await Ed25519Auth.loadCredentials(key)
       if (ed25519Creds) {
         log.info("found Ed25519 credentials", { key, clientId: ed25519Creds.clientId })
-
-        // Perform port knock if bolt key is available
-        if (ed25519Creds.boltKey) {
-          log.info("performing port knock", { key, server: mcp.url })
-          try {
-            const { performKnock } = await import("./knock-client")
-            await performKnock(mcp.url, ed25519Creds.boltKey, ed25519Creds.clientId, ed25519Creds.privateKey)
-            log.info("port knock successful", { key })
-          } catch (error) {
-            log.error("port knock failed", { key, error })
-            // Continue anyway - server might not have knocking enabled
-          }
-        }
       }
 
       // OAuth is enabled by default for remote servers unless explicitly disabled with oauth: false

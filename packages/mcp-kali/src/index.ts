@@ -6,6 +6,7 @@ import { fileURLToPath } from "url"
 import { loadAllTools } from "./tools/loader.js"
 import { DynamicRegistry } from "./tools/registry.js"
 import { createMcpServer } from "./server.js"
+import { logger } from "./logging/index.js"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DEFINITIONS_DIR = path.join(__dirname, "..", "src", "definitions")
@@ -21,7 +22,7 @@ const DEFINITIONS_DIR = path.join(__dirname, "..", "src", "definitions")
  */
 
 async function main() {
-  console.error("[bolt] Starting Bolt server (stdio)...")
+  logger.info("Starting Bolt MCP server (stdio transport)")
 
   // Load all tool definitions
   const tools = await loadAllTools(DEFINITIONS_DIR)
@@ -31,8 +32,13 @@ async function main() {
   registry.initialize(tools)
 
   const stats = registry.getStats()
-  console.error(`[bolt] ${stats.totalTools} tools indexed, 0 loaded initially`)
-  console.error(`[bolt] Context saved: ~${stats.totalTools * 500} tokens`)
+  logger.info("Tool registry ready", {
+    metadata: {
+      totalTools: stats.totalTools,
+      loadedTools: 0,
+      contextSaved: `~${stats.totalTools * 500} tokens`,
+    },
+  })
 
   // Create MCP server with the registry
   const server = createMcpServer(registry)
@@ -41,10 +47,13 @@ async function main() {
   const transport = new StdioServerTransport()
   await server.connect(transport)
 
-  console.error("[bolt] Bolt ready")
+  logger.audit({
+    event: "server_started",
+    message: "Bolt MCP server ready (stdio)",
+  })
 }
 
 main().catch((err) => {
-  console.error("[bolt] Fatal error:", err)
+  logger.error(err instanceof Error ? err : new Error(String(err)), "Fatal server error (stdio)")
   process.exit(1)
 })

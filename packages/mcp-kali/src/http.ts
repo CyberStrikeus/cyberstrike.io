@@ -1,17 +1,27 @@
 #!/usr/bin/env node
 
 import http from "node:http"
+import https from "node:https"
 import crypto from "node:crypto"
 import fs from "node:fs/promises"
 import path from "path"
 import { fileURLToPath } from "url"
+import { execSync } from "node:child_process"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js"
 import { loadAllTools } from "./tools/loader.js"
 import { DynamicRegistry } from "./tools/registry.js"
 import { createMcpServer } from "./server.js"
-import { KnockDaemon } from "./knock.js"
 import type { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import type { ToolDefinition } from "./tools/types.js"
+import {
+  MiddlewarePipeline,
+  errorHandler,
+  connectionThrottle,
+  securityValidator,
+  rateLimiter,
+  type MiddlewareContext,
+} from "./middleware/index.js"
+import { logger } from "./logging/index.js"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DEFINITIONS_DIR = path.join(__dirname, "..", "src", "definitions")
@@ -25,7 +35,6 @@ const PAIRING_CODE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 const NONCE_TTL_MS = 30 * 1000 // 30 second window for replay protection
 const TIMESTAMP_DRIFT_MS = 30 * 1000 // 30 second clock drift tolerance
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "..", "data")
-const DEFAULT_KNOCK_TTL_MS = 10 * 60 * 1000 // 10 minutes
 
 // --- Parse CLI arguments ---
 
@@ -39,14 +48,24 @@ for (let i = 0; i < cliArgs.length; i++) {
     process.env.MCP_ADMIN_TOKEN = cliArgs[++i]
   } else if (cliArgs[i] === "--data-dir" && cliArgs[i + 1]) {
     process.env.DATA_DIR = cliArgs[++i]
-  } else if (cliArgs[i] === "--knock") {
-    process.env.KNOCK_ENABLED = "true"
+  } else if (cliArgs[i] === "--tls") {
+    process.env.TLS_ENABLED = "true"
+  } else if (cliArgs[i] === "--tls-key" && cliArgs[i + 1]) {
+    process.env.TLS_KEY_PATH = cliArgs[++i]
+  } else if (cliArgs[i] === "--tls-cert" && cliArgs[i + 1]) {
+    process.env.TLS_CERT_PATH = cliArgs[++i]
   }
 }
 
 const effectivePort = parseInt(process.env.PORT || String(DEFAULT_PORT), 10)
 const effectiveHost = process.env.HOST || DEFAULT_HOST
 const adminToken = process.env.MCP_ADMIN_TOKEN || ""
+const dataDir = process.env.DATA_DIR || DATA_DIR
+
+// TLS Configuration
+const tlsEnabled = process.env.TLS_ENABLED === "true"
+const tlsKeyPath = process.env.TLS_KEY_PATH || path.join(dataDir, "tls-key.pem")
+const tlsCertPath = process.env.TLS_CERT_PATH || path.join(dataDir, "tls-cert.pem")
 
 /**
  * Constant-time string comparison to prevent timing attacks
@@ -61,8 +80,64 @@ function secureCompare(a: string, b: string): boolean {
     return false
   }
 }
-const dataDir = process.env.DATA_DIR || DATA_DIR
-const knockEnabled = process.env.KNOCK_ENABLED === "true"
+
+/**
+ * Generate self-signed TLS certificate for development
+ * Production should use Let's Encrypt or proper CA-signed certificates
+ */
+async function generateSelfSignedCert(keyPath: string, certPath: string): Promise<void> {
+  logger.warn("Generating self-signed certificate for development", {
+    category: "security",
+    metadata: { keyPath, certPath },
+  })
+  logger.security({
+    event: "self_signed_cert_warning",
+    message: "Self-signed certificates are NOT secure for production",
+    severity: "high",
+    action: "warn",
+    metadata: { recommendation: "Use Let's Encrypt or proper CA-signed certificate" },
+  })
+
+  try {
+    // Generate self-signed certificate using openssl
+    const cmd = `openssl req -x509 -newkey rsa:4096 -nodes -sha256 \
+      -keyout "${keyPath}" \
+      -out "${certPath}" \
+      -days 365 \
+      -subj "/CN=localhost/O=Bolt MCP Server/C=US" \
+      2>/dev/null`
+
+    execSync(cmd, { stdio: "inherit" })
+    logger.audit({
+      event: "cert_generated",
+      message: "TLS certificate and private key generated",
+      metadata: { certPath, keyPath },
+    })
+  } catch (error) {
+    logger.error(error instanceof Error ? error : new Error(String(error)), "Failed to generate TLS certificate")
+    throw error
+  }
+}
+
+/**
+ * Ensure TLS certificates exist
+ */
+async function ensureTlsCertificates(): Promise<void> {
+  if (!tlsEnabled) return
+
+  try {
+    await fs.access(tlsKeyPath)
+    await fs.access(tlsCertPath)
+    logger.info("Using existing TLS certificates", {
+      metadata: { keyPath: tlsKeyPath, certPath: tlsCertPath },
+    })
+  } catch {
+    logger.warn("TLS certificates not found, generating self-signed certificate", {
+      metadata: { keyPath: tlsKeyPath, certPath: tlsCertPath },
+    })
+    await generateSelfSignedCert(tlsKeyPath, tlsCertPath)
+  }
+}
 
 // =====================================================================
 // Ed25519 Key Management
@@ -108,7 +183,10 @@ async function initServerKeys(): Promise<void> {
       privateKey: crypto.createPrivateKey(stored.privateKey),
       publicKeyPem: stored.publicKey,
     }
-    console.error("[auth] Loaded existing server key pair")
+    logger.audit({
+      event: "server_keys_loaded",
+      message: "Loaded existing server Ed25519 key pair",
+    })
   } catch {
     // Generate new key pair
     const { publicKey, privateKey } = crypto.generateKeyPairSync("ed25519")
@@ -122,10 +200,16 @@ async function initServerKeys(): Promise<void> {
     )
 
     serverKeys = { publicKey, privateKey, publicKeyPem }
-    console.error("[auth] Generated new server key pair")
+    logger.audit({
+      event: "server_keys_generated",
+      message: "Generated new server Ed25519 key pair",
+    })
   }
 
-  console.error(`[auth] Server public key fingerprint: ${fingerprint(serverKeys.publicKeyPem)}`)
+  const keyFingerprint = fingerprint(serverKeys.publicKeyPem)
+  logger.info("Server public key fingerprint", {
+    metadata: { fingerprint: keyFingerprint },
+  })
 }
 
 /**
@@ -138,9 +222,13 @@ async function loadAuthorizedClients(): Promise<void> {
     for (const client of clients) {
       authorizedClients.set(client.clientId, client)
     }
-    console.error(`[auth] Loaded ${authorizedClients.size} authorized client(s)`)
+    logger.audit({
+      event: "clients_loaded",
+      message: "Loaded authorized clients",
+      metadata: { count: authorizedClients.size },
+    })
   } catch {
-    console.error("[auth] No authorized clients found (fresh install)")
+    logger.info("No authorized clients found (fresh install)")
   }
 }
 
@@ -333,7 +421,54 @@ interface Session {
 
 const sessions = new Map<string, Session>()
 let sharedToolDefs: Map<string, ToolDefinition>
-let knockDaemon: KnockDaemon | null = null
+
+// Initialize middleware pipeline
+const middlewareEnabled = process.env.MIDDLEWARE_ENABLED !== "false"
+const middleware = new MiddlewarePipeline()
+
+// Setup middleware pipeline (do this once, not per request)
+if (middlewareEnabled) {
+  middleware
+    .use(errorHandler())
+    .use(connectionThrottle({
+      enabled: process.env.CONNECTION_LIMIT_ENABLED !== "false",
+      maxGlobal: parseInt(process.env.CONNECTION_LIMIT_GLOBAL || "100", 10),
+      maxPerIp: parseInt(process.env.CONNECTION_LIMIT_PER_IP || "10", 10),
+    }))
+    .use(securityValidator({
+      maxBodySize: parseInt(process.env.REQUEST_SIZE_LIMIT || String(1024 * 1024), 10),
+      maxHeaderSize: parseInt(process.env.REQUEST_HEADER_LIMIT || String(8 * 1024), 10),
+      timeout: parseInt(process.env.REQUEST_TIMEOUT || "30000", 10),
+    }))
+    .use(rateLimiter({
+      enabled: process.env.RATE_LIMIT_ENABLED !== "false",
+      globalIpLimit: parseInt(process.env.RATE_LIMIT_GLOBAL_IP || "300", 10),
+      clientLimit: parseInt(process.env.RATE_LIMIT_CLIENT || "100", 10),
+      clientBurst: parseInt(process.env.RATE_LIMIT_CLIENT_BURST || "20", 10),
+      pairLimit: parseInt(process.env.RATE_LIMIT_PAIR || "10", 10),
+      mcpLimit: parseInt(process.env.RATE_LIMIT_MCP || "50", 10),
+    }))
+    // Add route handler as final middleware
+    .use(async (ctx: MiddlewareContext) => {
+      await handleRoutes(ctx.req, ctx.res, ctx)
+    })
+}
+
+/**
+ * Extract client IP from request
+ * Checks X-Forwarded-For header first (for proxies), then falls back to socket
+ */
+function getClientIp(req: http.IncomingMessage): string {
+  // Check X-Forwarded-For header (proxy/load balancer)
+  const forwarded = req.headers["x-forwarded-for"]
+  if (forwarded) {
+    const ip = Array.isArray(forwarded) ? forwarded[0] : forwarded.split(",")[0]
+    return ip.trim()
+  }
+
+  // Fallback to socket address
+  return req.socket.remoteAddress || "unknown"
+}
 
 function createSession(): Session {
   const registry = new DynamicRegistry()
@@ -344,7 +479,11 @@ function createSession(): Session {
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: () => crypto.randomUUID(),
     onsessioninitialized: (sessionId: string) => {
-      console.error(`[bolt] Session initialized: ${sessionId}`)
+      logger.connection({
+        event: "session_start",
+        message: "MCP session initialized",
+        sessionId,
+      })
       sessions.set(sessionId, session)
     },
   })
@@ -357,7 +496,7 @@ function createSession(): Session {
   }
 
   server.connect(transport).catch((err) => {
-    console.error("[bolt] Failed to connect server to transport:", err)
+    logger.error(err instanceof Error ? err : new Error(String(err)), "Failed to connect server to transport")
   })
 
   return session
@@ -375,7 +514,12 @@ function cleanupSessions(): void {
   const now = Date.now()
   for (const [id, session] of sessions.entries()) {
     if (now - session.lastActivity > SESSION_TIMEOUT_MS) {
-      console.error(`[bolt] Cleaning up expired session: ${id}`)
+      logger.connection({
+        event: "session_expired",
+        message: "Cleaning up expired session",
+        sessionId: id,
+        metadata: { lastActivity: new Date(session.lastActivity).toISOString() },
+      })
       session.transport.close().catch(() => {})
       sessions.delete(id)
     }
@@ -414,45 +558,110 @@ function jsonResponse(res: http.ServerResponse, status: number, body: unknown): 
 // Request Router
 // =====================================================================
 
+/**
+ * Main request handler with middleware integration
+ */
 async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
-  const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`)
-  const pathname = url.pathname
-
+  // Always set CORS headers
   setCorsHeaders(res)
 
-  // CORS preflight
+  // Handle CORS preflight immediately (bypass middleware)
   if (req.method === "OPTIONS") {
     res.writeHead(204)
     res.end()
     return
   }
 
+  // If middleware is disabled, go directly to route handling
+  if (!middlewareEnabled) {
+    return handleRoutes(req, res)
+  }
+
+  // Create middleware context
+  const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`)
+  const ctx: MiddlewareContext = {
+    req,
+    res,
+    pathname: url.pathname,
+    method: req.method || "GET",
+    requestId: crypto.randomUUID(),
+    clientIp: getClientIp(req),
+    startTime: Date.now(),
+  }
+
+  // Execute middleware pipeline (route handler is last middleware)
+  await middleware.execute(ctx)
+}
+
+/**
+ * Route handling logic (called after middleware)
+ */
+async function handleRoutes(
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  ctx?: MiddlewareContext,
+): Promise<void> {
+  const url = new URL(req.url || "/", `http://${req.headers.host || "localhost"}`)
+  const pathname = url.pathname
+
   // =================================================================
-  // ENDPOINTS NOT PROTECTED BY KNOCK (always accessible)
-  // These are needed for initial pairing before client can knock.
-  // Protected by their own auth mechanisms (admin token, pairing code).
+  // PUBLIC ENDPOINTS
+  // These endpoints are accessible without authentication.
+  // Protected by rate limiting and connection throttling via middleware.
   // =================================================================
 
-  // --- Health check (no auth, no knock) ---
+  // --- Health check (no auth required) ---
   // Allows clients to verify this is a Bolt server before pairing
+  // --- Health Check ---
+  // Public: minimal info (just status)
+  // Authenticated: full details (requires admin token)
   if (pathname === "/health" && req.method === "GET") {
+    const isAdmin = authenticateAdmin(req)
+
+    if (!isAdmin) {
+      // Public health check - minimal information
+      logger.debug("Public health check", {
+        metadata: { clientIp: getClientIp(req) },
+      })
+
+      jsonResponse(res, 200, {
+        status: "ok",
+        timestamp: new Date().toISOString(),
+      })
+      return
+    }
+
+    // Admin health check - detailed information
+    logger.audit({
+      event: "admin_health_check",
+      message: "Admin accessed detailed health endpoint",
+      clientIp: getClientIp(req),
+    })
+
     jsonResponse(res, 200, {
       status: "ok",
       identity: "bolt",
       version: "0.2.0",
+      timestamp: new Date().toISOString(),
       transport: "streamable-http",
       auth: "ed25519",
-      knock: knockDaemon?.getStatus() ?? { active: false },
+      middleware: middlewareEnabled ? "enabled" : "disabled",
+      tls: tlsEnabled ? "enabled" : "disabled",
       activeSessions: sessions.size,
       authorizedClients: authorizedClients.size,
       toolCount: sharedToolDefs?.size ?? 0,
-      uptime: process.uptime(),
+      uptime: Math.floor(process.uptime()),
+      memory: {
+        heapUsed: Math.floor(process.memoryUsage().heapUsed / 1024 / 1024), // MB
+        heapTotal: Math.floor(process.memoryUsage().heapTotal / 1024 / 1024), // MB
+        rss: Math.floor(process.memoryUsage().rss / 1024 / 1024), // MB
+      },
       serverFingerprint: fingerprint(serverKeys.publicKeyPem),
     })
     return
   }
 
-  // --- Pairing: Generate code (admin token required, no knock) ---
+  // --- Pairing: Generate code (admin token required) ---
   // Admin generates a one-time code for new client to pair
   if (pathname === "/pair" && req.method === "POST") {
     if (!authenticateAdmin(req)) {
@@ -469,7 +678,11 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
       used: false,
     })
 
-    console.error(`[auth] Pairing code generated: ${code}`)
+    logger.audit({
+      event: "pair_request",
+      message: `Pairing code generated`,
+      metadata: { code, expiresIn: PAIRING_CODE_TTL_MS / 1000 },
+    })
 
     jsonResponse(res, 200, {
       code,
@@ -479,11 +692,11 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
     return
   }
 
-  // --- Pairing: Exchange keys (pairing code required, no knock) ---
+  // --- Pairing: Exchange keys (pairing code required) ---
   // New client exchanges public keys using the one-time pairing code.
-  // After this, client is authorized and can send knock packets.
+  // After this, client is authorized for Ed25519 signed requests.
   if (pathname === "/pair/exchange" && req.method === "POST") {
-    const bodyStr = await readBody(req)
+    const bodyStr = ctx?.bodyStr || (await readBody(req))
     let body: { code?: string; clientPublicKey?: string; clientName?: string }
     try {
       body = JSON.parse(bodyStr)
@@ -541,30 +754,25 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
     authorizedClients.set(clientId, client)
     await saveAuthorizedClients()
 
-    console.error(`[auth] Client paired: ${client.name} (${clientId})`)
+    logger.audit({
+      event: "pair_success",
+      message: `Client paired successfully`,
+      clientId,
+      clientName: client.name,
+      metadata: { pairedAt: client.pairedAt },
+    })
 
-    // Enable port knocking if this is the first client
-    if (knockDaemon && authorizedClients.size === 1) {
-      await knockDaemon.enable()
-    }
-
-    // Include bolt key in response for future knock packets
-    const responseData: Record<string, unknown> = {
+    // Return pairing response
+    jsonResponse(res, 200, {
       clientId,
       serverPublicKey: serverKeys.publicKeyPem,
       serverFingerprint: fingerprint(serverKeys.publicKeyPem),
       name: client.name,
-    }
-
-    if (knockDaemon) {
-      responseData.boltKey = knockDaemon.getBoltKey()
-    }
-
-    jsonResponse(res, 200, responseData)
+    })
     return
   }
 
-  // --- List paired clients (admin token required, no knock) ---
+  // --- List paired clients (admin token required) ---
   if (pathname === "/pair/clients" && req.method === "GET") {
     if (!authenticateAdmin(req)) {
       jsonResponse(res, 401, { error: "Unauthorized", message: "Admin token required" })
@@ -581,7 +789,7 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
     return
   }
 
-  // --- Revoke a client (admin token required, no knock) ---
+  // --- Revoke a client (admin token required) ---
   if (pathname.startsWith("/pair/clients/") && req.method === "DELETE") {
     if (!authenticateAdmin(req)) {
       jsonResponse(res, 401, { error: "Unauthorized", message: "Admin token required" })
@@ -593,12 +801,12 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
       const client = authorizedClients.get(clientId)!
       authorizedClients.delete(clientId)
       await saveAuthorizedClients()
-      console.error(`[auth] Client revoked: ${client.name} (${clientId})`)
-
-      // Disable port knocking if this was the last client
-      if (knockDaemon && authorizedClients.size === 0) {
-        await knockDaemon.disable()
-      }
+      logger.audit({
+        event: "client_revoked",
+        message: "Client authorization revoked",
+        clientId,
+        clientName: client.name,
+      })
 
       jsonResponse(res, 200, { revoked: clientId })
     } else {
@@ -608,24 +816,31 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
   }
 
   // =================================================================
-  // ENDPOINTS PROTECTED BY KNOCK (requires SPA packet first)
-  // When knock is enabled, these are blocked by iptables until
-  // client sends a valid knock packet from their IP.
+  // AUTHENTICATED ENDPOINTS
+  // These endpoints require Ed25519 signature authentication.
+  // Protected by middleware (rate limiting, connection throttling) +
+  // Ed25519 signature verification for every request.
   // =================================================================
 
-  // --- MCP endpoint (knock + Ed25519 signature required) ---
+  // --- MCP endpoint (Ed25519 signature required) ---
   // This is where tool execution happens. Protected by:
-  //   1. Knock (iptables blocks unless client knocked)
+  //   1. Middleware (rate limiting, connection throttling, request validation)
   //   2. Ed25519 signed requests (every request must be signed)
   if (pathname === "/mcp") {
     // Read body for signature verification (POST only)
-    const bodyStr = req.method === "POST" ? await readBody(req) : ""
+    const bodyStr = req.method === "POST" ? (ctx?.bodyStr || (await readBody(req))) : ""
 
     // Authenticate (Ed25519 signature verification)
     const auth = authenticateMcpRequest(req, bodyStr)
     if (!auth.authenticated) {
       jsonResponse(res, 401, { error: "Unauthorized", message: auth.error })
       return
+    }
+
+    // Update context with auth info
+    if (ctx) {
+      ctx.authenticated = true
+      ctx.clientId = auth.clientId
     }
 
     if (req.method === "POST") {
@@ -677,7 +892,11 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
       if (session) {
         await session.transport.handleRequest(req, res)
         sessions.delete(sessionId!)
-        console.error(`[bolt] Session closed: ${sessionId}`)
+        logger.connection({
+          event: "session_end",
+          message: "MCP session closed",
+          sessionId: sessionId!,
+        })
       } else {
         jsonResponse(res, 404, { error: "Session not found" })
       }
@@ -700,78 +919,72 @@ const cleanupInterval = setInterval(() => {
   cleanupSessions()
   cleanupPairingCodes()
   cleanupNonces()
-  knockDaemon?.cleanupNonces()
 }, 5 * 60 * 1000)
 
 async function main(): Promise<void> {
-  console.error("[bolt] Starting Bolt server...")
+  logger.info("Starting Bolt MCP server")
 
   // Initialize crypto keys and authorized clients
   await initServerKeys()
   await loadAuthorizedClients()
 
+  // Ensure TLS certificates if TLS is enabled
+  await ensureTlsCertificates()
+
   // Load tool definitions
   sharedToolDefs = await loadAllTools(DEFINITIONS_DIR)
-  console.error(`[bolt] ${sharedToolDefs.size} tools indexed`)
+  logger.info("Tool definitions loaded", {
+    metadata: { toolCount: sharedToolDefs.size },
+  })
 
-  // Start knock daemon if enabled
-  if (knockEnabled) {
-    knockDaemon = new KnockDaemon(
-      {
-        dataDir,
-        targetPort: effectivePort,
-        accessTtlMs: DEFAULT_KNOCK_TTL_MS,
-        timestampDriftMs: TIMESTAMP_DRIFT_MS,
-      },
-      {
-        getClientPublicKey(clientId: string): string | undefined {
-          return authorizedClients.get(clientId)?.publicKeyPem
-        },
-      }
-    )
-    await knockDaemon.start()
-  }
-
-  const server = http.createServer(async (req, res) => {
+  // Create request handler
+  const requestHandler = async (req: http.IncomingMessage, res: http.ServerResponse) => {
     try {
       await handleRequest(req, res)
     } catch (err) {
-      console.error("[bolt] Request error:", err)
+      logger.error(err instanceof Error ? err : new Error(String(err)), "Request handling failed")
       if (!res.headersSent) {
         jsonResponse(res, 500, { error: "Internal server error" })
       }
     }
-  })
+  }
+
+  // Create HTTP or HTTPS server based on TLS configuration
+  const server = tlsEnabled
+    ? https.createServer(
+        {
+          key: await fs.readFile(tlsKeyPath, "utf-8"),
+          cert: await fs.readFile(tlsCertPath, "utf-8"),
+        },
+        requestHandler,
+      )
+    : http.createServer(requestHandler)
+
+  const protocol = tlsEnabled ? "https" : "http"
 
   server.listen(effectivePort, effectiveHost, () => {
-    console.error(`[bolt] Server listening on http://${effectiveHost}:${effectivePort}`)
-    console.error(`[bolt] Endpoints:`)
-    console.error(`[bolt]   MCP:     http://${effectiveHost}:${effectivePort}/mcp`)
-    console.error(`[bolt]   Health:  http://${effectiveHost}:${effectivePort}/health`)
-    console.error(`[bolt]   Pair:    http://${effectiveHost}:${effectivePort}/pair`)
-    console.error(`[bolt] Auth: Ed25519 signatures (${authorizedClients.size} client(s) registered)`)
-    if (knockDaemon) {
-      const ks = knockDaemon.getStatus()
-      console.error(`[bolt] Knock: enabled, rotating ports (iptables: ${ks.iptables ? "active" : "unavailable"})`)
-      console.error(`[bolt] Bolt key: ${knockDaemon.getBoltKey()}`)
-    } else {
-      console.error("[bolt] Knock: disabled (use --knock to enable)")
-    }
-    if (adminToken) {
-      console.error("[bolt] Admin token: set")
-    } else {
-      console.error("[bolt] Admin token: NOT SET — pairing disabled (set MCP_ADMIN_TOKEN)")
-    }
+    logger.audit({
+      event: "server_started",
+      message: "Bolt MCP server listening",
+      metadata: {
+        url: `${protocol}://${effectiveHost}:${effectivePort}`,
+        endpoints: {
+          mcp: `${protocol}://${effectiveHost}:${effectivePort}/mcp`,
+          health: `${protocol}://${effectiveHost}:${effectivePort}/health`,
+          pair: `${protocol}://${effectiveHost}:${effectivePort}/pair`,
+        },
+        auth: `Ed25519 signatures (${authorizedClients.size} clients)`,
+        middleware: middlewareEnabled ? "enabled" : "disabled",
+        tls: tlsEnabled ? "enabled" : "disabled",
+        adminToken: adminToken ? "set" : "NOT SET (pairing disabled)",
+      },
+    })
   })
 
   // Graceful shutdown
   const shutdown = async (): Promise<void> => {
-    console.error("[bolt] Shutting down...")
+    logger.info("Shutting down server")
     clearInterval(cleanupInterval)
-
-    if (knockDaemon) {
-      await knockDaemon.stop()
-    }
 
     for (const [id, session] of sessions.entries()) {
       session.transport.close().catch(() => {})
@@ -779,7 +992,10 @@ async function main(): Promise<void> {
     }
 
     server.close(() => {
-      console.error("[bolt] Server closed")
+      logger.audit({
+        event: "server_stopped",
+        message: "Bolt MCP server closed",
+      })
       process.exit(0)
     })
 
@@ -791,6 +1007,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err) => {
-  console.error("[bolt] Fatal error:", err)
+  logger.error(err instanceof Error ? err : new Error(String(err)), "Fatal server error")
   process.exit(1)
 })
