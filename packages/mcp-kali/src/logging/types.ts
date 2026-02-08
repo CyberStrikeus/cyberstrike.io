@@ -58,6 +58,20 @@ export interface AuditLogEvent extends BaseLogEvent {
     | "client_revoked"
     | "tool_call"
     | "tool_complete"
+    | "job_started"
+    | "job_completed"
+    | "job_failed"
+    | "job_cancelled"
+    | "tools_loaded"
+    | "tools_unloaded"
+    | "tools_unloaded_all"
+    | "server_started"
+    | "server_keys_loaded"
+    | "server_keys_generated"
+    | "clients_loaded"
+    | "cert_generated"
+    | "admin_health_check"
+    | "server_stopped"
 }
 
 /**
@@ -114,7 +128,7 @@ export interface ToolResultEvent extends BaseLogEvent {
  */
 export interface ConnectionLogEvent extends BaseLogEvent {
   category: "connections"
-  event: "session_start" | "session_end" | "connection_established" | "connection_closed"
+  event: "session_start" | "session_end" | "session_expired" | "connection_established" | "connection_closed"
 
   /** Connection duration (for end events) */
   duration?: number
@@ -168,6 +182,7 @@ export interface SecurityLogEvent extends BaseLogEvent {
     | "invalid_signature"
     | "suspicious_request"
     | "access_denied"
+    | "self_signed_cert_warning"
 
   /** Severity level */
   severity: "low" | "medium" | "high" | "critical"

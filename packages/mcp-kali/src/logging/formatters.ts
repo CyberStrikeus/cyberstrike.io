@@ -122,12 +122,12 @@ export function truncateString(str: string, maxLength = 200): string {
 /**
  * JSON formatter with sanitization
  */
-export const jsonFormatter = format.combine(
+export const jsonFormatter: ReturnType<typeof format.combine> = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSS" }),
   format.errors({ stack: true }),
   format.printf((info) => {
     // Sanitize metadata
-    const sanitized = {
+    const sanitized: Record<string, unknown> = {
       ...info,
       metadata: info.metadata ? sanitizeValue(info.metadata) : undefined,
     }
@@ -146,7 +146,7 @@ export const jsonFormatter = format.combine(
 /**
  * Console formatter (human-readable)
  */
-export const consoleFormatter = format.combine(
+export const consoleFormatter: ReturnType<typeof format.combine> = format.combine(
   format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
   format.colorize(),
   format.printf((info) => {

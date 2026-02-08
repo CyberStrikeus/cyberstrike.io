@@ -8,8 +8,15 @@
     "mcp-kali": "./dist/index.js",
     "mcp-kali-http": "./dist/http.js"
   },
+  "files": [
+    "dist/",
+    "src/definitions/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc",
+    "prepublishOnly": "npm run build",
     "dev": "tsx src/index.ts",
     "dev:http": "tsx src/http.ts",
     "start": "node dist/index.js",

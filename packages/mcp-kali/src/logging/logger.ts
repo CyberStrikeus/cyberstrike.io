@@ -182,7 +182,7 @@ export class Logger {
     this.log({
       level: "info",
       message: toSafeString(message),
-      metadata: metadata ? sanitizeValue(metadata) : undefined,
+      metadata: metadata ? (sanitizeValue(metadata) as Record<string, unknown>) : undefined,
     })
   }
 
@@ -190,7 +190,7 @@ export class Logger {
     this.log({
       level: "warn",
       message: toSafeString(message),
-      metadata: metadata ? sanitizeValue(metadata) : undefined,
+      metadata: metadata ? (sanitizeValue(metadata) as Record<string, unknown>) : undefined,
     })
   }
 
@@ -198,7 +198,7 @@ export class Logger {
     this.log({
       level: "debug",
       message: toSafeString(message),
-      metadata: metadata ? sanitizeValue(metadata) : undefined,
+      metadata: metadata ? (sanitizeValue(metadata) as Record<string, unknown>) : undefined,
     })
   }
 }
