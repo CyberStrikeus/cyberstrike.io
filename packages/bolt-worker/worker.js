@@ -65,19 +65,53 @@ if curl -s http://localhost:3001/health > /dev/null 2>&1; then
     echo ""
     echo "Bolt installed successfully!"
     echo ""
-    echo "Admin Token (save this!):"
-    echo ""
-    echo "   \$TOKEN"
-    echo ""
-    echo ""
-    echo "Add to Cyberstrike:"
-    echo ""
-    echo "   1. Run: cyberstrike"
-    echo "   2. Type: /bolt"
-    echo "   3. Press 'a' to add server"
-    echo "   4. URL: http://localhost:3001"
-    echo "   5. Paste your token"
-    echo ""
+
+    # Generate pairing code
+    echo "Generating pairing code..."
+    PAIR_RESPONSE=\$(curl -s -H "Authorization: Bearer \$TOKEN" -X POST http://localhost:3001/pair)
+
+    # Parse with jq (or grep fallback if jq not installed)
+    if command -v jq &> /dev/null; then
+        PAIRING_CODE=\$(echo "\$PAIR_RESPONSE" | jq -r '.code')
+        EXPIRES_IN=\$(echo "\$PAIR_RESPONSE" | jq -r '.expiresIn')
+    else
+        PAIRING_CODE=\$(echo "\$PAIR_RESPONSE" | grep -o '"code":"[^"]*"' | cut -d'"' -f4)
+        EXPIRES_IN=300
+    fi
+
+    if [ -n "\$PAIRING_CODE" ]; then
+        echo ""
+        echo "Pairing Code (expires in \${EXPIRES_IN}s):"
+        echo ""
+        echo "   \$PAIRING_CODE"
+        echo ""
+        echo ""
+        echo "Quick Setup (Recommended):"
+        echo ""
+        echo "   cyberstrike mcp pair http://localhost:3001 \$PAIRING_CODE"
+        echo ""
+        echo ""
+        echo "Manual Setup (if needed):"
+        echo ""
+        echo "   Admin Token: \$TOKEN"
+        echo ""
+    else
+        echo ""
+        echo "Admin Token (save this!):"
+        echo ""
+        echo "   \$TOKEN"
+        echo ""
+        echo ""
+        echo "Add to Cyberstrike:"
+        echo ""
+        echo "   1. Run: cyberstrike"
+        echo "   2. Type: /bolt"
+        echo "   3. Press 'a' to add server"
+        echo "   4. URL: http://localhost:3001"
+        echo "   5. Paste your token"
+        echo ""
+    fi
+
     echo "Docs: https://docs.cyberstrike.io/docs/mcp/bolt"
     echo ""
 else

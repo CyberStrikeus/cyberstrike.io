@@ -20,12 +20,22 @@ export namespace McpAuth {
   })
   export type ClientInfo = z.infer<typeof ClientInfo>
 
+  export const Ed25519Credentials = z.object({
+    clientId: z.string(),
+    clientPublicKey: z.string(),
+    clientPrivateKey: z.string(),
+    serverPublicKey: z.string(),
+    serverFingerprint: z.string(),
+  })
+  export type Ed25519Credentials = z.infer<typeof Ed25519Credentials>
+
   export const Entry = z.object({
     tokens: Tokens.optional(),
     clientInfo: ClientInfo.optional(),
     codeVerifier: z.string().optional(),
     oauthState: z.string().optional(),
     serverUrl: z.string().optional(), // Track the URL these credentials are for
+    ed25519: Ed25519Credentials.optional(),
   })
   export type Entry = z.infer<typeof Entry>
 

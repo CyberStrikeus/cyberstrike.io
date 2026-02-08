@@ -19,6 +19,7 @@ import { withTimeout } from "@/util/timeout"
 import { McpOAuthProvider } from "./oauth-provider"
 import { McpOAuthCallback } from "./oauth-callback"
 import { McpAuth } from "./auth"
+import { Ed25519Auth } from "./ed25519"
 import { BusEvent } from "../bus/bus-event"
 import { Bus } from "@/bus"
 import { TuiEvent } from "@/cli/cmd/tui/event"
@@ -307,6 +308,15 @@ export namespace MCP {
     let status: Status | undefined = undefined
 
     if (mcp.type === "remote") {
+      // Check for Ed25519 credentials (from pairing)
+      const ed25519Creds = await Ed25519Auth.loadCredentials(key)
+      if (ed25519Creds) {
+        log.info("found Ed25519 credentials", { key, clientId: ed25519Creds.clientId })
+        // TODO: Implement custom MCP transport with Ed25519 request signing
+        // For now, Ed25519 credentials are stored but not used for MCP requests
+        // The server accepts both Ed25519 signatures and bearer token authentication
+      }
+
       // OAuth is enabled by default for remote servers unless explicitly disabled with oauth: false
       const oauthDisabled = mcp.oauth === false
       const oauthConfig = typeof mcp.oauth === "object" ? mcp.oauth : undefined

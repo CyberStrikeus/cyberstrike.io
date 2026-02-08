@@ -7,10 +7,12 @@ import { UI } from "../ui"
 import { MCP } from "../../mcp"
 import { McpAuth } from "../../mcp/auth"
 import { McpOAuthProvider } from "../../mcp/oauth-provider"
+import { Ed25519Auth } from "../../mcp/ed25519"
 import { Config } from "../../config/config"
 import { Instance } from "../../project/instance"
 import { Installation } from "../../installation"
 import path from "path"
+import os from "os"
 import { Global } from "../../global"
 import { modify, applyEdits } from "jsonc-parser"
 import { Bus } from "../../bus"
@@ -59,6 +61,7 @@ export const McpCommand = cmd({
       .command(McpAuthCommand)
       .command(McpLogoutCommand)
       .command(McpDebugCommand)
+      .command(McpPairCommand)
       .demandCommand(),
   async handler() {},
 })
@@ -749,6 +752,202 @@ export const McpDebugCommand = cmd({
         }
 
         prompts.outro("Debug complete")
+      },
+    })
+  },
+})
+
+export const McpPairCommand = cmd({
+  command: "pair [url] [code]",
+  describe: "pair with a Bolt MCP server using a pairing code",
+  builder: (yargs) =>
+    yargs
+      .positional("url", {
+        describe: "URL of the Bolt MCP server (e.g., https://bolt.example.com:3001)",
+        type: "string",
+      })
+      .positional("code", {
+        describe: "6-character pairing code (e.g., ABC-DEF)",
+        type: "string",
+      })
+      .option("global", {
+        describe: "Save to global config instead of project config",
+        type: "boolean",
+        default: false,
+      })
+      .option("name", {
+        describe: "Name for this MCP server in config",
+        type: "string",
+      }),
+  async handler(args) {
+    await Instance.provide({
+      directory: process.cwd(),
+      async fn() {
+        UI.empty()
+        prompts.intro("Pair with Bolt MCP Server")
+
+        // Step 1: Get URL (interactive or from args)
+        let url = args.url
+        if (!url) {
+          const urlInput = await prompts.text({
+            message: "Enter Bolt server URL",
+            placeholder: "https://bolt.example.com:3001",
+            validate: (x) => {
+              if (!x) return "Required"
+              const isValid = URL.canParse(x)
+              return isValid ? undefined : "Invalid URL"
+            },
+          })
+          if (prompts.isCancel(urlInput)) throw new UI.CancelledError()
+          url = urlInput
+        }
+
+        // Step 2: Get pairing code (interactive or from args)
+        let code = args.code
+        if (!code) {
+          const codeInput = await prompts.text({
+            message: "Enter pairing code (6 characters)",
+            placeholder: "ABC-DEF",
+            validate: (x) => {
+              if (!x) return "Required"
+              const cleaned = x.replace("-", "").toUpperCase()
+              if (cleaned.length !== 6) return "Must be 6 characters"
+              if (!/^[A-Z0-9]+$/.test(cleaned)) return "Invalid format"
+              return undefined
+            },
+          })
+          if (prompts.isCancel(codeInput)) throw new UI.CancelledError()
+          code = codeInput
+        }
+
+        // Normalize code format
+        const cleanCode = code.replace("-", "").toUpperCase()
+        const formattedCode = `${cleanCode.slice(0, 3)}-${cleanCode.slice(3)}`
+
+        // Step 3: Get server name (interactive or from args)
+        let name = args.name
+        if (!name) {
+          const parsed = new URL(url)
+          const defaultName = parsed.hostname.split(".")[0] || "bolt"
+          const nameInput = await prompts.text({
+            message: "Name for this server",
+            initialValue: defaultName,
+            validate: (x) => (x && x.length > 0 ? undefined : "Required"),
+          })
+          if (prompts.isCancel(nameInput)) throw new UI.CancelledError()
+          name = nameInput
+        }
+
+        // Step 4: Determine config location
+        const project = Instance.project
+        let configPath: string
+
+        if (args.global || project.vcs !== "git") {
+          configPath = await resolveConfigPath(Global.Path.config, true)
+        } else {
+          const [projectConfigPath, globalConfigPath] = await Promise.all([
+            resolveConfigPath(Instance.worktree),
+            resolveConfigPath(Global.Path.config, true),
+          ])
+
+          const scopeResult = await prompts.select({
+            message: "Save configuration to",
+            options: [
+              {
+                label: "Current project",
+                value: projectConfigPath,
+                hint: Instance.worktree,
+              },
+              {
+                label: "Global",
+                value: globalConfigPath,
+                hint: Global.Path.config,
+              },
+            ],
+          })
+          if (prompts.isCancel(scopeResult)) throw new UI.CancelledError()
+          configPath = scopeResult
+        }
+
+        const spinner = prompts.spinner()
+
+        // Step 5: Generate Ed25519 keypair
+        spinner.start("Generating Ed25519 keypair...")
+        const { publicKeyPem, privateKeyPem } = await Ed25519Auth.generateKeyPair()
+        const clientId = Ed25519Auth.fingerprint(publicKeyPem)
+
+        // Step 6: Exchange pairing code for server credentials
+        spinner.message("Exchanging pairing code...")
+
+        try {
+          const response = await fetch(`${url}/pair/exchange`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              code: formattedCode,
+              clientPublicKey: publicKeyPem,
+              clientName: `${os.userInfo().username}@${os.hostname()}`,
+            }),
+          })
+
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({}))
+            throw new Error(error.error || `Server returned ${response.status}`)
+          }
+
+          const result = (await response.json()) as {
+            clientId: string
+            serverPublicKey: string
+            serverFingerprint: string
+            name: string
+          }
+
+          // Step 7: Store Ed25519 credentials
+          await Ed25519Auth.storeCredentials(
+            name,
+            url,
+            publicKeyPem,
+            privateKeyPem,
+            result.serverPublicKey,
+            result.clientId,
+            result.serverFingerprint,
+          )
+
+          // Step 8: Save MCP config
+          const mcpConfig: Config.Mcp = {
+            type: "remote",
+            url,
+            oauth: false,
+          }
+
+          await addMcpToConfig(name, mcpConfig, configPath)
+
+          spinner.stop("Pairing successful!")
+
+          prompts.log.success(`Paired with ${url}`)
+          prompts.log.info(`Client ID: ${clientId}`)
+          prompts.log.info(`Server fingerprint: ${result.serverFingerprint}`)
+          prompts.log.info(`Config saved to: ${configPath}`)
+          prompts.outro("Done")
+        } catch (error) {
+          spinner.error("Pairing failed")
+
+          if (error instanceof Error) {
+            if (error.message.includes("Invalid or expired")) {
+              prompts.log.error("Pairing code is invalid or has expired (codes expire after 5 minutes)")
+              prompts.log.info("Generate a new code on the server with:")
+              prompts.log.info(`  curl -H "Authorization: Bearer <admin-token>" -X POST ${url}/pair`)
+            } else if (error.message.includes("already used")) {
+              prompts.log.error("This pairing code has already been used")
+              prompts.log.info("Each code can only be used once. Generate a new one.")
+            } else {
+              prompts.log.error(error.message)
+            }
+          }
+
+          prompts.outro("Failed")
+          throw error
+        }
       },
     })
   },
