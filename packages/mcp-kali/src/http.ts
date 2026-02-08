@@ -47,6 +47,20 @@ for (let i = 0; i < cliArgs.length; i++) {
 const effectivePort = parseInt(process.env.PORT || String(DEFAULT_PORT), 10)
 const effectiveHost = process.env.HOST || DEFAULT_HOST
 const adminToken = process.env.MCP_ADMIN_TOKEN || ""
+
+/**
+ * Constant-time string comparison to prevent timing attacks
+ */
+function secureCompare(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  try {
+    const bufA = Buffer.from(a)
+    const bufB = Buffer.from(b)
+    return crypto.timingSafeEqual(bufA, bufB)
+  } catch {
+    return false
+  }
+}
 const dataDir = process.env.DATA_DIR || DATA_DIR
 const knockEnabled = process.env.KNOCK_ENABLED === "true"
 
@@ -283,7 +297,7 @@ function authenticateMcpRequest(req: http.IncomingMessage, bodyStr: string): Aut
     const authHeader = req.headers.authorization
     if (authHeader) {
       const [scheme, token] = authHeader.split(" ")
-      if (scheme === "Bearer" && token === adminToken) {
+      if (scheme === "Bearer" && token && secureCompare(token, adminToken)) {
         return { authenticated: true, clientId: "admin" }
       }
     }
@@ -303,7 +317,7 @@ function authenticateAdmin(req: http.IncomingMessage): boolean {
   if (!authHeader) return false
 
   const [scheme, token] = authHeader.split(" ")
-  return scheme === "Bearer" && token === adminToken
+  return scheme === "Bearer" && token && secureCompare(token, adminToken)
 }
 
 // =====================================================================

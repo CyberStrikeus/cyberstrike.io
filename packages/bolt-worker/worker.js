@@ -31,7 +31,7 @@ if docker ps -a --format '{{.Names}}' | grep -q '^bolt$'; then
     echo ""
     read -p "Remove and reinstall? [y/N] " -n 1 -r
     echo
-    if [[ \\$REPLY =~ ^[Yy]$ ]]; then
+    if [[ \$REPLY =~ ^[Yy]$ ]]; then
         docker rm -f bolt 2>/dev/null || true
     else
         echo "Aborted."
@@ -40,7 +40,7 @@ if docker ps -a --format '{{.Names}}' | grep -q '^bolt$'; then
 fi
 
 # Generate secure token
-TOKEN=\\$(openssl rand -hex 32)
+TOKEN=\$(openssl rand -hex 32)
 
 echo "Pulling Bolt image..."
 docker pull ghcr.io/cyberstrikeus/bolt:latest
@@ -51,7 +51,7 @@ docker run -d \\
   --restart unless-stopped \\
   -p 3001:3001 \\
   -v bolt-data:/data \\
-  -e MCP_ADMIN_TOKEN=\\$TOKEN \\
+  -e MCP_ADMIN_TOKEN=\$TOKEN \\
   --cap-add NET_RAW \\
   --cap-add NET_ADMIN \\
   ghcr.io/cyberstrikeus/bolt:latest
@@ -67,7 +67,7 @@ if curl -s http://localhost:3001/health > /dev/null 2>&1; then
     echo ""
     echo "Admin Token (save this!):"
     echo ""
-    echo "   \\$TOKEN"
+    echo "   \$TOKEN"
     echo ""
     echo ""
     echo "Add to Cyberstrike:"
