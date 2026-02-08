@@ -12,6 +12,7 @@ export namespace Ed25519Auth {
   export interface Credentials {
     clientId: string
     privateKey: crypto.KeyObject
+    boltKey?: string // For port knocking
   }
 
   export interface SignatureHeaders {
@@ -104,6 +105,7 @@ export namespace Ed25519Auth {
     serverPublicKey: string,
     clientId: string,
     serverFingerprint: string,
+    boltKey?: string,
   ): Promise<void> {
     const entry = (await McpAuth.get(mcpName)) ?? {}
 
@@ -113,6 +115,7 @@ export namespace Ed25519Auth {
       clientPrivateKey,
       serverPublicKey,
       serverFingerprint,
+      boltKey,
     }
 
     await McpAuth.set(mcpName, entry, serverUrl)
@@ -131,6 +134,7 @@ export namespace Ed25519Auth {
       return {
         clientId: entry.ed25519.clientId,
         privateKey,
+        boltKey: entry.ed25519.boltKey,
       }
     } catch (error) {
       console.error(`Failed to load Ed25519 credentials for ${mcpName}:`, error)

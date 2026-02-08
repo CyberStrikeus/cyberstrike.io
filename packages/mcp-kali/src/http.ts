@@ -543,12 +543,24 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
 
     console.error(`[auth] Client paired: ${client.name} (${clientId})`)
 
-    jsonResponse(res, 200, {
+    // Enable port knocking if this is the first client
+    if (knockDaemon && authorizedClients.size === 1) {
+      await knockDaemon.enable()
+    }
+
+    // Include bolt key in response for future knock packets
+    const responseData: Record<string, unknown> = {
       clientId,
       serverPublicKey: serverKeys.publicKeyPem,
       serverFingerprint: fingerprint(serverKeys.publicKeyPem),
       name: client.name,
-    })
+    }
+
+    if (knockDaemon) {
+      responseData.boltKey = knockDaemon.getBoltKey()
+    }
+
+    jsonResponse(res, 200, responseData)
     return
   }
 
@@ -582,6 +594,12 @@ async function handleRequest(req: http.IncomingMessage, res: http.ServerResponse
       authorizedClients.delete(clientId)
       await saveAuthorizedClients()
       console.error(`[auth] Client revoked: ${client.name} (${clientId})`)
+
+      // Disable port knocking if this was the last client
+      if (knockDaemon && authorizedClients.size === 0) {
+        await knockDaemon.disable()
+      }
+
       jsonResponse(res, 200, { revoked: clientId })
     } else {
       jsonResponse(res, 404, { error: "Client not found" })

@@ -143,6 +143,7 @@ export class KnockDaemon {
   private boltKey: Buffer = Buffer.alloc(0)
   private rotationTimer: ReturnType<typeof setInterval> | null = null
   private currentPorts: number[] = []
+  private enabled = false // NEW: Track if knocking is enabled
 
   constructor(config: KnockConfig, clientLookup: AuthorizedClientLookup) {
     this.config = config
@@ -150,7 +151,8 @@ export class KnockDaemon {
   }
 
   /**
-   * Start the knock daemon: load/generate key, set up firewall, begin listening.
+   * Start the knock daemon: load/generate key, check iptables.
+   * Does NOT enable knocking yet - call enable() after first client pairs.
    */
   async start(): Promise<void> {
     // Load or generate bolt key
@@ -162,11 +164,25 @@ export class KnockDaemon {
     if (!this.iptablesAvailable) {
       console.error("[knock] iptables not available — running in log-only mode")
       console.error("[knock] (Port knocking requires Linux with iptables and NET_ADMIN capability)")
-    } else {
-      // Install DROP rule for the target port
-      await this.lockPort()
-      console.error(`[knock] Port ${this.config.targetPort} locked (iptables DROP)`)
     }
+
+    console.error("[knock] Daemon initialized (knocking DISABLED until first client pairs)")
+  }
+
+  /**
+   * Enable port knocking (called when first client is added).
+   */
+  async enable(): Promise<void> {
+    if (this.enabled) return
+
+    if (!this.iptablesAvailable) {
+      console.error("[knock] Cannot enable: iptables not available")
+      return
+    }
+
+    // Install DROP rule for the target port
+    await this.lockPort()
+    console.error(`[knock] Port ${this.config.targetPort} locked (iptables DROP)`)
 
     // Start listening on current ports
     await this.rotatePorts()
@@ -178,8 +194,50 @@ export class KnockDaemon {
       })
     }, PORT_ROTATION_INTERVAL_MS)
 
+    this.enabled = true
+
+    console.error(`[knock] Port knocking ENABLED`)
     console.error(`[knock] Access TTL: ${this.config.accessTtlMs / 1000}s`)
     console.error(`[knock] Port rotation: every ${PORT_ROTATION_INTERVAL_MS / 1000}s`)
+  }
+
+  /**
+   * Disable port knocking (called when last client is removed).
+   */
+  async disable(): Promise<void> {
+    if (!this.enabled) return
+
+    // Stop rotation timer
+    if (this.rotationTimer) {
+      clearInterval(this.rotationTimer)
+      this.rotationTimer = null
+    }
+
+    // Remove all active access rules
+    for (const [ip, rule] of this.activeRules.entries()) {
+      clearTimeout(rule.timer)
+      if (this.iptablesAvailable) {
+        await this.removeAccess(ip).catch(() => {})
+      }
+    }
+    this.activeRules.clear()
+
+    // Remove the DROP rule (unlock port)
+    if (this.iptablesAvailable) {
+      await this.unlockPort()
+      console.error(`[knock] Port ${this.config.targetPort} unlocked`)
+    }
+
+    // Close all UDP sockets
+    for (const [port, socket] of this.sockets.entries()) {
+      socket.close()
+    }
+    this.sockets.clear()
+    this.currentPorts = []
+
+    this.enabled = false
+
+    console.error("[knock] Port knocking DISABLED")
   }
 
   /**
@@ -275,34 +333,15 @@ export class KnockDaemon {
    * Stop the daemon: remove all rules and close sockets.
    */
   async stop(): Promise<void> {
-    // Stop rotation timer
-    if (this.rotationTimer) {
-      clearInterval(this.rotationTimer)
-      this.rotationTimer = null
-    }
-
-    // Remove all active access rules
-    for (const [ip, rule] of this.activeRules.entries()) {
-      clearTimeout(rule.timer)
-      if (this.iptablesAvailable) {
-        await this.removeAccess(ip).catch(() => {})
-      }
-    }
-    this.activeRules.clear()
-
-    // Remove the DROP rule
-    if (this.iptablesAvailable) {
-      await this.unlockPort().catch(() => {})
-    }
-
-    // Close all UDP sockets
-    for (const [port, socket] of this.sockets.entries()) {
-      socket.close()
-    }
-    this.sockets.clear()
-    this.currentPorts = []
-
+    await this.disable()
     console.error("[knock] Daemon stopped")
+  }
+
+  /**
+   * Check if port knocking is currently enabled.
+   */
+  isEnabled(): boolean {
+    return this.enabled
   }
 
   /**

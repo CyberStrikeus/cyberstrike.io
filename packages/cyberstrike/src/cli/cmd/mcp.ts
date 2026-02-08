@@ -900,6 +900,7 @@ export const McpPairCommand = cmd({
             serverPublicKey: string
             serverFingerprint: string
             name: string
+            boltKey?: string // For port knocking
           }
 
           // Step 7: Store Ed25519 credentials
@@ -911,6 +912,7 @@ export const McpPairCommand = cmd({
             result.serverPublicKey,
             result.clientId,
             result.serverFingerprint,
+            result.boltKey,
           )
 
           // Step 8: Save MCP config
