@@ -1,4 +1,4 @@
-import type { MiddlewareContext, MiddlewareHandler } from "./types"
+import type { MiddlewareContext, MiddlewareHandler } from "./types.js"
 
 /**
  * Middleware pipeline for request processing

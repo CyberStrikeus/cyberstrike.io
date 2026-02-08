@@ -1,4 +1,4 @@
-import type { MiddlewareContext, MiddlewareError, MiddlewareHandler } from "./types"
+import type { MiddlewareContext, MiddlewareError, MiddlewareHandler } from "./types.js"
 
 /**
  * Error handler middleware

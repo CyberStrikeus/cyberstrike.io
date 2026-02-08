@@ -1,5 +1,5 @@
-import type { MiddlewareContext, MiddlewareHandler } from "./types"
-import { createMiddlewareError } from "./types"
+import type { MiddlewareContext, MiddlewareHandler } from "./types.js"
+import { createMiddlewareError } from "./types.js"
 
 /**
  * Configuration for request security validation

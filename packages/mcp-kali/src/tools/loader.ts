@@ -2,6 +2,7 @@ import fs from "fs/promises"
 import path from "path"
 import YAML from "yaml"
 import { ToolDefinition, LazyToolInfo } from "./types.js"
+import { logger } from "../logging/index.js"
 
 /**
  * Load all tool definitions from the definitions directory
@@ -34,14 +35,21 @@ export async function loadAllTools(definitionsDir: string): Promise<Map<string, 
         }
 
         tools.set(validated.name, validated)
-        console.error(`[bolt] Loaded tool: ${validated.name}`)
+        logger.debug("Tool definition loaded", {
+          metadata: { toolName: validated.name, category: validated.category },
+        })
       } catch (err) {
-        console.error(`[bolt] Failed to parse ${filePath}:`, err)
+        logger.error(
+          err instanceof Error ? err : new Error(String(err)),
+          `Failed to parse tool definition: ${filePath}`
+        )
       }
     }
   }
 
-  console.error(`[bolt] Loaded ${tools.size} tools`)
+  logger.info("Tool definitions loaded", {
+    metadata: { toolCount: tools.size },
+  })
   return tools
 }
 
