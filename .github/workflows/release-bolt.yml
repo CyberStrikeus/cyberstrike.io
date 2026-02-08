@@ -75,6 +75,19 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
 
+      - name: Make package public
+        continue-on-error: true
+        run: |
+          echo "Setting package visibility to public..."
+          gh api \
+            --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /orgs/CyberStrikeus/packages/container/bolt \
+            -f visibility='public' || echo "Note: Could not set visibility (may already be public or need manual setup)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Output image info
         run: |
           echo "## Bolt Docker Image Published" >> $GITHUB_STEP_SUMMARY
