@@ -317,7 +317,7 @@ function authenticateAdmin(req: http.IncomingMessage): boolean {
   if (!authHeader) return false
 
   const [scheme, token] = authHeader.split(" ")
-  return scheme === "Bearer" && token && secureCompare(token, adminToken)
+  return scheme === "Bearer" && !!token && secureCompare(token, adminToken)
 }
 
 // =====================================================================
