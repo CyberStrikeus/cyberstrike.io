@@ -58,8 +58,10 @@ jobs:
           tags: |
             # For releases: use the tag directly (CalVer: v2026.2.7 -> 2026.2.7)
             type=raw,value={{tag}},enable=${{ github.event_name == 'release' }}
-            # For main branch: use 'latest'
-            type=raw,value=latest,enable={{is_default_branch}}
+            # For dev branch: use 'dev-latest' tag
+            type=raw,value=dev-latest,enable=${{ github.ref == 'refs/heads/dev' }}
+            # For main branch: use 'latest' tag
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
             # For manual dispatch: use input tag
             type=raw,value=${{ github.event.inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
 
