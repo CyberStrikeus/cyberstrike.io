@@ -11,7 +11,7 @@ name: "Bolt: Build & Publish Docker Image"
 
 on:
   push:
-    branches: [main]
+    branches: [dev, main]
     paths:
       - "packages/mcp-kali/**"
       - ".github/workflows/release-bolt.yml"
