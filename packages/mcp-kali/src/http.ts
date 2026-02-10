@@ -34,6 +34,7 @@ const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes
 const PAIRING_CODE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 const NONCE_TTL_MS = 30 * 1000 // 30 second window for replay protection
 const TIMESTAMP_DRIFT_MS = 30 * 1000 // 30 second clock drift tolerance
+const SETUP_TOKEN_TTL_MS = 30 * 60 * 1000 // 30 minutes for fresh install setup
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "..", "data")
 
 // --- Parse CLI arguments ---
@@ -156,8 +157,15 @@ interface AuthorizedClient {
   pairedAt: string
 }
 
+interface SetupToken {
+  token: string
+  createdAt: number
+  ttl: number // milliseconds
+}
+
 let serverKeys: ServerKeys
 const authorizedClients = new Map<string, AuthorizedClient>()
+let setupToken: SetupToken | null = null
 
 const SERVER_KEYS_PATH = () => path.join(dataDir, "server-keys.json")
 const CLIENTS_PATH = () => path.join(dataDir, "authorized-clients.json")
@@ -406,6 +414,82 @@ function authenticateAdmin(req: http.IncomingMessage): boolean {
 
   const [scheme, token] = authHeader.split(" ")
   return scheme === "Bearer" && !!token && secureCompare(token, adminToken)
+}
+
+/**
+ * Generate a cryptographically secure setup token for fresh installations.
+ */
+function generateSetupToken(): string {
+  return crypto.randomBytes(32).toString("base64url")
+}
+
+/**
+ * Check if the setup token is still valid (within TTL).
+ */
+function isSetupTokenValid(): boolean {
+  if (!setupToken) return false
+  const age = Date.now() - setupToken.createdAt
+  return age < setupToken.ttl
+}
+
+/**
+ * Authenticate /pair endpoint with hybrid approach:
+ * - If clients exist: only admin token allowed
+ * - If no clients: admin token OR setup token allowed
+ */
+function authenticatePairRequest(req: http.IncomingMessage): {
+  authenticated: boolean
+  method?: "admin" | "setup"
+  error?: string
+} {
+  // If clients already exist, only admin token is allowed
+  if (authorizedClients.size > 0) {
+    if (!adminToken) {
+      return { authenticated: false, error: "Admin token required but not set" }
+    }
+
+    const authHeader = req.headers.authorization
+    if (!authHeader) {
+      return { authenticated: false, error: "Authorization header required (Bearer token)" }
+    }
+
+    const [scheme, token] = authHeader.split(" ")
+    if (scheme === "Bearer" && token && secureCompare(token, adminToken)) {
+      return { authenticated: true, method: "admin" }
+    }
+
+    return { authenticated: false, error: "Invalid admin token" }
+  }
+
+  // No clients exist: allow either admin token OR setup token
+  // Try admin token first (if set)
+  if (adminToken) {
+    const authHeader = req.headers.authorization
+    if (authHeader) {
+      const [scheme, token] = authHeader.split(" ")
+      if (scheme === "Bearer" && token && secureCompare(token, adminToken)) {
+        return { authenticated: true, method: "admin" }
+      }
+    }
+  }
+
+  // Try setup token
+  if (setupToken && isSetupTokenValid()) {
+    const authHeader = req.headers.authorization
+    if (authHeader) {
+      const [scheme, token] = authHeader.split(" ")
+      if (scheme === "Bearer" && token && secureCompare(token, setupToken.token)) {
+        return { authenticated: true, method: "setup" }
+      }
+    }
+  }
+
+  // No valid auth provided
+  if (setupToken && isSetupTokenValid()) {
+    return { authenticated: false, error: "Setup token or admin token required (Bearer token)" }
+  }
+
+  return { authenticated: false, error: adminToken ? "Admin token required" : "No authentication configured" }
 }
 
 // =====================================================================
@@ -661,11 +745,13 @@ async function handleRoutes(
     return
   }
 
-  // --- Pairing: Generate code (admin token required) ---
-  // Admin generates a one-time code for new client to pair
+  // --- Pairing: Generate code (setup token OR admin token required) ---
+  // For fresh installs: setup token (30 min) OR admin token
+  // After first client: only admin token
   if (pathname === "/pair" && req.method === "POST") {
-    if (!authenticateAdmin(req)) {
-      jsonResponse(res, 401, { error: "Unauthorized", message: "Admin token required (MCP_ADMIN_TOKEN)" })
+    const auth = authenticatePairRequest(req)
+    if (!auth.authenticated) {
+      jsonResponse(res, 401, { error: "Unauthorized", message: auth.error })
       return
     }
 
@@ -680,8 +766,8 @@ async function handleRoutes(
 
     logger.audit({
       event: "pair_request",
-      message: `Pairing code generated`,
-      metadata: { code, expiresIn: PAIRING_CODE_TTL_MS / 1000 },
+      message: `Pairing code generated via ${auth.method} authentication`,
+      metadata: { code, expiresIn: PAIRING_CODE_TTL_MS / 1000, authMethod: auth.method },
     })
 
     jsonResponse(res, 200, {
@@ -753,6 +839,16 @@ async function handleRoutes(
 
     authorizedClients.set(clientId, client)
     await saveAuthorizedClients()
+
+    // Invalidate setup token after first client is paired
+    if (setupToken) {
+      logger.audit({
+        event: "setup_token_invalidated",
+        message: "Setup token invalidated after first client pairing",
+        metadata: { clientId, clientName: client.name },
+      })
+      setupToken = null
+    }
 
     logger.audit({
       event: "pair_success",
@@ -927,6 +1023,41 @@ async function main(): Promise<void> {
   // Initialize crypto keys and authorized clients
   await initServerKeys()
   await loadAuthorizedClients()
+
+  // Generate setup token for fresh installations (no clients, no admin token)
+  if (authorizedClients.size === 0 && !adminToken) {
+    setupToken = {
+      token: generateSetupToken(),
+      createdAt: Date.now(),
+      ttl: SETUP_TOKEN_TTL_MS,
+    }
+
+    const expiresAt = new Date(setupToken.createdAt + setupToken.ttl).toISOString()
+    const expiresIn = Math.floor(setupToken.ttl / 1000 / 60) // minutes
+
+    console.log("\n" + "=".repeat(70))
+    console.log("⚠️  FRESH INSTALLATION - SETUP TOKEN GENERATED")
+    console.log("=".repeat(70))
+    console.log(`\n🔑 Setup Token (valid for ${expiresIn} minutes):`)
+    console.log(`\n   ${setupToken.token}\n`)
+    console.log(`📅 Expires at: ${expiresAt}`)
+    console.log(`\n💡 Use this token to pair your first client:`)
+    console.log(`   curl -X POST http://localhost:${effectivePort}/pair \\`)
+    console.log(`     -H "Authorization: Bearer ${setupToken.token}"\n`)
+    console.log("⚠️  After pairing your first client, you'll need to set MCP_ADMIN_TOKEN")
+    console.log("   for future pairing operations.\n")
+    console.log("=".repeat(70) + "\n")
+
+    logger.audit({
+      event: "setup_token_generated",
+      message: "Setup token generated for fresh installation",
+      metadata: {
+        expiresAt,
+        ttlSeconds: setupToken.ttl / 1000,
+        note: "Setup token allows first client pairing without admin token",
+      },
+    })
+  }
 
   // Ensure TLS certificates if TLS is enabled
   await ensureTlsCertificates()

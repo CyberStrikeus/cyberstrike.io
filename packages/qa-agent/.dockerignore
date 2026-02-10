@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+*.md
+.qa-agent.jsonc
+test
+.turbo

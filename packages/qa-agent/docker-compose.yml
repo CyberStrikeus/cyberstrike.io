@@ -1,0 +1,68 @@
+name: qa-agent
+services:
+  qa-agent:
+    build: .
+    image: cyberstrike/qa-agent:0.1.0
+    container_name: qa-agent
+    restart: unless-stopped
+    # Use 'host' for same-machine access (OAuth callback auto-works)
+    # Use 'bridge' for remote access (requires callback URL relay via dashboard)
+    network_mode: bridge
+    environment:
+      - TZ=${TZ:-UTC}
+      - PORT=3000
+      - DATA_DIR=/data
+      - NODE_ENV=production
+    ports:
+      - target: 3000
+        published: ${WEBUI_PORT:-3000}
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: /DATA/AppData/$AppID/data
+        target: /data
+
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: Timezone (e.g. America/New_York)
+      ports:
+        - container: "3000"
+          description:
+            en_us: Web dashboard port
+      volumes:
+        - container: /data
+          description:
+            en_us: Projects, reports, Claude credentials, and configuration data
+
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: qa-agent
+  author: CyberStrike
+  category: Developer
+  icon: https://cyberstrike.us/qa-agent-icon.png
+  title:
+    en_us: QA Agent
+  tagline:
+    en_us: AI-Powered QA Testing & Auto-Fix
+  description:
+    en_us: |
+      Watch git repositories for new commits, test them with AI, and auto-fix failures.
+      Features:
+      - Monitor multiple repositories simultaneously
+      - AI-powered test planning and execution via Claude
+      - Automatic fix generation for failing tests
+      - Self-healing CI loop (detect -> test -> fix -> re-test)
+      - Web dashboard for monitoring and management
+      - OAuth authentication via dashboard (Pro/Max subscription)
+  tips:
+    before_install:
+      en_us: |
+        After installing, open the dashboard and click "Login to Claude"
+        to authenticate with your Anthropic Pro/Max subscription.
+        No API key required - uses OAuth authentication.
+  index: /
+  port_map: "3000"

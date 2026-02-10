@@ -19,7 +19,8 @@ import { withTimeout } from "@/util/timeout"
 import { McpOAuthProvider } from "./oauth-provider"
 import { McpOAuthCallback } from "./oauth-callback"
 import { McpAuth } from "./auth"
-import { Ed25519Auth } from "./ed25519"
+import { Ed25519Auth } from "./ed25519.js"
+import { BoltTransport } from "./bolt-transport.js"
 import { BusEvent } from "../bus/bus-event"
 import { Bus } from "@/bus"
 import { TuiEvent } from "@/cli/cmd/tui/event"
@@ -337,22 +338,45 @@ export namespace MCP {
         )
       }
 
+      // Prepare requestInit with headers
+      let requestInit: RequestInit | undefined = mcp.headers ? { headers: mcp.headers } : undefined
+
+      // Create transport - use BoltTransport for Ed25519 auth, otherwise use StreamableHTTPClientTransport
+      let httpTransport: TransportWithAuth
+      if (ed25519Creds) {
+        // Use BoltTransport which automatically signs all requests with Ed25519 signatures
+        log.info("using BoltTransport for Ed25519 auth", { key, clientId: ed25519Creds.clientId })
+        httpTransport = new BoltTransport(
+          new URL(mcp.url),
+          ed25519Creds.clientId,
+          ed25519Creds.privateKey,
+          requestInit ? { requestInit } : undefined,
+        )
+      } else {
+        // Use standard transport with OAuth if available
+        httpTransport = new StreamableHTTPClientTransport(new URL(mcp.url), {
+          authProvider,
+          requestInit,
+        })
+      }
+
       const transports: Array<{ name: string; transport: TransportWithAuth }> = [
         {
           name: "StreamableHTTP",
-          transport: new StreamableHTTPClientTransport(new URL(mcp.url), {
-            authProvider,
-            requestInit: mcp.headers ? { headers: mcp.headers } : undefined,
-          }),
+          transport: httpTransport,
         },
-        {
+      ]
+
+      // Only add SSE transport if not using Ed25519 (SSE doesn't support custom auth headers yet)
+      if (!ed25519Creds) {
+        transports.push({
           name: "SSE",
           transport: new SSEClientTransport(new URL(mcp.url), {
             authProvider,
-            requestInit: mcp.headers ? { headers: mcp.headers } : undefined,
+            requestInit,
           }),
-        },
-      ]
+        })
+      }
 
       let lastError: Error | undefined
       const defaultTimeout = await getDefaultTimeout()

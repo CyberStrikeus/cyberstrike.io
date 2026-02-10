@@ -99,10 +99,11 @@ ENV DATA_DIR=/data
 ENV NODE_ENV=production
 
 # TLS / Let's Encrypt configuration
-ENV TLS_ENABLED=false
+ENV TLS_ENABLED=true
 ENV TLS_AUTO_CERT=false
 ENV TLS_DOMAIN=""
 ENV TLS_EMAIL=""
+ENV DOCKER_CONTAINER=true
 
 # Expose common ports (actual port is configurable via PORT env var)
 # HTTP: 3001 (default), 8080, 8000, 3000

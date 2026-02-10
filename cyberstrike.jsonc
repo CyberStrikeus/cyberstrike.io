@@ -1,5 +1,12 @@
 {
-  "$schema": "https://cyberstrike.io/config.json"
+  "$schema": "https://cyberstrike.io/config.json",
+  "mcp": {
+    "bol-88": {
+      "type": "remote",
+      "url": "http://147.135.60.70:3001/mcp",
+      "oauth": false
+    }
+  },
 
   // MCP Servers Configuration (optional)
   // Uncomment and configure the kali MCP after building:

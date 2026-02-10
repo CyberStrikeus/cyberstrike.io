@@ -239,7 +239,7 @@
     },
     "packages/mcp-kali": {
       "name": "@cyberstrike-io/mcp-kali",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "bin": {
         "mcp-kali": "./dist/index.js",
         "mcp-kali-http": "./dist/http.js",
