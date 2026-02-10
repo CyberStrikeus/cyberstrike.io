@@ -661,13 +661,11 @@ async function handleRoutes(
     return
   }
 
-  // --- Pairing: Generate code (admin token required) ---
-  // Admin generates a one-time code for new client to pair
+  // --- Pairing: Generate code (public endpoint, rate-limited) ---
+  // Client requests a pairing code to initiate authentication
   if (pathname === "/pair" && req.method === "POST") {
-    if (!authenticateAdmin(req)) {
-      jsonResponse(res, 401, { error: "Unauthorized", message: "Admin token required (MCP_ADMIN_TOKEN)" })
-      return
-    }
+    // Rate limiting is handled by middleware
+    // No admin token required - pairing is a public flow
 
     cleanupPairingCodes()
 
