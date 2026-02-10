@@ -72,6 +72,8 @@ export interface AuditLogEvent extends BaseLogEvent {
     | "cert_generated"
     | "admin_health_check"
     | "server_stopped"
+    | "setup_token_generated"
+    | "setup_token_invalidated"
 }
 
 /**
