@@ -33,11 +33,11 @@
     "./jsx-dev-runtime": "./jsx-runtime.d.ts"
   },
   "dependencies": {
-    "@babel/core": "7.28.0",
-    "@babel/preset-typescript": "7.27.1",
+    "@babel/core": "7.29.0",
+    "@babel/preset-typescript": "7.28.5",
     "@cyberstrike-io/tui-core": "workspace:*",
     "babel-plugin-module-resolver": "5.0.2",
-    "babel-preset-solid": "1.9.9",
+    "babel-preset-solid": "1.9.10",
     "s-js": "^0.4.9"
   },
   "devDependencies": {
